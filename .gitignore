@@ -1,0 +1,10 @@
+# Project
+target/
+src/test/resources/test-output/
+src/test/resources/config/
+
+# IDE
+.vscode/
+
+# OS
+.DS_Store
