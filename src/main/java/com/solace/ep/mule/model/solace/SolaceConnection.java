@@ -32,7 +32,7 @@ public class SolaceConnection {
     )
     protected String clientUserName;
 
-        @JacksonXmlProperty(
+    @JacksonXmlProperty(
         isAttribute = true,
         localName = "password"
     )

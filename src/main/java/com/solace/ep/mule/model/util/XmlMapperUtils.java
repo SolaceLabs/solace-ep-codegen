@@ -14,8 +14,7 @@ public class XmlMapperUtils {
         xmlMapper
                 .getFactory()
                 .getXMLOutputFactory()
-                .setProperty(WstxOutputProperties
-                .P_USE_DOUBLE_QUOTES_IN_XML_DECL, true);
+                .setProperty(WstxOutputProperties.P_USE_DOUBLE_QUOTES_IN_XML_DECL, true);
         return xmlMapper;
     }
 }
