@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 
 import com.google.gson.JsonObject;
 import com.solace.ep.asyncapi.AsyncApiAccessor;
+import com.solace.ep.asyncapi.AsyncApiChannel;
 import com.solace.ep.asyncapi.AsyncApiMessage;
 
 import lombok.extern.slf4j.Slf4j;
@@ -34,24 +35,24 @@ public class TestAsyncApiParsing {
 
     }
 
-    // @Test
-    // public void getTopLevel() {
-    //     final String asyncApi = getAsyncApiSample1();
+    @Test
+    public void getTopLevel() {
+        final String asyncApi = getAsyncApiSample1();
 
-    //     AsyncApiAccessor accessor = new AsyncApiAccessor( AsyncApiAccessor.parseAsyncApi(asyncApi) );
+        AsyncApiAccessor accessor = new AsyncApiAccessor( AsyncApiAccessor.parseAsyncApi(asyncApi) );
 
-    //     try {
-    //         assertTrue( accessor.getChannels() != null);
-    //         assertTrue( accessor.getInfo() != null);
-    //         assertTrue( accessor.getMessages() !=null );
-    //         assertTrue( accessor.getSchemas() !=null);
-    //         String version = accessor.getAsyncapiVersion();
-    //         assertTrue(version.contentEquals("2.5.0"));
-    //     } catch ( Exception e ) {
-    //         fail(e.getLocalizedMessage());
-    //     }
+        try {
+            assertTrue( accessor.getChannels() != null);
+            assertTrue( accessor.getInfo() != null);
+            assertTrue( accessor.getMessages() !=null );
+            assertTrue( accessor.getSchemas() !=null);
+            String version = accessor.getAsyncapiVersion();
+            assertTrue(version.contentEquals("2.5.0"));
+        } catch ( Exception e ) {
+            fail(e.getLocalizedMessage());
+        }
 
-    // }
+    }
 
     @Test
     public void validateInfo() {
@@ -149,12 +150,81 @@ public class TestAsyncApiParsing {
         }
     }
 
+    @Test void validateAsyncApiPublishChannels() {
+        final String asyncApi = getAsyncApiSample1();
+
+        AsyncApiAccessor accessor = new AsyncApiAccessor(AsyncApiAccessor.parseAsyncApi(asyncApi));
+
+        try {
+
+            for ( String channelId : accessor.getChannels().keySet() ) {
+
+                AsyncApiChannel channel = new AsyncApiChannel( accessor.getChannels().get(channelId).getAsJsonObject(), accessor );
+
+                if ( channel.hasPublishOperation() ) {
+                    System.out.println( channel.getPublishOpMessage().getPayloadAsString() );
+
+                    assertTrue( channel.getPublishOpMessage().getPayloadAsString().contains("namespace") );
+
+                    for (String p : channel.getParameters() ) {
+                        System.out.println( "Parameter: " + p );
+                    }
+
+                    String queueName = channel.getPublishQueueName();
+
+                    if (queueName != null) {
+                        System.out.println("QueueName: " + queueName);
+                    }
+                    for ( String s : channel.getPublishQueueSubscriptions() ) {
+                        
+                        assertTrue( s.startsWith("acmeretail") );
+                        
+                        System.out.println("Subscription: " + s);
+                    }
+
+                    System.out.println();
+                }
+            }
+
+        } catch( Exception e) {
+            fail(e.getLocalizedMessage());
+        }
+    }
+
+    @Test void validateAsyncApiSubscribeChannels() {
+        final String asyncApi = getAsyncApiSample1();
+
+        AsyncApiAccessor accessor = new AsyncApiAccessor(AsyncApiAccessor.parseAsyncApi(asyncApi));
+
+        try {
+
+            for ( String channelId : accessor.getChannels().keySet() ) {
+
+                AsyncApiChannel channel = new AsyncApiChannel( accessor.getChannels().get(channelId).getAsJsonObject(), accessor );
+
+                if ( channel.hasSubscribeOperation() ) {
+                    System.out.println( channel.getSubscribeOpMessage().getPayloadAsString() );
+
+                    assertTrue( channel.getSubscribeOpMessage().getPayloadAsString().contains("namespace") );
+
+                    for (String p : channel.getParameters() ) {
+                        System.out.println( "Parameter: " + p );
+                    }
+
+                    System.out.println();
+                }
+            }
+
+        } catch( Exception e) {
+            fail(e.getLocalizedMessage());
+        }
+    }
+
     private static String getAsyncApiSample1() {
 
         String fileName = "src/test/resources/asyncapi/sample1.json";
         Path path = Paths.get(fileName);
         StringBuilder data = new StringBuilder();
-//        byte[] bytes = Files.readAllBytes(path);
         try {
             List<String> allLines = Files.readAllLines(path, StandardCharsets.UTF_8);
             for ( String s : allLines ) {

@@ -27,5 +27,6 @@ public class AsyncApiFieldConstants {
     public static final String
                     OP_PUBLISH = "publish",
                     OP_SUBSCRIBE = "subscribe",
-                    CHANNEL_PARAMETERS = "parameters";
+                    CHANNEL_PARAMETERS = "parameters",
+                    OP_MESSAGE = "message";
 }

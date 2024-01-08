@@ -111,7 +111,7 @@ public class AsyncApiAccessor {
         return gson.toJson(schemaObject);
     }
 
-    private Map<String, JsonElement> getSchemas() throws Exception {
+    public Map<String, JsonElement> getSchemas() throws Exception {
         if (schemas == null) {
             JsonObject schemasObject = getFieldAsReference(AsyncApiFieldConstants.API_SCHEMAS);
             schemas = schemasObject.asMap();
@@ -119,7 +119,7 @@ public class AsyncApiAccessor {
         return schemas;
     }
 
-    private Map<String, JsonElement> getChannels() throws Exception {
+    public Map<String, JsonElement> getChannels() throws Exception {
         if (channels == null) {
             JsonObject channelsObject = getFieldAsReference(AsyncApiFieldConstants.API_CHANNELS);
             channels = channelsObject.asMap();
@@ -127,7 +127,7 @@ public class AsyncApiAccessor {
         return channels;
     }
 
-    private Map<String, JsonElement> getMessages() throws Exception {
+    public Map<String, JsonElement> getMessages() throws Exception {
         if (messages == null) {
             JsonObject messagesObject = getFieldAsReference(AsyncApiFieldConstants.API_MESSAGES);
             messages = messagesObject.asMap();

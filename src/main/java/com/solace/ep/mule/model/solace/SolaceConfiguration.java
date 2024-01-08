@@ -5,11 +5,13 @@ import com.solace.ep.mule.model.base.BaseElement;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
+@AllArgsConstructor
 public class SolaceConfiguration extends BaseElement {
     
     @JacksonXmlProperty(
@@ -30,6 +32,12 @@ public class SolaceConfiguration extends BaseElement {
         namespace = "http://www.mulesoft.org/schema/mule/solace"
     )
     protected EventPortalConfiguration eventPortalConfiguration;
+
+    public SolaceConfiguration( String name, String docName ) {
+        solaceConnection = new SolaceConnection();
+        eventPortalConfiguration = new EventPortalConfiguration();
+        this.name = name;
+    }
 
     @Data
     @NoArgsConstructor
