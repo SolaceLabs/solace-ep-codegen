@@ -15,6 +15,4 @@ public class MapSetVariable {
 
     protected String variableValue;
 
-    protected String variableDocName;
-
 }

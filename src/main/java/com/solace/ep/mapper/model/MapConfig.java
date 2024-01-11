@@ -13,8 +13,6 @@ public class MapConfig {
     
     protected String configName;
 
-    protected String configDocName;
-
     protected String connectBrokerHost;
 
     protected String connectMsgVpn;

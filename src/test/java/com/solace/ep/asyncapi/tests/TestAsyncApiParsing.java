@@ -220,9 +220,27 @@ public class TestAsyncApiParsing {
         }
     }
 
-    private static String getAsyncApiSample1() {
+    public static String getAsyncApiSample1() {
 
         String fileName = "src/test/resources/asyncapi/sample1.json";
+        Path path = Paths.get(fileName);
+        StringBuilder data = new StringBuilder();
+        try {
+            List<String> allLines = Files.readAllLines(path, StandardCharsets.UTF_8);
+            for ( String s : allLines ) {
+                data.append(s);
+                data.append('\n');
+            }
+        } catch (Exception exc) {
+            log.error( exc.getLocalizedMessage() );
+            return null;
+        }
+        return data.toString();
+    }
+
+    public static String getAsyncApiSample2() {
+
+        String fileName = "src/test/resources/asyncapi/sample2.json";
         Path path = Paths.get(fileName);
         StringBuilder data = new StringBuilder();
         try {

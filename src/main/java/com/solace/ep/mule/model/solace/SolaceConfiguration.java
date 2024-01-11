@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-@NoArgsConstructor
 @AllArgsConstructor
 public class SolaceConfiguration extends BaseElement {
     
@@ -33,10 +32,16 @@ public class SolaceConfiguration extends BaseElement {
     )
     protected EventPortalConfiguration eventPortalConfiguration;
 
+    public SolaceConfiguration() {
+        this.solaceConnection = new SolaceConnection();
+        this.eventPortalConfiguration = new EventPortalConfiguration();
+    }
+
     public SolaceConfiguration( String name, String docName ) {
         solaceConnection = new SolaceConnection();
         eventPortalConfiguration = new EventPortalConfiguration();
         this.name = name;
+        this.setDocNameAndGenerateDocId(docName);
     }
 
     @Data
@@ -56,5 +61,9 @@ public class SolaceConfiguration extends BaseElement {
             localName = "cloudOrgPrefix"
         )
         protected String cloudOrgPrefix;
+
+        public EventPortalConfiguration( String cloudApiToken ) {
+            this.cloudApiToken = cloudApiToken;
+        }
     }
 }

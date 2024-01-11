@@ -1,26 +1,21 @@
 package com.solace.ep.mapper.model;
 
+import com.solace.ep.mapper.MapUtils;
+
 import lombok.Getter;
-import lombok.Setter;
 
 public abstract class AbstractMapValidateSchema {
     
-    @Getter
-    @Setter
-    protected String validateSchemaDocName = "Validate Schema";
-
     @Getter
     protected String validateSchemaContents = null;
 
     @Getter
     private byte[] md5Digest = null;
 
-    public AbstractMapValidateSchema( String schemaContents ) {
-        setValidateSchemaContents(schemaContents);
+    public AbstractMapValidateSchema() {
     }
 
-    public AbstractMapValidateSchema( String schemaContents, String validateSchemaDocName ) {
-        this.validateSchemaDocName = validateSchemaDocName;
+    public AbstractMapValidateSchema( String schemaContents ) {
         setValidateSchemaContents(schemaContents);
     }
 

@@ -116,6 +116,33 @@ public class AsyncApiChannel {
         }
     }
 
+    // public String getOpMessageName( String operationType ) {
+    //     if (
+    //         operationType != AsyncApiFieldConstants.OP_PUBLISH && 
+    //         operationType != AsyncApiFieldConstants.OP_SUBSCRIBE
+    //     ) {
+    //         return null;
+    //     }
+    //     if ( ! asyncApiChannel.has( operationType ) ) {
+    //         return null;
+    //     }
+    //     JsonObject operation = asyncApiChannel.getAsJsonObject(operationType);
+    //     if ( ! operation.has(AsyncApiFieldConstants.OP_MESSAGE) ) {
+    //         return AsyncApiUtils.DEFAULT_MESSAGE_NAME;
+    //     }
+    //     JsonObject message = operation.getAsJsonObject(AsyncApiFieldConstants.OP_MESSAGE);
+    //     if ( message.has(AsyncApiFieldConstants.API_$REF) ) {
+    //         JsonElement refElement = message.get( AsyncApiFieldConstants.API_$REF );
+    //         if ( refElement.isJsonPrimitive() ) {
+    //             String messageName = AsyncApiUtils.getLastElementFromRefString(refElement.getAsString());
+    //             if ( messageName != null && messageName.length() > 0 ) {
+    //                 return messageName;
+    //             }
+    //         }
+    //     }
+    //     return AsyncApiUtils.DEFAULT_MESSAGE_NAME;
+    // }
+
     public String getPublishQueueName() {
 
         JsonObject queueObject = getPublishQueueJsonObject();
@@ -136,6 +163,23 @@ public class AsyncApiChannel {
 
         if (queueObject.has("topicSubscriptions") ) {
             JsonArray array = queueObject.get("topicSubscriptions").getAsJsonArray();
+            List<String> subscriptions = new ArrayList<String>();
+            for ( JsonElement element : array ) {
+                subscriptions.add( element.getAsString() );
+            }
+            return subscriptions;
+        }
+        return null;
+    }
+
+    public List<String> getPublishTopicSubscriptions() {
+
+        JsonObject topicObject = getPublishTopicJsonObject();
+
+        if (topicObject == null) return null;
+
+        if (topicObject.has("topicSubscriptions") ) {
+            JsonArray array = topicObject.get("topicSubscriptions").getAsJsonArray();
             List<String> subscriptions = new ArrayList<String>();
             for ( JsonElement element : array ) {
                 subscriptions.add( element.getAsString() );
@@ -170,4 +214,28 @@ public class AsyncApiChannel {
         return null;
     }
 
+    private JsonObject getPublishTopicJsonObject() {
+        
+        if ( this.publishOpFirstDestination == null ) {
+            JsonArray array = getPublishOpSolaceDestinations();
+            if ( array == null || array.size() < 1 ) return null;
+
+            for ( JsonElement je : array.asList() ) {
+                if ( ! je.isJsonObject() ) return null;
+                this.publishOpFirstDestination = je.getAsJsonObject();
+                break;
+            }
+        }
+
+        if ( publishOpFirstDestination.has("destinationType") && 
+                publishOpFirstDestination.get("destinationType").getAsString().contentEquals( "queue" ) ) {
+            if ( publishOpFirstDestination.has( "queue" ) ) {
+                JsonElement queueElement = publishOpFirstDestination.get("queue");
+                if ( queueElement.isJsonObject() ) {
+                    return ( JsonObject )queueElement;
+                }
+            }
+        }
+        return null;
+    }
 }

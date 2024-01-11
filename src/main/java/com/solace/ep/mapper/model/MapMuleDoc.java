@@ -8,15 +8,13 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class PseudoMuleDoc {
+public class MapMuleDoc {
     
-    MapConfig mapConfig;
+    MapConfig mapConfig = null;
 
     List<MapGlobalProperty> mapGlobalProperties = new ArrayList<MapGlobalProperty>();
 
     List<MapFlow> mapFlows = new ArrayList<MapFlow>();
-
-    List<MapSubFlowBizLogic> mapBizLogicSubFlows = new ArrayList<MapSubFlowBizLogic>();
 
     List<MapSubFlowEgress> mapEgressSubFlows = new ArrayList<MapSubFlowEgress>();
 

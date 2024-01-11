@@ -12,6 +12,7 @@ import com.solace.ep.mule.model.ee.TransformOperation;
 import com.solace.ep.mule.model.json.ValidateJsonSchema;
 import com.solace.ep.mule.model.solace.SolacePublish;
 import com.solace.ep.mule.model.solace.SolaceQueueListener;
+import com.solace.ep.mule.model.solace.SolaceTopicListener;
 import com.solace.ep.mule.model.xml_module.ValidateXmlSchema;
 
 import lombok.Data;
@@ -38,6 +39,13 @@ public class MuleFlow extends BaseElement {
         localName = "queue-listener"
     )
     protected SolaceQueueListener queueListener;
+
+    @JacksonXmlProperty(
+        isAttribute = false,
+        namespace = "http://www.mulesoft.org/schema/mule/solace",
+        localName = "topic-listener"
+    )
+    protected SolaceTopicListener topicListener;
 
     @JacksonXmlProperty(
         isAttribute = false,

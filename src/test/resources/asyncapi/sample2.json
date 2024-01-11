@@ -473,6 +473,48 @@
 					"x-ep-parameter-name": "out2"
 				}
 			}
+		},
+		"acmeretail/onlineservices/another/dummy/output/{mickey}/{mouse}": {
+			"subscribe": {
+				"message": {
+					"$ref": "#/components/messages/Test Output"
+				}
+			},
+			"parameters": {
+				"regionId": {
+					"schema": {
+						"type": "string"
+					},
+					"x-ep-parameter-name": "out1"
+				},
+				"customerId": {
+					"schema": {
+						"type": "string"
+					},
+					"x-ep-parameter-name": "out2"
+				}
+			}
+		},
+		"acmeretail/onlineservices/yet/another/dummy/output/{donald}/{duck}": {
+			"subscribe": {
+				"message": {
+					"$ref": "#/components/messages/Test Output"
+				}
+			},
+			"parameters": {
+				"regionId": {
+					"schema": {
+						"type": "string"
+					},
+					"x-ep-parameter-name": "out1"
+				},
+				"customerId": {
+					"schema": {
+						"type": "string"
+					},
+					"x-ep-parameter-name": "out2"
+				}
+			}
 		}
 	},
 	"asyncapi": "2.5.0",

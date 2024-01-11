@@ -3,40 +3,31 @@ package com.solace.ep.mapper.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor
 public class MapSubFlowEgress {
     
-    String egressFlowName;
+    String messageName;
 
-    @Builder.Default
     List<MapSetVariable> setVariables = new ArrayList<MapSetVariable>();
 
-    @Builder.Default
-    MapValidateSchemaXml validateSchemaXml = null;
+    MapValidateSchemaXml validateSchemaXml = new MapValidateSchemaXml();
 
-    @Builder.Default
-    MapValidateSchemaJson validateSchemaJson = null;
+    MapValidateSchemaJson validateSchemaJson = new MapValidateSchemaJson();
 
-    @Builder
+    MapSolacePublish mapSolacePublish = new MapSolacePublish();
+
     @Data
-    @AllArgsConstructor
     @NoArgsConstructor
     public static class MapSolacePublish {
 
         protected String publishAddress;
 
-        protected String publishDocName;
-
-        protected String publishConfigRef;
-
         protected String publishMessageType;
+
+        //  protected String publishConfigRef;
     }
 }
