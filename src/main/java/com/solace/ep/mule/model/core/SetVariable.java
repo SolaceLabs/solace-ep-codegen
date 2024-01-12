@@ -31,6 +31,7 @@ public class SetVariable extends BaseElement {
 
     public SetVariable( String variableName, String value, String docName ) {
         this( variableName, value );
-        super.setDocNameAndGenerateDocId(docName);
+        this.setDocName(docName);
+//        super.setDocNameAndGenerateDocId(docName);
     }
 }

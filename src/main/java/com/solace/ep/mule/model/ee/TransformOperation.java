@@ -20,6 +20,12 @@ public class TransformOperation extends BaseElement {
     )
     protected TransformMessage transformMessage;
 
+    public TransformOperation( String transformDocName, String transformMessagePayload ) {
+        this.setDocName( docName );
+        this.transformMessage = new TransformMessage();
+        this.transformMessage.setSetPayload( transformMessagePayload );
+    }
+
     @Data
     @NoArgsConstructor
     public static class TransformMessage {

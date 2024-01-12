@@ -7,7 +7,6 @@ import java.io.File;
 import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import com.solace.ep.asyncapi.AsyncApiAccessor;
 import com.solace.ep.asyncapi.tests.TestAsyncApiParsing;
 import com.solace.ep.mapper.asyncapi.AsyncApiToMuleDocMapper;
 import com.solace.ep.mapper.model.MapMuleDoc;
@@ -71,7 +70,7 @@ public class TestMapper {
         XmlMapper xmlMapper = XmlMapperUtils.createXmlMapperForMuleDoc();
 
         try {
-            xmlMapper.writeValue(new File("src/test/resources/test-output/mappedOutput13.xml"), muleDoc);
+            xmlMapper.writeValue(new File("src/test/resources/test-output/mappedOutput19.xml"), muleDoc);
         } catch ( Exception exc ) {
             log.error( exc.getLocalizedMessage() );
             exc.printStackTrace();

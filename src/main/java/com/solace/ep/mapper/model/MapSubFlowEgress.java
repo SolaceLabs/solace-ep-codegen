@@ -1,7 +1,7 @@
 package com.solace.ep.mapper.model;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,24 +10,16 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class MapSubFlowEgress {
     
-    String messageName;
+    protected String messageName;
 
-    List<MapSetVariable> setVariables = new ArrayList<MapSetVariable>();
+    protected Map<String, String> setVariables = new HashMap<>();
 
-    MapValidateSchemaXml validateSchemaXml = new MapValidateSchemaXml();
+    protected String jsonSchemaContent = null;
 
-    MapValidateSchemaJson validateSchemaJson = new MapValidateSchemaJson();
+    protected String xmlSchemaContent = null;
 
-    MapSolacePublish mapSolacePublish = new MapSolacePublish();
+    protected String publishAddress;
 
-    @Data
-    @NoArgsConstructor
-    public static class MapSolacePublish {
+    protected boolean publishToQueue = false;
 
-        protected String publishAddress;
-
-        protected String publishMessageType;
-
-        //  protected String publishConfigRef;
-    }
 }

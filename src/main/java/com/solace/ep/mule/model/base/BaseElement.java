@@ -27,14 +27,6 @@ public class BaseElement {
         // namespace = "http://www.mulesoft.org/schema/mule/documentation",
         // localName = "id"
     )
-    protected String docId = null;
+    protected String docId = UUID.randomUUID().toString();
 
-    public void generateDocId() {
-        this.docId = UUID.randomUUID().toString();
-    }
-
-    public void setDocNameAndGenerateDocId( String docName ) {
-        this.docName = docName;
-        this.generateDocId();
-    }
 }

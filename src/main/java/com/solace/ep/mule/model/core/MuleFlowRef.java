@@ -24,6 +24,7 @@ public class MuleFlowRef extends BaseElement {
 
     public MuleFlowRef( String name, String docName ) {
         this.name = name;
-        super.setDocNameAndGenerateDocId(docName);
+        this.setDocName(docName);
+//        super.setDocNameAndGenerateDocId(docName);
     }
 }

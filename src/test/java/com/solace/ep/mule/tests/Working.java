@@ -30,7 +30,7 @@ public class Working {
         SolaceConfiguration solaceConfiguration = new SolaceConfiguration();
         solaceConfiguration.setName("Solace_PubSub__Connector_Config");
         solaceConfiguration.setDocName("Solace PubSub+ Connector Config");
-        solaceConfiguration.generateDocId();
+//        solaceConfiguration.generateDocId();
 
         solaceConfiguration.setEventPortalConfiguration( new EventPortalConfiguration() );
         solaceConfiguration.getEventPortalConfiguration().setCloudApiToken("eySecretCloudApiTokenhiouqhfeuohwaeoiufhwoefhaefiohw83hh984357348tqyuheakfj");
@@ -49,19 +49,19 @@ public class Working {
 
         GlobalProperty gp1 = new GlobalProperty();
         GlobalProperty gp2 = new GlobalProperty();
-        gp1.setDocNameAndGenerateDocId("Global Property 1");
+        gp1.setDocName("Global Property 1");
         gp1.setPropertyNameValue("epApplicationVersionId", "tt794pd354t");
-        gp2.setDocNameAndGenerateDocId("Global Property 2");
+        gp2.setDocName("Global Property 2");
         gp2.setPropertyNameValue("AnotherProperty", "AnotherValue");
 
         mule.getGlobalProperty().add( gp1 );
         mule.getGlobalProperty().add( gp2 );
 
         MuleFlow flow1 = new MuleFlow();
-        flow1.generateDocId();
+        // flow1.generateDocId();
         flow1.setName("Ingress.SHIPPING.CATALOGUE.queue");
         SolaceQueueListener q1 = new SolaceQueueListener();
-        q1.setDocNameAndGenerateDocId("SHIPPING.CATALOGUE Listener");
+        q1.setDocName("SHIPPING.CATALOGUE Listener");
         q1.setConfigRef("Solace_PubSub__Connector_Config");
         q1.setAddress("SHIPPING.CATALOGUE");
         q1.setAckMode("AUTOMATIC_ON_FLOW_COMPLETION");
@@ -69,7 +69,7 @@ public class Working {
         flow1.setQueueListener(q1);
 
         ValidateJsonSchema val1 = new ValidateJsonSchema();
-        val1.setDocNameAndGenerateDocId("Validate JSON schema");
+        val1.setDocName("Validate JSON schema");
         val1.setSchemaLocation("schemas/my-schema.json");
         val1.setSchemaContents("This is some crazy, crazy content!!!");
 
@@ -77,18 +77,18 @@ public class Working {
         flow1.setFlowRef(new MuleFlowRef("BizLogic.SHIPPING.CATALOG.queue", "Business Logic"));
 
         ValidateXmlSchema vXml = new ValidateXmlSchema();
-        vXml.setDocNameAndGenerateDocId("Validate Xml");
+        vXml.setDocName("Validate Xml");
         vXml.setSchemaLocation("schemas/myschema.xsd");
         vXml.setSchemaContents("Super content!!!!");
 
         flow1.setValidateXmlSchema(vXml);
 
         MuleFlow subFlow1 = new MuleFlow();
-        subFlow1.generateDocId();
+        // subFlow1.generateDocId();
         subFlow1.setName("BizLogic.SHIPPING.CATALOG.queue");
 
         TransformOperation transform1 = new TransformOperation();
-        transform1.setDocNameAndGenerateDocId("Transform Message");
+        transform1.setDocName("Transform Message");
         transform1.setTransformMessage(new TransformMessage());
         transform1.getTransformMessage().setSetPayload("%dw 2.0\noutput application/java\n---\n{\n}");
 
@@ -97,17 +97,17 @@ public class Working {
         subFlow1.setFlowRef(flowRef2);
 
         MuleFlow subFlow2 = new MuleFlow();
-        subFlow2.generateDocId();
+        // subFlow2.generateDocId();
         subFlow2.setName("Egress.ShipmentCreated.topic");
         subFlow2.getSetVariable().add(new SetVariable("someVariable", "value123", "Generate Dynamic Topic"));
         subFlow2.getSetVariable().add(new SetVariable("anotherVariable", "anotherValue456", "Multiple Variables are possible"));
         ValidateXmlSchema vXml2 = new ValidateXmlSchema();
-        vXml2.setDocNameAndGenerateDocId("Validate schema XML");
+        vXml2.setDocName("Validate schema XML");
         ValidateJsonSchema vJson2 = new ValidateJsonSchema();
-        vJson2.setDocNameAndGenerateDocId("Validate schema Json");
+        vJson2.setDocName("Validate schema Json");
         vJson2.setSchemaContents(TestData.getSampleJson1());
         SolacePublish solacePublish2 = new SolacePublish();
-        solacePublish2.setDocNameAndGenerateDocId("Publish Shipment Updated Event");
+        solacePublish2.setDocName("Publish Shipment Updated Event");
         solacePublish2.setAddress("acmeretail/shipping/shipment/created/v1/regionId/statusId/shipmentId");
         solacePublish2.setConfigRef("Solace_PubSub__Connector_Config");
         solacePublish2.setDestinationType("QUEUE");

@@ -3,7 +3,6 @@ package com.solace.ep.mapper.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -15,35 +14,22 @@ public class MapFlow {
 
     protected boolean isDirectConsumer = false;
 
-    protected MapSolaceQueueListener flowQueueListener;
+    // Queue Listener fields
+    protected String queueListenerAddress;
 
-    protected MapSolaceTopicListener flowTopicListener;
+    protected String queueListenerAckMode;
+    // ---
+    
+    // Topic Listener Fields
+    protected List<String> directListenerTopics = new ArrayList<>();
 
-    protected MapValidateSchemaJson flowMapValidateSchemaJson;
+    protected String directListenerContentType;
+    // ---
 
-    protected MapValidateSchemaXml flowMapValidateSchemaXml;
+    protected String directListenerEncoding;
+    
+    protected String jsonSchemaContent = null;
 
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class MapSolaceQueueListener {
+    protected String xmlSchemaContent = null;
 
-        protected String listenerAddress;
-
-        protected String listenerAckMode;
-
-    }
-
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class MapSolaceTopicListener {
-
-        protected List<String> listenerTopics = new ArrayList<>();
-
-        protected String listenerContentType;
-
-        protected String listenerEncoding;
-
-    }
 }

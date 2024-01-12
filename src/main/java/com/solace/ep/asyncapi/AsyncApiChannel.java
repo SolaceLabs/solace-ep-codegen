@@ -116,33 +116,6 @@ public class AsyncApiChannel {
         }
     }
 
-    // public String getOpMessageName( String operationType ) {
-    //     if (
-    //         operationType != AsyncApiFieldConstants.OP_PUBLISH && 
-    //         operationType != AsyncApiFieldConstants.OP_SUBSCRIBE
-    //     ) {
-    //         return null;
-    //     }
-    //     if ( ! asyncApiChannel.has( operationType ) ) {
-    //         return null;
-    //     }
-    //     JsonObject operation = asyncApiChannel.getAsJsonObject(operationType);
-    //     if ( ! operation.has(AsyncApiFieldConstants.OP_MESSAGE) ) {
-    //         return AsyncApiUtils.DEFAULT_MESSAGE_NAME;
-    //     }
-    //     JsonObject message = operation.getAsJsonObject(AsyncApiFieldConstants.OP_MESSAGE);
-    //     if ( message.has(AsyncApiFieldConstants.API_$REF) ) {
-    //         JsonElement refElement = message.get( AsyncApiFieldConstants.API_$REF );
-    //         if ( refElement.isJsonPrimitive() ) {
-    //             String messageName = AsyncApiUtils.getLastElementFromRefString(refElement.getAsString());
-    //             if ( messageName != null && messageName.length() > 0 ) {
-    //                 return messageName;
-    //             }
-    //         }
-    //     }
-    //     return AsyncApiUtils.DEFAULT_MESSAGE_NAME;
-    // }
-
     public String getPublishQueueName() {
 
         JsonObject queueObject = getPublishQueueJsonObject();

@@ -6,11 +6,13 @@ import com.solace.ep.mule.model.base.BaseElement;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.NoArgsConstructor;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor
+@Builder
 public class SolaceConfiguration extends BaseElement {
     
     @JacksonXmlProperty(
@@ -37,15 +39,10 @@ public class SolaceConfiguration extends BaseElement {
         this.eventPortalConfiguration = new EventPortalConfiguration();
     }
 
-    public SolaceConfiguration( String name, String docName ) {
-        solaceConnection = new SolaceConnection();
-        eventPortalConfiguration = new EventPortalConfiguration();
-        this.name = name;
-        this.setDocNameAndGenerateDocId(docName);
-    }
-
     @Data
     @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
     public static class EventPortalConfiguration {
 
         @JacksonXmlProperty(
@@ -62,8 +59,8 @@ public class SolaceConfiguration extends BaseElement {
         )
         protected String cloudOrgPrefix;
 
-        public EventPortalConfiguration( String cloudApiToken ) {
-            this.cloudApiToken = cloudApiToken;
-        }
+        // public EventPortalConfiguration( String cloudApiToken ) {
+        //     this.cloudApiToken = cloudApiToken;
+        // }
     }
 }

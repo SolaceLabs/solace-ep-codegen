@@ -11,15 +11,14 @@ import com.solace.ep.asyncapi.AsyncApiMessage;
 import com.solace.ep.asyncapi.AsyncApiUtils;
 import com.solace.ep.mapper.MapUtils;
 import com.solace.ep.mapper.model.MapFlow;
-import com.solace.ep.mapper.model.MapGlobalProperty;
 import com.solace.ep.mapper.model.MapMuleDoc;
-import com.solace.ep.mapper.model.MapSetVariable;
 import com.solace.ep.mapper.model.MapSubFlowEgress;
-import com.solace.ep.mapper.model.MapValidateSchemaJson;
-import com.solace.ep.mapper.model.MapValidateSchemaXml;
-import com.solace.ep.mapper.model.MapFlow.MapSolaceQueueListener;
-import com.solace.ep.mapper.model.MapFlow.MapSolaceTopicListener;
 
+/**
+ * Class to map from AsyncApi model to intermediate 'Mapper' structures
+ * used to create Mule Flow Docs. This class is specifically created for
+ * AsyncApi instances generated from Solace Event Portal application
+ */
 public class AsyncApiToMuleDocMapper {
     
     public static MapMuleDoc mapMuleDocFromAsyncApi( AsyncApiAccessor asyncApiAccessor ) throws Exception {
@@ -30,11 +29,9 @@ public class AsyncApiToMuleDocMapper {
 
         // Map EP App Version Id to Global Property
         if ( asyncApiAccessor.getInfo().getEpApplicationVersionId() != null ) {
-            mapMuleDoc.getMapGlobalProperties().add( 
-                new MapGlobalProperty(
-                    MapUtils.GLOBAL_NAME_EP_APP_VERSION_ID, 
-                    asyncApiAccessor.getInfo().getEpApplicationVersionId()
-                )
+            mapMuleDoc.getGlobalProperties().put(
+                MapUtils.GLOBAL_NAME_EP_APP_VERSION_ID, 
+                asyncApiAccessor.getInfo().getEpApplicationVersionId()
             );
         }
 
@@ -70,23 +67,22 @@ public class AsyncApiToMuleDocMapper {
             if ( channel.getPublishQueueName() == null ) {
                 // Handle as DIRECT
                 
-                final MapSolaceTopicListener mapToTopicListener = new MapSolaceTopicListener();
+                mapToFlow.setDirectConsumer(true);
+                mapToFlow.setFlowDesignation("DirectSubscriber");
+
                 if ( channel.getPublishTopicSubscriptions() != null && ! channel.getPublishTopicSubscriptions().isEmpty() )  {
-                    mapToTopicListener.setListenerTopics( channel.getPublishTopicSubscriptions() );
+                    mapToFlow.setDirectListenerTopics(channel.getPublishTopicSubscriptions());
                 } else {
                     String singleTopic = channelName.replaceAll("\\{" + AsyncApiUtils.REGEX_SOLACE_TOPIC_CHAR_CLASS + "*\\}","*");
-                    mapToTopicListener.setListenerTopics(
+                    mapToFlow.setDirectListenerTopics(
                         Arrays.asList( singleTopic )
                     );
                 }
-                mapToTopicListener.setListenerContentType(channel.getPublishOpMessage().getContentType());
+                mapToFlow.setDirectListenerContentType(channel.getPublishOpMessage().getContentType());
 
-                mapToFlow.setFlowTopicListener(mapToTopicListener);
-                mapToFlow.setDirectConsumer(true);
-                mapToFlow.setFlowDesignation("DirectSubscriber");
+
                 if ( channel.getPublishOpMessage().getContentType().toLowerCase().contains( "json" ) ) {
-                    MapValidateSchemaJson validateJson = new MapValidateSchemaJson( channel.getPublishOpMessage().getPayloadAsString() );
-                    mapToFlow.setFlowMapValidateSchemaJson(validateJson);
+                    mapToFlow.setJsonSchemaContent(channel.getPublishOpMessage().getPayloadAsString());
                 }
 
             } else {
@@ -98,7 +94,7 @@ public class AsyncApiToMuleDocMapper {
                 if ( inputQueueMap.get( channel.getPublishQueueName() ).booleanValue() == true ) {
                     // This is a duplicate queue in the spec, check to see if it has already been handled
                     for ( MapFlow checkDup : mapMuleDoc.getMapFlows() ) {
-                        if ( checkDup.getFlowQueueListener().getListenerAddress().contentEquals(channel.getPublishQueueName()) ) {
+                        if ( checkDup.getQueueListenerAddress().contentEquals(channel.getPublishQueueName()) ) {
                             duplicateQueue = true;
                             break;
                         }
@@ -109,23 +105,20 @@ public class AsyncApiToMuleDocMapper {
                 }
 
                 final String queueName = channel.getPublishQueueName();
-                final MapSolaceQueueListener mapToQueueListener = new MapSolaceQueueListener();
-                mapToQueueListener.setListenerAddress(queueName);
-                mapToQueueListener.setListenerAckMode( MapUtils.DEFAULT_ACKMODE );
-
-                mapToFlow.setFlowQueueListener(mapToQueueListener);
                 mapToFlow.setFlowDesignation(queueName);
                 mapToFlow.setDirectConsumer(false);
+
+                mapToFlow.setQueueListenerAddress(queueName);
+                mapToFlow.setQueueListenerAckMode( MapUtils.DEFAULT_ACKMODE );
+
                 if ( 
                     inputQueueMap.get( channel.getPublishQueueName() ).booleanValue() == false &&
                     channel.getPublishOpMessage().getContentType().toLowerCase().contains( "json" ) 
                 ) 
                 {
-                    MapValidateSchemaJson validateJson = new MapValidateSchemaJson( channel.getPublishOpMessage().getPayloadAsString() );
-                    mapToFlow.setFlowMapValidateSchemaJson(validateJson);
+                    mapToFlow.setJsonSchemaContent(channel.getPublishOpMessage().getPayloadAsString());
                 } else {
-                    MapValidateSchemaXml validateXml = new MapValidateSchemaXml();
-                    mapToFlow.setFlowMapValidateSchemaXml(validateXml);
+                    mapToFlow.setXmlSchemaContent("");
                 }
             }
             mapMuleDoc.getMapFlows().add(mapToFlow);
@@ -133,7 +126,6 @@ public class AsyncApiToMuleDocMapper {
 
         // Create one egress sub-flow for each output channel
         // Output channel has subscribe operation
-
         for ( Map.Entry<String, JsonElement> channelElement : asyncApiAccessor.getChannels().entrySet() ) {
             AsyncApiChannel channel = new AsyncApiChannel(channelElement.getValue().getAsJsonObject(), asyncApiAccessor);
             String channelName = channelElement.getKey();
@@ -149,19 +141,15 @@ public class AsyncApiToMuleDocMapper {
             mapToSubFlowEgress.setMessageName( messageName );
 
             for ( String parameter : channel.getParameters() ) {
-                mapToSubFlowEgress.getSetVariables().add(
-                    new MapSetVariable( 
-                        parameter, 
-                        "" )
-                );
+                mapToSubFlowEgress.getSetVariables().put( parameter, "" );
             }
 
             String jsonPayload = channel.getSubscribeOpMessage().getPayloadAsString();
             if ( jsonPayload != null ) {
-                mapToSubFlowEgress.getValidateSchemaJson().setValidateSchemaContents(jsonPayload);
+                mapToSubFlowEgress.setJsonSchemaContent(jsonPayload);
             }
 
-            mapToSubFlowEgress.getMapSolacePublish().setPublishAddress(
+            mapToSubFlowEgress.setPublishAddress(
                 channelName.
                     replace("/{", "/").
                     replace("}/", "/").
@@ -170,7 +158,6 @@ public class AsyncApiToMuleDocMapper {
 
             mapMuleDoc.getMapEgressSubFlows().add(mapToSubFlowEgress);
         }
-
         return mapMuleDoc;
     }
 
@@ -179,5 +166,4 @@ public class AsyncApiToMuleDocMapper {
             AsyncApiAccessor.parseAsyncApi(asyncApiAsString)
         ) );
     }
-
 }
