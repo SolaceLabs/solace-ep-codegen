@@ -10,11 +10,11 @@ import java.nio.file.Paths;
 import java.util.List;
 
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import com.solace.ep.mapper.MuleDocMapper;
-import com.solace.ep.mapper.asyncapi.AsyncApiToMuleDocMapper;
-import com.solace.ep.mapper.model.MapMuleDoc;
-import com.solace.ep.mule.model.core.MuleDoc;
-import com.solace.ep.mule.model.util.XmlMapperUtils;
+import com.solace.ep.muleflow.mapper.MuleDocMapper;
+import com.solace.ep.muleflow.mapper.asyncapi.AsyncApiToMuleDocMapper;
+import com.solace.ep.muleflow.mapper.model.MapMuleDoc;
+import com.solace.ep.muleflow.mule.model.core.MuleDoc;
+import com.solace.ep.muleflow.mule.util.XmlMapperUtils;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -69,7 +69,7 @@ public class MuleFlowGenerator {
         }
     }
 
-    public static MuleDoc createMuleDocFromAsyncApi(
+    private static MuleDoc createMuleDocFromAsyncApi(
                             String inputAsyncApiString ) throws Exception {
 
         MapMuleDoc mapMuleDoc = AsyncApiToMuleDocMapper.mapMuleDocFromAsyncApi(inputAsyncApiString);

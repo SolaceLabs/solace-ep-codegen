@@ -5,23 +5,23 @@ import java.io.File;
 import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import com.solace.ep.mule.model.base.KeyValuePair;
-import com.solace.ep.mule.model.core.GlobalProperty;
-import com.solace.ep.mule.model.core.MuleDoc;
-import com.solace.ep.mule.model.core.MuleFlow;
-import com.solace.ep.mule.model.core.MuleFlowRef;
-import com.solace.ep.mule.model.core.SetVariable;
-import com.solace.ep.mule.model.ee.TransformOperation;
-import com.solace.ep.mule.model.ee.TransformOperation.TransformMessage;
-import com.solace.ep.mule.model.json.ValidateJsonSchema;
-import com.solace.ep.mule.model.solace.SolaceConfiguration;
-import com.solace.ep.mule.model.solace.SolaceConfiguration.EventPortalConfiguration;
-import com.solace.ep.mule.model.solace.SolaceConnection;
-import com.solace.ep.mule.model.solace.SolaceMessage;
-import com.solace.ep.mule.model.solace.SolacePublish;
-import com.solace.ep.mule.model.solace.SolaceQueueListener;
-import com.solace.ep.mule.model.util.XmlMapperUtils;
-import com.solace.ep.mule.model.xml_module.ValidateXmlSchema;
+import com.solace.ep.muleflow.mule.model.base.KeyValuePair;
+import com.solace.ep.muleflow.mule.model.core.GlobalProperty;
+import com.solace.ep.muleflow.mule.model.core.MuleDoc;
+import com.solace.ep.muleflow.mule.model.core.MuleFlow;
+import com.solace.ep.muleflow.mule.model.core.MuleFlowRef;
+import com.solace.ep.muleflow.mule.model.core.SetVariable;
+import com.solace.ep.muleflow.mule.model.ee.TransformOperation;
+import com.solace.ep.muleflow.mule.model.ee.TransformOperation.TransformMessage;
+import com.solace.ep.muleflow.mule.model.json.ValidateJsonSchema;
+import com.solace.ep.muleflow.mule.model.solace.SolaceConfiguration;
+import com.solace.ep.muleflow.mule.model.solace.SolaceConnection;
+import com.solace.ep.muleflow.mule.model.solace.SolaceMessage;
+import com.solace.ep.muleflow.mule.model.solace.SolacePublish;
+import com.solace.ep.muleflow.mule.model.solace.SolaceQueueListener;
+import com.solace.ep.muleflow.mule.model.solace.SolaceConfiguration.EventPortalConfiguration;
+import com.solace.ep.muleflow.mule.model.xml_module.ValidateXmlSchema;
+import com.solace.ep.muleflow.mule.util.XmlMapperUtils;
 
 public class Working {
     
