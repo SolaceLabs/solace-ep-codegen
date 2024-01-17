@@ -23,9 +23,12 @@ import com.solace.ep.mule.model.solace.SolaceTopicListener;
 import com.solace.ep.mule.model.solace.SolaceConfiguration.EventPortalConfiguration;
 import com.solace.ep.mule.model.xml_module.ValidateXmlSchema;
 
+import lombok.extern.slf4j.Slf4j;
+
 /** 
  * 'MuleDocMapper' class 
  */
+@Slf4j
 public class MuleDocMapper {
     
     /**
@@ -45,7 +48,7 @@ public class MuleDocMapper {
     private Map<String, Integer> countByFlowDesignation = new HashMap<>();
 
     /**
-     * Default constructor
+     * Default Constructor
      */
     public MuleDocMapper() {
         initialize();
@@ -68,6 +71,7 @@ public class MuleDocMapper {
 
         // In case of instance re-use
         initialize();
+        log.info("BEGIN Mapping from MapMuleDoc --> Mule Flow");
 
         // Create solace:config block; null config is handled
         muleDoc.setSolaceConfiguration( createSolaceConfiguration( mapMuleDoc.getMapConfig() ) );
@@ -90,6 +94,7 @@ public class MuleDocMapper {
             addMuleSubflowEgress( mapFromSubFlowEgress) ;
         }
 
+        log.info("DONE Mapping from MapMuleDoc --> Mule Flow");
         return muleDoc;
     }
 
@@ -181,6 +186,8 @@ public class MuleDocMapper {
 
         // Add a corresponding BizLogic sub-flow to the MuleDoc
         addMuleSubFlowBizLogic( bizLogicFlowName );
+
+        log.info("Added ingress flow '{}' to Mule Doc", muleFlow.getName());
     }
 
     public void addMuleSubFlowBizLogic( String bizLogicFlowName ) {
@@ -191,6 +198,8 @@ public class MuleDocMapper {
         subFlowBizLogic.setTransform( createDefaultTransformMessageOperation() );
         addFlowRef(subFlowBizLogic, bizLogicFlowName, MapUtils.FLOW_REF_DOC_NAME_TO_EGRESS);
         muleDoc.getSubFlow().add(subFlowBizLogic);
+
+        log.info("Added BizLogic sub-flow '{}' to Mule Doc", subFlowBizLogic.getName());
     }
 
     public void addMuleSubflowEgress( MapSubFlowEgress mapFromSubFlow ) {
@@ -214,10 +223,12 @@ public class MuleDocMapper {
         addSolacePublish(subFlowEgress, mapFromSubFlow );
 
         muleDoc.getSubFlow().add(subFlowEgress);
+        log.info("Added egress sub-flow '{}' to MuleDoc", subFlowEgress.getName());
     }
 
     public void addSolacePublish( MuleFlow subFlow, MapSubFlowEgress mapFromSubFlow ) {
         if ( mapFromSubFlow.getPublishAddress() == null || mapFromSubFlow.getPublishAddress().length() == 0 ) {
+            log.warn("No publish addresses found for egress sub-flow '{}'", subFlow.getName());
             return;
         }
 
@@ -235,6 +246,7 @@ public class MuleDocMapper {
         solacePublish.setMessage( new SolaceMessage( messageType ) );
 
         subFlow.setPublish(solacePublish);
+        log.debug("Added solace:publish to egress sub-flow '{}'", subFlow.getName());
     }
 
     /**
@@ -244,10 +256,11 @@ public class MuleDocMapper {
      * @param mapFromSetVariable
      */
     public static void addSetVariables( MuleFlow muleFlow, Map<String, String> mapFromSetVariables ) {
-
         if ( mapFromSetVariables == null ) {
+            log.debug("No Set Variable entries found");
             return;
         }
+        int setVariableCount = 0;
         for (Map.Entry<String, String> v : mapFromSetVariables.entrySet() ) {
             muleFlow.getSetVariable().add(
                 new SetVariable(
@@ -256,7 +269,9 @@ public class MuleDocMapper {
                     MapUtils.getSetVariableDocNameForTopicParameter( v.getKey() )
                 )
             );
+            setVariableCount++;
         }
+        log.info("Mapped {} Set Variable entries to Mule Flow '{}'", setVariableCount, muleFlow.getName());
     }
 
     /**
@@ -278,6 +293,7 @@ public class MuleDocMapper {
      */
     public static void addValidateJsonSchema( MuleFlow muleFlow, String jsonSchemaContents ) {
         if (jsonSchemaContents == null) {
+            log.debug("jsonSchemaContents is empty for Mule Flow '{}' -- skipping", muleFlow.getName());
             return;
         }
 
@@ -287,6 +303,7 @@ public class MuleDocMapper {
             validateJsonSchema.setSchemaContents( jsonSchemaContents );
         }
         muleFlow.setValidateJsonSchema(validateJsonSchema);
+        log.debug("Added xml:validate-schema for Mule Flow '{}'", muleFlow.getName());
     }
 
     /**
@@ -297,6 +314,7 @@ public class MuleDocMapper {
      */
     public static void addValidateXmlSchema( MuleFlow muleFlow, String xmlSchemaContents ) {
         if (xmlSchemaContents == null) {
+            log.debug("xmlSchemaContents is empty for Mule Flow '{}' -- skipping", muleFlow.getName());
             return;
         }
 
@@ -306,6 +324,7 @@ public class MuleDocMapper {
             validateXmlSchema.setSchemaContents( xmlSchemaContents );
         }
         muleFlow.setValidateXmlSchema(validateXmlSchema);
+        log.debug("Added xml:validate-schema for Mule Flow '{}'", muleFlow.getName());
     }
 
     /**
@@ -316,6 +335,7 @@ public class MuleDocMapper {
      */
     public static void addFlowRef( MuleFlow muleFlow, String refName, String refDocName ) {
         muleFlow.setFlowRef( new MuleFlowRef( refName, refDocName ) );
+        log.debug("Added MuleFlowRef: {} to MuleFlow '{}'", refName, muleFlow.getName());
     }
 
     /**
@@ -325,8 +345,10 @@ public class MuleDocMapper {
      */
     public void addGlobalProperties( Map<String, String> mapFromGlobalProperties ) {
         if ( mapFromGlobalProperties == null ) {
+            log.debug("No Global Properties found");
             return;
         }
+        int globalPropertyCount = 0;
         for ( Map.Entry<String, String> gp : mapFromGlobalProperties.entrySet() ) {
             muleDoc.getGlobalProperty().add( 
                 new GlobalProperty(
@@ -335,7 +357,9 @@ public class MuleDocMapper {
                     MapUtils.GLOBAL_PROPERTY_DOC_NAME
                 )
             );
+            globalPropertyCount++;
         }
+        log.info("Mapped {} Global Properties to MuleDoc", globalPropertyCount);
     }
 
     /**
@@ -346,27 +370,33 @@ public class MuleDocMapper {
     public static SolaceConfiguration createSolaceConfiguration( MapConfig mapFromConfig ) {
         if (mapFromConfig == null) {
             mapFromConfig = MapUtils.getDefaultSolaceConfiguration();
+            log.info("Solace Configuration not found in input - using Default");
         }
 
-        return
-        SolaceConfiguration.builder().
-            solaceConnection(
-                SolaceConnection.builder().
-                    brokerHost( mapFromConfig.getConnectBrokerHost() ).
-                    msgVpn(mapFromConfig.getConnectMsgVpn()).
-                    clientUserName(mapFromConfig.getConnectClientUserName()).
-                    password(mapFromConfig.getConnectPassword()).
-                    build()
-            ).
-            eventPortalConfiguration(
-                EventPortalConfiguration.builder().
-                    cloudApiToken( 
-                        mapFromConfig.getEpCloudApiToken() != null && mapFromConfig.getEpCloudApiToken().length() > 0 ?
-                        mapFromConfig.getEpCloudApiToken() :
-                        null
-                     ).build()
-            )
-            .build();
+        SolaceConfiguration solaceConfiguration = 
+            SolaceConfiguration.builder().
+                solaceConnection(
+                    SolaceConnection.builder().
+                        brokerHost( mapFromConfig.getConnectBrokerHost() ).
+                        msgVpn(mapFromConfig.getConnectMsgVpn()).
+                        clientUserName(mapFromConfig.getConnectClientUserName()).
+                        password(mapFromConfig.getConnectPassword()).
+                        build()
+                ).
+                eventPortalConfiguration(
+                    EventPortalConfiguration.builder().
+                        cloudApiToken( 
+                            mapFromConfig.getEpCloudApiToken() != null && mapFromConfig.getEpCloudApiToken().length() > 0 ?
+                            mapFromConfig.getEpCloudApiToken() :
+                            null
+                        ).build()
+                )
+                .build();
+        solaceConfiguration.setName( MapUtils.DEFAULT_SOLACE_CONFIG_NAME );
+        solaceConfiguration.setDocName( MapUtils.DEFAULT_SOLACE_CONFIG_DOC_NAME );
+
+        log.debug("Mapped MapConfig --> SolaceConfiguration");
+        return solaceConfiguration;
     }
 
     /**

@@ -52,6 +52,12 @@ public class MapUtils {
                     TOPIC = "topic",
                     QUEUE = "queue";
 
+    /**
+     * Get Ingress flow name attribute from Designation (queueName or 'Direct Topic') and isDirectConsumer flag
+     * @param designation
+     * @param isDirectConsumer
+     * @return
+     */
     public static String getFlowNameFromDesignation( String designation, boolean isDirectConsumer ) {
         if ( designation == null || designation.length() == 0 ) {
             designation = "UNKNOWN";
@@ -59,6 +65,11 @@ public class MapUtils {
         return String.format( PATTERN_MULE_FLOW_NAME, designation, ( isDirectConsumer ? TOPIC : QUEUE ) );
     }
 
+    /**
+     * Get Ingress flow doc:name attribute from Designation (queueName or 'Direct Topic')
+     * @param designation
+     * @return
+     */
     public static String getFlowDocNameFromDesignation( String designation ) {
         if ( designation == null || designation.length() == 0 ) {
             designation = "UNKNOWN";
@@ -66,6 +77,12 @@ public class MapUtils {
         return String.format(PATTERN_MULE_FLOW_DOC_NAME, designation);
     }
 
+    /**
+     * Get BizLogic sub-flow name attribute from Designation (queueName or 'Direct Topic') and isDirectConsumer flag
+     * @param designation
+     * @param isDirectConsumer
+     * @return
+     */
     public static String getBizLogicSubFlowNameFromDesignation( String designation, boolean isDirectConsumer ) {
         if ( designation == null || designation.length() == 0 ) {
             designation = "UNKNOWN";
@@ -73,10 +90,18 @@ public class MapUtils {
         return String.format(PATTERN_BIZLOGIC_SUBFLOW_NAME, designation, ( isDirectConsumer ? TOPIC : QUEUE ) );
     }
 
+    /**
+     * Return static string defining stub transformation business logic
+     * @return
+     */
     public static String getTransformMessageStub() {
         return TRANSFORM_MESSAGE_BIZLOGIC_STUB;
     }
 
+    /** 
+     * Get Egress sub-flow name for a messageName
+     * Assumes that the messageName is unique in the constructed MuleDoc
+     */
     public static String getEgressSubFlowNameFromMessageName( String messageName ) {
         if ( messageName == null || messageName.length() == 0 ) {
             messageName = "OutputMessage";
@@ -84,6 +109,11 @@ public class MapUtils {
         return String.format(PATTERN_EGRESS_SUBFLOW_NAME, messageName.replace(" ", ""), TOPIC);
     }
 
+    /**
+     * Get Egress sub-flow doc:name for a message
+     * @param messageName
+     * @return
+     */
     public static String getEgressSubFlowDocNameFromMessageName( String messageName ) {
         if ( messageName == null || messageName.length() == 0 ) {
             messageName = "OutputMessage";
@@ -91,10 +121,19 @@ public class MapUtils {
         return String.format(PATTERN_EGRESS_SUBFLOW_DOC_NAME, messageName );
     }
 
+    /**
+     * Get set-variable doc:name attribute value for a topic parameter
+     * @param parameter
+     * @return
+     */
     public static String getSetVariableDocNameForTopicParameter( String parameter ) {
         return String.format( PATTERN_SETVARIABLE_DOC_NAME_FOR_TOPIC_PARAMETER, parameter );
     }
 
+    /** 
+     * Build and return default MapConfig object for Solace broker
+     * @return
+     */
     public static MapConfig getDefaultSolaceConfiguration() {
         return MapConfig.builder()
             .configName(DEFAULT_CONFIG_REF)
@@ -106,6 +145,12 @@ public class MapUtils {
             .build();
     }
     
+    /**
+     * Get MD5 Digest of input string
+     * Use to compare/sort Schema content
+     * @param value
+     * @return
+     */
     public static byte[] getMd5Digest( String value ) {
 
         byte[] digest = null;
@@ -118,6 +163,13 @@ public class MapUtils {
         return digest;
     }
 
+    /**
+     * Compare byte arrays
+     * Use to compare MD5 hashes associated with schema content
+     * @param v1
+     * @param v2
+     * @return
+     */
     public static boolean md5DigestMatches( byte[] v1, byte[] v2 ) {
 
         if ( v1.length != v2.length ) {

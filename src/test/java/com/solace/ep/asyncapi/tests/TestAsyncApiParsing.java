@@ -256,4 +256,20 @@ public class TestAsyncApiParsing {
         return data.toString();
     }
 
+    public static String getAsyncApi( String filePath ) {
+
+        Path path = Paths.get(filePath);
+        StringBuilder data = new StringBuilder();
+        try {
+            List<String> allLines = Files.readAllLines(path, StandardCharsets.UTF_8);
+            for ( String s : allLines ) {
+                data.append(s);
+                data.append('\n');
+            }
+        } catch (Exception exc) {
+            log.error( exc.getLocalizedMessage() );
+            return null;
+        }
+        return data.toString();
+    }
 }

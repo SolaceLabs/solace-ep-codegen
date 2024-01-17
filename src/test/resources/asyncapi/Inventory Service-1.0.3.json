@@ -1,0 +1,283 @@
+{
+    "components": {
+        "schemas": {},
+        "messages": {
+            "Order Updated": {
+                "x-ep-event-id": "dew5s3ylyx2",
+                "x-ep-event-version-displayname": "",
+                "description": "As the order moves through the fulfillment process, each service add to this topic to show current state.",
+                "x-ep-application-domain-id": "tqq4yat791e",
+                "schemaFormat": "application/vnd.apache.avro+json;version=1.9.0",
+                "x-ep-event-state-name": "RELEASED",
+                "x-ep-shared": "true",
+                "x-ep-application-domain-name": "OnlineServices",
+                "x-ep-event-version-id": "apsc3dx4iv6",
+                "payload": {
+                    "namespace": "io.confluent.examples.streams.avro.microservices",
+                    "name": "Order",
+                    "type": "record",
+                    "fields": [
+                        {
+                            "name": "id",
+                            "type": "string"
+                        },
+                        {
+                            "name": "customerId",
+                            "type": "long"
+                        },
+                        {
+                            "name": "state",
+                            "type": "OrderState"
+                        },
+                        {
+                            "name": "product",
+                            "type": "enum",
+                            "symbols": [
+                                "JUMPERS",
+                                "UNDERPANTS",
+                                "STOCKINGS"
+                            ]
+                        },
+                        {
+                            "name": "quantity",
+                            "type": "int"
+                        },
+                        {
+                            "name": "price",
+                            "type": "double"
+                        },
+                        {
+                            "name": "OrderState",
+                            "type": "enum",
+                            "symbols": [
+                                "CREATED",
+                                "VALIDATED",
+                                "FAILED",
+                                "SHIPPED"
+                            ]
+                        }
+                    ]
+                },
+                "x-ep-event-version": "1.0.2",
+                "x-ep-event-name": "Order Updated",
+                "contentType": "application/json",
+                "x-ep-event-state-id": "2"
+            },
+            "Warehouse Inventory Update": {
+                "x-ep-event-id": "crgeanif8re",
+                "x-ep-event-version-displayname": "",
+                "description": "Current stock levels for items in the warehouse",
+                "x-ep-application-domain-id": "rn829b4pj26",
+                "schemaFormat": "application/vnd.apache.avro+json;version=1.9.0",
+                "x-ep-event-state-name": "RELEASED",
+                "x-ep-shared": "true",
+                "x-ep-application-domain-name": "Fulfillment",
+                "x-ep-event-version-id": "m4rcl5sfrm7",
+                "payload": {
+                    "namespace": "io.confluent.examples.streams.avro.microservices",
+                    "name": "Inventory",
+                    "type": "record",
+                    "fields": [
+                        {
+                            "name": "id",
+                            "type": "string"
+                        },
+                        {
+                            "name": "product",
+                            "type": "enum",
+                            "symbols": [
+                                "JUMPERS",
+                                "UNDERPANTS",
+                                "STOCKINGS"
+                            ]
+                        },
+                        {
+                            "name": "quantity",
+                            "type": "int"
+                        }
+                    ]
+                },
+                "x-ep-event-version": "2.0.0",
+                "x-ep-event-name": "Warehouse Inventory Update",
+                "contentType": "application/json",
+                "x-ep-event-state-id": "2"
+            },
+            "Order Created": {
+                "x-ep-event-id": "iuzsbviyvuh",
+                "x-ep-event-version-displayname": "",
+                "description": "Created after an order is validated as correct and passes logic checks",
+                "x-ep-application-domain-id": "tqq4yat791e",
+                "schemaFormat": "application/vnd.apache.avro+json;version=1.9.0",
+                "x-ep-event-state-name": "RELEASED",
+                "x-ep-shared": "true",
+                "x-ep-application-domain-name": "OnlineServices",
+                "x-ep-event-version-id": "v99l5ufh1by",
+                "payload": {
+                    "namespace": "io.confluent.examples.streams.avro.microservices",
+                    "name": "Order",
+                    "type": "record",
+                    "fields": [
+                        {
+                            "name": "id",
+                            "type": "string"
+                        },
+                        {
+                            "name": "customerId",
+                            "type": "long"
+                        },
+                        {
+                            "name": "state",
+                            "type": "OrderState"
+                        },
+                        {
+                            "name": "product",
+                            "type": "enum",
+                            "symbols": [
+                                "JUMPERS",
+                                "UNDERPANTS",
+                                "STOCKINGS"
+                            ]
+                        },
+                        {
+                            "name": "quantity",
+                            "type": "int"
+                        },
+                        {
+                            "name": "price",
+                            "type": "double"
+                        },
+                        {
+                            "name": "OrderState",
+                            "type": "enum",
+                            "symbols": [
+                                "CREATED",
+                                "VALIDATED",
+                                "FAILED",
+                                "SHIPPED"
+                            ]
+                        }
+                    ]
+                },
+                "x-ep-event-version": "2.0.2",
+                "x-ep-event-name": "Order Created",
+                "contentType": "application/json",
+                "x-ep-event-state-id": "2"
+            }
+        }
+    },
+    "channels": {
+        "acmeretail/onlineservices/order/updated/v1/{regionId}/{orderId}": {
+            "subscribe": {
+                "message": {
+                    "$ref": "#/components/messages/Order Updated"
+                }
+            },
+            "parameters": {
+                "regionId": {
+                    "schema": {
+                        "type": "string"
+                    },
+                    "x-ep-parameter-name": "regionId"
+                },
+                "orderId": {
+                    "schema": {
+                        "type": "string"
+                    },
+                    "x-ep-parameter-name": "orderId"
+                }
+            }
+        },
+        "acmeretail/fulfillment/inventory/update/v2/{productTypeId}/{productId}": {
+            "subscribe": {
+                "message": {
+                    "$ref": "#/components/messages/Warehouse Inventory Update"
+                }
+            },
+            "publish": {
+                "bindings": {
+                    "solace": {
+                        "destinations": [
+                            {
+                                "destinationType": "queue",
+                                "queue": {
+                                    "name": "INVENTORY.INVENTORY",
+                                    "topicSubscriptions": [
+                                        "acmeretail/fulfillment/inventory/update/v2/*/*"
+                                    ]
+                                }
+                            }
+                        ],
+                        "bindingVersion": "0.3.0"
+                    }
+                },
+                "message": {
+                    "$ref": "#/components/messages/Warehouse Inventory Update"
+                }
+            },
+            "parameters": {
+                "productId": {
+                    "schema": {
+                        "type": "string"
+                    },
+                    "x-ep-parameter-name": "productId"
+                },
+                "productTypeId": {
+                    "schema": {
+                        "type": "string"
+                    },
+                    "x-ep-parameter-name": "productTypeId"
+                }
+            }
+        },
+        "acmeretail/onlineservices/order/created/v2/{regionId}/{orderId}": {
+            "publish": {
+                "bindings": {
+                    "solace": {
+                        "destinations": [
+                            {
+                                "destinationType": "queue",
+                                "queue": {
+                                    "name": "INVENTORY.ORDERS",
+                                    "topicSubscriptions": [
+                                        "acmeretail/onlineservices/order/created/v2/*/*"
+                                    ]
+                                }
+                            }
+                        ],
+                        "bindingVersion": "0.3.0"
+                    }
+                },
+                "message": {
+                    "$ref": "#/components/messages/Order Created"
+                }
+            },
+            "parameters": {
+                "regionId": {
+                    "schema": {
+                        "type": "string"
+                    },
+                    "x-ep-parameter-name": "regionId"
+                },
+                "orderId": {
+                    "schema": {
+                        "type": "string"
+                    },
+                    "x-ep-parameter-name": "orderId"
+                }
+            }
+        }
+    },
+    "asyncapi": "2.5.0",
+    "info": {
+        "x-ep-application-version": "1.0.3",
+        "x-ep-application-version-id": "g4610dqaf77",
+        "x-ep-application-id": "ghbqwefzgag",
+        "description": "This service validates incoming orders to ensure there is sufficient stock to fulfill them. This validation process considers both the inventory in the warehouse as well as a set \"reserved\" items which is maintained by this service. Reserved items are those that are in the warehouse, but have been allocated to a pending order.\n\n[GitHub](https://github.com/confluentinc/solace-streams-examples/blob/5.0.0-post/src/main/java/io/confluent/examples/streams/microservices/InventoryService.java)",
+        "x-ep-state-name": "RELEASED",
+        "title": "Inventory Service",
+        "x-ep-application-domain-id": "rn829b4pj26",
+        "version": "1.0.3",
+        "x-ep-state-id": "2",
+        "x-ep-application-domain-name": "Fulfillment"
+    }
+}
