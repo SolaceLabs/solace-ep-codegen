@@ -18,9 +18,20 @@ import com.solace.ep.muleflow.mule.util.XmlMapperUtils;
 
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Class to convert AsyncApi for Solace Applications generated from
+ * Event Portal to Mule Flow XML for import into AnyPoint Studio
+ */
 @Slf4j
 public class MuleFlowGenerator {
     
+    /**
+     * Reads AsyncApi from storage and writes Mule Flow XML to storage
+     * Parameters are paths to input/output files.
+     * @param inputAsyncApiFile
+     * @param outputMuleXmlFile
+     * @throws Exception
+     */
     public static void writeMuleXmlFileFromAsyncApiFile( String inputAsyncApiFile, String outputMuleXmlFile ) 
                     throws Exception {
 
@@ -34,6 +45,14 @@ public class MuleFlowGenerator {
         }
     }
 
+    /**
+     * Accepts AsyncApi as String parameter and writes Mule Flow XML to storage
+     * Parameter for AsyncApi is the content as String. Parameter for Mule XML
+     * is path to output file.
+     * @param inputAsyncApiString
+     * @param outputMuleXmlFile
+     * @throws Exception
+     */
     public static void writeMuleXmlFileFromAsyncApiString( String inputAsyncApiString, String outputMuleXmlFile )
                     throws Exception {
 
@@ -46,6 +65,12 @@ public class MuleFlowGenerator {
         }
     }
 
+    /**
+     * Reads AsyncApi from Storage and returns serialized Mule Flow XML content as String.
+     * Parameter for AsyncApi is file path.
+     * @param inputAsyncApiFile
+     * @return
+     */
     public static String getMuleDocXmlFromAsyncApiFile( String inputAsyncApiFile ) {
 
         try {
@@ -58,6 +83,12 @@ public class MuleFlowGenerator {
         }
     }
 
+    /**
+     * Accepts AsyncApi as String parameter and returns serialized Mule Flow XML
+     * content as String. Parameter for AsyncApi is the content as String.
+     * @param inputAsyncApiString
+     * @return
+     */
     public static String getMuleDocXmlFromAsyncApiString( String inputAsyncApiString ) {
 
         try {
@@ -90,6 +121,12 @@ public class MuleFlowGenerator {
         return xmlMapper.writeValueAsString( muleDoc );
     }
 
+    /**
+     * Self-Explanatory
+     * @param filePath
+     * @return
+     * @throws Exception
+     */
     public static String getFileAsString( String filePath ) throws Exception {
 
         StringBuilder data = new StringBuilder();
