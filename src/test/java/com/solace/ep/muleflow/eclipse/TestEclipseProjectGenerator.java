@@ -3,8 +3,9 @@ package com.solace.ep.muleflow.eclipse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-import java.io.File;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import org.junit.jupiter.api.Test;
 
@@ -16,33 +17,36 @@ import lombok.extern.slf4j.Slf4j;
 public class TestEclipseProjectGenerator {
     
     private static final String INVENTORY_SERVICE = "src/test/resources/asyncapi/Inventory Service-1.0.3.json";
-    private static final String CATALOGUE_SERVICE = "src/test/resources/asyncapi/Catalogue Services-1.1.1.json";
+    // private static final String CATALOGUE_SERVICE = "src/test/resources/asyncapi/Catalogue Services-1.1.1.json";
 
     /**
      * Test ability to generate a new project using EclipseProjectGenerator
      */
     @Test
-    void createStructure1() {
+    public void testCreateStructure1() {
 
         EclipseProjectGenerator epg = new EclipseProjectGenerator();
+        String newProject = "";
 
         try {
-            epg.createProjectStructure("Test-new-project");
+            newProject = epg.createProjectStructure("Test-new-project");
         } catch (Exception e) {
             log.error(e.getMessage());
             fail(e.getMessage());
             return;
         }
 
-        log.info("Success - createStructure1");
-
+        Path newProjectPath = Paths.get( newProject );
+        assertTrue( Files.exists( newProjectPath ) );
+        
+        // log.info("Success - createStructure1");
     }
 
     /**
      * Test createMuleProject method - Creates project structure in tmp directory
      */
     @Test 
-    void createMuleProject() {
+    public void testCreateMuleProject() {
 
         final String 
             groupId = "com.solace.ep.awesome",
@@ -68,9 +72,10 @@ public class TestEclipseProjectGenerator {
             return;
         }
 
+        String generatedArchive = "NADA";
         EclipseProjectGenerator epg = new EclipseProjectGenerator();
         try {
-            epg.createMuleProject(groupId, artifactId, version, xmlString);
+            generatedArchive = epg.createMuleProject(groupId, artifactId, version, xmlString);
         } catch (Exception e) {
             log.error(e.getMessage());
             fail(e.getMessage());
@@ -78,12 +83,12 @@ public class TestEclipseProjectGenerator {
         }
 
         // If we're here, we succeeded
-        assertTrue(true);
-        log.info("Success - createMuleProject");
+        Path generatedArchivePath = Paths.get( generatedArchive );
+        assertTrue( Files.exists( generatedArchivePath ) );
     }
 
     @Test
-    void testGenerateEclipseArchiveForMuleFlowFromAsyncApi() {
+    public void testGenerateEclipseArchiveForMuleFlowFromAsyncApi() {
 
         final String 
             groupId = "com.solace.ep.awesome",
@@ -102,6 +107,8 @@ public class TestEclipseProjectGenerator {
             fail( exc.getMessage() );
             return;
         }
+        Path generatedArchivePath = Paths.get( generatedArchive );
+        assertTrue( Files.exists( generatedArchivePath ) );
 
     }
 

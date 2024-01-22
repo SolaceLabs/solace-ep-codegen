@@ -9,7 +9,6 @@ import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.solace.ep.asyncapi.tests.TestAsyncApiParsing;
-import com.solace.ep.muleflow.mapper.MapUtils;
 import com.solace.ep.muleflow.mapper.MuleDocMapper;
 import com.solace.ep.muleflow.mapper.asyncapi.AsyncApiToMuleDocMapper;
 import com.solace.ep.muleflow.mapper.model.MapMuleDoc;
@@ -25,7 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 public class TestMapper {
     
     @Test
-    public void TestCreateMapMuleDocFromAsyncApi() {
+    public void testCreateMapMuleDocFromAsyncApi() {
 
         final String asyncApi = TestAsyncApiParsing.getAsyncApiSample1();
 
@@ -50,7 +49,7 @@ public class TestMapper {
      * Test ability to map AsyncApi --> MuleDocMapper --> MuleDoc
      */
     @Test
-    public void TestCreateMuleDocFromAsyncApi() {
+    public void testCreateMuleDocFromAsyncApi() {
 
         final String asyncApi = TestAsyncApiParsing.getAsyncApiSample2();
 

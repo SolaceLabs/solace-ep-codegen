@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.StringTokenizer;
 
 import com.solace.ep.muleflow.MuleFlowGenerator;
-import com.solace.ep.muleflow.util.FileCopy;
+import com.solace.ep.muleflow.util.FileUtls;
 import com.solace.ep.muleflow.util.Zipper;
 
 import lombok.extern.slf4j.Slf4j;
@@ -77,7 +77,7 @@ public class EclipseProjectGenerator {
 
         String newMuleArchivePath = createMuleProject(groupId, flowNameArtifactId, version, muleFlowXml);
 
-        FileCopy.copyFile(newMuleArchivePath, projectOutputPathAsString);
+        FileUtls.copyFile(newMuleArchivePath, projectOutputPathAsString);
     }
 
     /**
@@ -192,7 +192,7 @@ public class EclipseProjectGenerator {
         log.debug("Completed creating Mule Flow {}.xml for Mule Project", flowName);
     }
 
-    protected void createProjectStructure( String newProjectName ) throws Exception {
+    protected String createProjectStructure( String newProjectName ) throws Exception {
 
         log.debug("Start creating Mule Project folder structure in temp directory");
         try {
@@ -218,6 +218,7 @@ public class EclipseProjectGenerator {
         }
         log.debug("Completed creating Mule Project folder structure in temp directory: {}", 
             projectPaths.get( PATH_TMP ));
+        return newProjectRoot.getAbsolutePath();
     }
 
     private void writeStringToFile( String dataToWrite, File dir, String fileName )  

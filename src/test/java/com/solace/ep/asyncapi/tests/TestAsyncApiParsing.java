@@ -22,7 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 public class TestAsyncApiParsing {
 
     @Test
-    public void parseTopLevel() {
+    public void testParseTopLevel() {
 
         final String asyncApi = getAsyncApiSample1();
 
@@ -36,7 +36,7 @@ public class TestAsyncApiParsing {
     }
 
     @Test
-    public void getTopLevel() {
+    public void testGetTopLevel() {
         final String asyncApi = getAsyncApiSample1();
 
         AsyncApiAccessor accessor = new AsyncApiAccessor( AsyncApiAccessor.parseAsyncApi(asyncApi) );
@@ -55,7 +55,7 @@ public class TestAsyncApiParsing {
     }
 
     @Test
-    public void validateInfo() {
+    public void testValidateInfo() {
 
         final String asyncApi = getAsyncApiSample1();
 
@@ -81,7 +81,7 @@ public class TestAsyncApiParsing {
     }
 
     @Test
-    public void validateMessage() {
+    public void testValidateMessage() {
 
         final String asyncApi = getAsyncApiSample1();
 
@@ -113,7 +113,7 @@ public class TestAsyncApiParsing {
     }
 
     @Test
-    public void validateSchemasAccessors() {
+    public void testValidateSchemasAccessors() {
         final String asyncApi = getAsyncApiSample1();
 
         AsyncApiAccessor accessor = new AsyncApiAccessor(AsyncApiAccessor.parseAsyncApi(asyncApi));
@@ -133,7 +133,7 @@ public class TestAsyncApiParsing {
         }
     }
     
-    @Test void validateSchemaAccessFromMessage() {
+    @Test void testValidateSchemaAccessFromMessage() {
         final String asyncApi = getAsyncApiSample1();
 
         AsyncApiAccessor accessor = new AsyncApiAccessor(AsyncApiAccessor.parseAsyncApi(asyncApi));
@@ -150,7 +150,7 @@ public class TestAsyncApiParsing {
         }
     }
 
-    @Test void validateAsyncApiPublishChannels() {
+    @Test void testValidateAsyncApiPublishChannels() {
         final String asyncApi = getAsyncApiSample1();
 
         AsyncApiAccessor accessor = new AsyncApiAccessor(AsyncApiAccessor.parseAsyncApi(asyncApi));
@@ -194,7 +194,7 @@ public class TestAsyncApiParsing {
     }
 
     @Test 
-    void validateAsyncApiSubscribeChannels() {
+    void testValidateAsyncApiSubscribeChannels() {
         final String asyncApi = getAsyncApiSample1();
 
         AsyncApiAccessor accessor = new AsyncApiAccessor(AsyncApiAccessor.parseAsyncApi(asyncApi));

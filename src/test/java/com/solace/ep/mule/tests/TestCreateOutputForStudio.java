@@ -3,8 +3,6 @@ package com.solace.ep.mule.tests;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-import java.io.File;
-
 import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
@@ -31,12 +29,10 @@ import lombok.extern.slf4j.Slf4j;
  * Rough tests for Mule Flow XML with Solace artifacts
  */
 @Slf4j
-public class CreateOutputForStudio {
+public class TestCreateOutputForStudio {
     
     @Test
-    public void createOutput1() {
-
-        log.info("Start 'createOutput1 test'");
+    public void testCreateOutput1() {
 
         // Solace Configuration
         SolaceConfiguration solaceConfiguration = new SolaceConfiguration();
@@ -53,9 +49,6 @@ public class CreateOutputForStudio {
         solaceConfiguration.getSolaceConnection().setMsgVpn("testVpn");
         solaceConfiguration.getSolaceConnection().setClientUserName("solace-cloud-client");
         solaceConfiguration.getSolaceConnection().setPassword("football1");
-
-        // solaceConfiguration.getSolaceConnection().getJcsmpProperties().add(new KeyValuePair("key1", "value1"));
-        // solaceConfiguration.getSolaceConnection().getJcsmpProperties().add(new KeyValuePair("key2", "value2"));
 
         MuleDoc mule = new MuleDoc();
         mule.setSolaceConfiguration(solaceConfiguration);
@@ -75,7 +68,6 @@ public class CreateOutputForStudio {
 
         // Flow 1
         MuleFlow flow1 = new MuleFlow();
-//        flow1.generateDocId();
         flow1.setName("Ingress.SHIPPING.CATALOGUE.queue");
 
         // Flow 1 Listener
@@ -95,7 +87,6 @@ public class CreateOutputForStudio {
         flow1.setFlowRef(new MuleFlowRef("BizLogic.SHIPPING.CATALOG.queue", "Business Logic"));
 
         MuleFlow subFlow1 = new MuleFlow();
-//        subFlow1.generateDocId();
         subFlow1.setName(flow1.getFlowRef().getName());
 
         TransformOperation transform1 = new TransformOperation();
@@ -108,7 +99,6 @@ public class CreateOutputForStudio {
 
 
         MuleFlow subFlow2 = new MuleFlow();
-//        subFlow2.generateDocId();
         subFlow2.setName(subFlow1.getFlowRef().getName());
         subFlow2.getSetVariable().add(new SetVariable("someVariable", "value123", "Generate Dynamic Topic"));
         subFlow2.getSetVariable().add(new SetVariable("anotherVariable", "anotherValue456", "Multiple Variables are possible"));
@@ -148,7 +138,6 @@ public class CreateOutputForStudio {
         assertTrue(outXml.contains("variableName=\"someVariable"));
         assertTrue(outXml.contains("Validate schema Json"));
         assertTrue(outXml.contains("Egress.ShipmentCreated.topic"));
-        log.info("End 'createOutput1 test'");
     }
 
 }

@@ -1,6 +1,8 @@
 # Project
 target/
-src/test/resources/test-output/
+src/test/resources/test-output/*.xml
+src/test/resources/test-output/builder/*.xml
+src/test/resources/test-output/generated-archive/*.jar
 src/test/resources/config/
 
 # IDE

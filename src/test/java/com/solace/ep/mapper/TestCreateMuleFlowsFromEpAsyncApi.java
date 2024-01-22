@@ -17,7 +17,7 @@ import com.solace.ep.muleflow.mule.util.XmlMapperUtils;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class CreateMuleFlowsFromEpAsyncApi {
+public class TestCreateMuleFlowsFromEpAsyncApi {
     
     /**
      * Create Mule Flow XML for Inventory Service

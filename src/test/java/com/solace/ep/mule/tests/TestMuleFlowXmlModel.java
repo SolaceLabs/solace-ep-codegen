@@ -3,8 +3,6 @@ package com.solace.ep.mule.tests;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-import java.io.File;
-
 import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
@@ -29,10 +27,10 @@ import com.solace.ep.muleflow.mule.util.XmlMapperUtils;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class MuleFlowXmlModelTests {
+public class TestMuleFlowXmlModel {
     
     @Test
-    public void working() {
+    public void testIncrementalUnitTest() {
         SolaceConfiguration solaceConfiguration = new SolaceConfiguration();
         solaceConfiguration.setName("Solace_PubSub__Connector_Config");
         solaceConfiguration.setDocName("Solace PubSub+ Connector Config");
