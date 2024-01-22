@@ -103,7 +103,7 @@ public class TestEclipseProjectGenerator {
             EclipseProjectGenerator epg = new EclipseProjectGenerator();
             epg.generateEclipseArchiveForMuleFlowFromAsyncApi(groupId, artifactId, version, asyncApi, generatedArchive);
         } catch ( Exception exc ) {
-            log.error("Failed to read the input file {}", INVENTORY_SERVICE);
+            log.error("Failed to create the archive file for {}", INVENTORY_SERVICE);
             fail( exc.getMessage() );
             return;
         }
