@@ -1,1 +1,82 @@
-{"components":{"schemas":{},"messages":{"Catalogue Updated":{"x-ep-event-id":"qd444el506r","x-ep-event-version-displayname":"","description":"Changes in items available for purchase from the store and their descriptions.","x-ep-application-domain-id":"4940w3ohug3","schemaFormat":"application/vnd.apache.avro+json;version=1.9.0","x-ep-event-state-name":"RELEASED","x-ep-shared":"true","x-ep-application-domain-name":"Merchandising","x-ep-event-version-id":"5rcpcygnsd8","payload":{"namespace":"io.confluent.examples.streams.avro.microservices","name":"Catalog","type":"record","fields":[{"name":"id","type":"string"},{"name":"product","type":"enum","symbols":["JUMPERS","UNDERPANTS","STOCKINGS"]},{"name":"quantity","type":"int"}]},"x-ep-event-version":"1.0.2","x-ep-event-name":"Catalogue Updated","contentType":"application/json","x-ep-event-state-id":"2"}}},"channels":{"acmeretail/merchandising/catalogue/updated/v1/{productTypeId}/{productId}":{"subscribe":{"message":{"$ref":"#/components/messages/Catalogue Updated"}},"parameters":{"productId":{"schema":{"type":"string"},"x-ep-parameter-name":"productId"},"productTypeId":{"schema":{"type":"string"},"x-ep-parameter-name":"productTypeId"}}}},"asyncapi":"2.5.0","info":{"x-ep-application-version":"1.1.1","x-ep-application-version-id":"ndd18snjwxp","x-ep-application-id":"c4xb0r8v8n4","description":"A legacy codebase that manages changes made to the product catalog, initiated from an internal UI. This has comparatively fewer users, and an existing codebase. Events are picked up from the legacy Postgres database using a CDC connector to push them into solace. The single-message transforms feature reformats the messages before they are made public. Images are saved to a distributed filesystem for access by the web tier.\n\n[GitHub source](https://github.com/confluentinc/solace-streams-examples)","x-ep-state-name":"RELEASED","title":"Catalogue Services","x-ep-application-domain-id":"4940w3ohug3","version":"1.1.1","x-ep-state-id":"2","x-ep-application-domain-name":"Merchandising"}}
+{
+    "components": {
+        "schemas": {},
+        "messages": {
+            "Catalogue Updated": {
+                "x-ep-event-id": "klregaiwop",
+                "x-ep-event-version-displayname": "",
+                "description": "Changes in items available for purchase from the store and their descriptions.",
+                "x-ep-application-domain-id": "faeklngrap",
+                "schemaFormat": "application/vnd.apache.avro+json;version=1.9.0",
+                "x-ep-event-state-name": "RELEASED",
+                "x-ep-shared": "true",
+                "x-ep-application-domain-name": "Merchandising",
+                "x-ep-event-version-id": "eragjrgpoi3333232333",
+                "payload": {
+                    "namespace": "io.confluent.examples.streams.avro.microservices",
+                    "name": "Catalog",
+                    "type": "record",
+                    "fields": [
+                        {
+                            "name": "id",
+                            "type": "string"
+                        },
+                        {
+                            "name": "product",
+                            "type": "enum",
+                            "symbols": [
+                                "JUMPERS",
+                                "UNDERPANTS",
+                                "STOCKINGS"
+                            ]
+                        },
+                        {
+                            "name": "quantity",
+                            "type": "int"
+                        }
+                    ]
+                },
+                "x-ep-event-version": "1.0.2",
+                "x-ep-event-name": "Catalogue Updated",
+                "contentType": "application/json",
+                "x-ep-event-state-id": "2"
+            }
+        }
+    },
+    "channels": {
+        "acmeretail/merchandising/catalogue/updated/v1/{productTypeId}/{productId}": {
+            "subscribe": {
+                "message": {
+                    "$ref": "#/components/messages/Catalogue Updated"
+                }
+            },
+            "parameters": {
+                "productId": {
+                    "schema": {
+                        "type": "string"
+                    },
+                    "x-ep-parameter-name": "productId"
+                },
+                "productTypeId": {
+                    "schema": {
+                        "type": "string"
+                    },
+                    "x-ep-parameter-name": "productTypeId"
+                }
+            }
+        }
+    },
+    "asyncapi": "2.5.0",
+    "info": {
+        "x-ep-application-version": "1.1.1",
+        "x-ep-application-version-id": "thaeop3l43",
+        "x-ep-application-id": "eatlkrgaekl9",
+        "description": "A legacy codebase that manages changes made to the product catalog, initiated from an internal UI. This has comparatively fewer users, and an existing codebase. Events are picked up from the legacy Postgres database using a CDC connector to push them into solace. The single-message transforms feature reformats the messages before they are made public. Images are saved to a distributed filesystem for access by the web tier.\n\n[GitHub source](https://github.com/confluentinc/solace-streams-examples)",
+        "x-ep-state-name": "RELEASED",
+        "title": "Catalogue Services",
+        "x-ep-application-domain-id": "ergapijr934",
+        "version": "1.1.1",
+        "x-ep-state-id": "2",
+        "x-ep-application-domain-name": "Merchandising"
+    }
+}

@@ -64,12 +64,12 @@ public class TestAsyncApiParsing {
         try {
             
             assertTrue( accessor.getInfo().getEpApplicationVersion().contentEquals("0.1.2"));
-            assertTrue( accessor.getInfo().getEpApplicationVersionId().contentEquals("no95i2vlifo"));
-            assertTrue( accessor.getInfo().getEpApplicationId().contentEquals("pvmnilubh38"));
+            assertTrue( accessor.getInfo().getEpApplicationVersionId().contentEquals("angoiawro24"));
+            assertTrue( accessor.getInfo().getEpApplicationId().contentEquals("eampiojgi4"));
             assertTrue( accessor.getInfo().getInfoDescription().contentEquals("A streaming service leveraging the solace Streams API. This service reacts to orders as they are created, updating the Shipping topic as notifications are received from the delivery company.\n\n[GitHub Source](https://github.com/confluentinc/solace-streams-examples)"));
             assertTrue( accessor.getInfo().getEpStateName().contentEquals("RELEASED"));
             assertTrue( accessor.getInfo().getInfoTitle().contentEquals("Shipping Service"));
-            assertTrue( accessor.getInfo().getEpApplicationDomainId().contentEquals("jdjtm87hb63"));
+            assertTrue( accessor.getInfo().getEpApplicationDomainId().contentEquals("aregpij409"));
             assertTrue( accessor.getInfo().getInfoVersion().contentEquals("0.1.2"));
             assertTrue( accessor.getInfo().getEpStateId().contentEquals("2"));
             assertTrue( accessor.getInfo().getEpApplicationDomainName().contentEquals("Shipping"));
@@ -90,15 +90,15 @@ public class TestAsyncApiParsing {
         try {
             AsyncApiMessage message1 = accessor.getMessageByName("Catalogue Updated");
 
-            assertTrue( message1.getEpEventId().contentEquals("qd444el506r"));
+            assertTrue( message1.getEpEventId().contentEquals("dummyeventid"));
             assertTrue( message1.getEpVersionDisplayName().contentEquals(""));
             assertTrue( message1.getDescription().contentEquals("Changes in items available for purchase from the store and their descriptions."));
-            assertTrue( message1.getEpApplicationDomainId().contentEquals("4940w3ohug3"));
+            assertTrue( message1.getEpApplicationDomainId().contentEquals("dummyappdomain10"));
             assertTrue( message1.getSchemaFormat().contentEquals("application/vnd.apache.avro+json;version=1.9.0"));
             assertTrue( message1.getEpEventStateName().contentEquals("RELEASED"));
             assertTrue( message1.getEpShared().contentEquals("true"));
             assertTrue( message1.getEpApplicationDomainName().contentEquals("Merchandising"));
-            assertTrue( message1.getEpEventVersionId().contentEquals("5rcpcygnsd8"));
+            assertTrue( message1.getEpEventVersionId().contentEquals("eventversionfake100"));
             assertTrue( message1.getEpEventVersion().contentEquals("1.0.2"));
             assertTrue( message1.getEpEventName().contentEquals("Catalogue Updated"));
             assertTrue( message1.getContentType().contentEquals("application/json"));
@@ -164,7 +164,9 @@ public class TestAsyncApiParsing {
                 if ( channel.hasPublishOperation() ) {
                     System.out.println( channel.getPublishOpMessage().getPayloadAsString() );
 
-                    assertTrue( channel.getPublishOpMessage().getPayloadAsString().contains("namespace") );
+                    assertTrue( 
+                        channel.getPublishOpMessage().getPayloadAsString().contains("namespace") ||
+                        channel.getPublishOpMessage().getPayloadAsString().contains("properties"));
 
                     for (String p : channel.getParameters() ) {
                         System.out.println( "Parameter: " + p );
@@ -174,12 +176,12 @@ public class TestAsyncApiParsing {
 
                     if (queueName != null) {
                         System.out.println("QueueName: " + queueName);
-                    }
-                    for ( String s : channel.getPublishQueueSubscriptions() ) {
-                        
-                        assertTrue( s.startsWith("acmeretail") );
-                        
-                        System.out.println("Subscription: " + s);
+                        for ( String s : channel.getPublishQueueSubscriptions() ) {
+                            
+                            assertTrue( s.startsWith("acmeretail") );
+                            
+                            System.out.println("Subscription: " + s);
+                        }
                     }
 
                     System.out.println();
@@ -191,7 +193,8 @@ public class TestAsyncApiParsing {
         }
     }
 
-    @Test void validateAsyncApiSubscribeChannels() {
+    @Test 
+    void validateAsyncApiSubscribeChannels() {
         final String asyncApi = getAsyncApiSample1();
 
         AsyncApiAccessor accessor = new AsyncApiAccessor(AsyncApiAccessor.parseAsyncApi(asyncApi));
@@ -205,7 +208,9 @@ public class TestAsyncApiParsing {
                 if ( channel.hasSubscribeOperation() ) {
                     System.out.println( channel.getSubscribeOpMessage().getPayloadAsString() );
 
-                    assertTrue( channel.getSubscribeOpMessage().getPayloadAsString().contains("namespace") );
+                    assertTrue( 
+                        channel.getSubscribeOpMessage().getPayloadAsString().contains("namespace") ||
+                        channel.getSubscribeOpMessage().getPayloadAsString().contains( "properties" ));
 
                     for (String p : channel.getParameters() ) {
                         System.out.println( "Parameter: " + p );

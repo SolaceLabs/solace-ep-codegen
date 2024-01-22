@@ -1,5 +1,8 @@
 package com.solace.ep.mule.tests;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import java.io.File;
 
 import org.junit.jupiter.api.Test;
@@ -23,7 +26,10 @@ import com.solace.ep.muleflow.mule.model.solace.SolaceConfiguration.EventPortalC
 import com.solace.ep.muleflow.mule.model.xml_module.ValidateXmlSchema;
 import com.solace.ep.muleflow.mule.util.XmlMapperUtils;
 
-public class Working {
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+public class MuleFlowXmlModelTests {
     
     @Test
     public void working() {
@@ -33,10 +39,10 @@ public class Working {
 //        solaceConfiguration.generateDocId();
 
         solaceConfiguration.setEventPortalConfiguration( new EventPortalConfiguration() );
-        solaceConfiguration.getEventPortalConfiguration().setCloudApiToken("eySecretCloudApiTokenhiouqhfeuohwaeoiufhwoefhaefiohw83hh984357348tqyuheakfj");
+        solaceConfiguration.getEventPortalConfiguration().setCloudApiToken("eySecretCloudApiTokenhiouqhnotarealtokenwoefhaefiohw83hh862486248tqsqueakfj");
 
         solaceConfiguration.setSolaceConnection( new SolaceConnection() );
-        solaceConfiguration.getSolaceConnection().setBrokerHost("tcps://mr-connection-bpeyke548a8.messaging.solace.cloud:55443");
+        solaceConfiguration.getSolaceConnection().setBrokerHost("tcps://mr-connection-myservice123.messaging.solace.cloud:55443");
         solaceConfiguration.getSolaceConnection().setMsgVpn("testVpn");
         solaceConfiguration.getSolaceConnection().setClientUserName("solace-cloud-client");
         solaceConfiguration.getSolaceConnection().setPassword("football1");
@@ -50,7 +56,7 @@ public class Working {
         GlobalProperty gp1 = new GlobalProperty();
         GlobalProperty gp2 = new GlobalProperty();
         gp1.setDocName("Global Property 1");
-        gp1.setPropertyNameValue("epApplicationVersionId", "tt794pd354t");
+        gp1.setPropertyNameValue("epApplicationVersionId", "notreal354t");
         gp2.setDocName("Global Property 2");
         gp2.setPropertyNameValue("AnotherProperty", "AnotherValue");
 
@@ -123,14 +129,20 @@ public class Working {
         
         XmlMapper xmlMapper = XmlMapperUtils.createXmlMapperForMuleDoc();
 
+        String outXml = "";
         try {
-            xmlMapper.writeValue(new File("src/test/resources/test-output/working.xml"), mule);
-            String outXml = xmlMapper.writeValueAsString(mule);
+//            xmlMapper.writeValue(new File("src/test/resources/test-output/working.xml"), mule);
+            outXml = xmlMapper.writeValueAsString(mule);
             System.out.println(outXml);
+            log.info("Created XML Output");
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println(e.getLocalizedMessage());
+            log.error(e.getLocalizedMessage());
+            fail( e.getMessage() );
+            return;
         }
+
+        assertTrue( outXml.contains("doc:name=\"Publish Shipment Updated Event") );
 
     }
 }

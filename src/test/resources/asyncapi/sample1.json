@@ -64,15 +64,15 @@
 				"x-ep-event-state-id": "2"
 			},            
 			"Catalogue Updated": {
-				"x-ep-event-id": "qd444el506r",
+				"x-ep-event-id": "dummyeventid",
 				"x-ep-event-version-displayname": "",
 				"description": "Changes in items available for purchase from the store and their descriptions.",
-				"x-ep-application-domain-id": "4940w3ohug3",
+				"x-ep-application-domain-id": "dummyappdomain10",
 				"schemaFormat": "application/vnd.apache.avro+json;version=1.9.0",
 				"x-ep-event-state-name": "RELEASED",
 				"x-ep-shared": "true",
 				"x-ep-application-domain-name": "Merchandising",
-				"x-ep-event-version-id": "5rcpcygnsd8",
+				"x-ep-event-version-id": "eventversionfake100",
 				"payload": {
 					"namespace": "io.confluent.examples.streams.avro.microservices",
 					"name": "Catalog",
@@ -103,15 +103,15 @@
 				"x-ep-event-state-id": "2"
 			},
 			"Shipment Created": {
-				"x-ep-event-id": "79xb6oijf4r",
+				"x-ep-event-id": "fakeeventid101",
 				"x-ep-event-version-displayname": "",
 				"description": "Changes in the shipping status of ordered items as they move out of the warehouse to home delivery.",
-				"x-ep-application-domain-id": "jdjtm87hb63",
+				"x-ep-application-domain-id": "fakeappdomain",
 				"schemaFormat": "application/vnd.apache.avro+json;version=1.9.0",
 				"x-ep-event-state-name": "RELEASED",
 				"x-ep-shared": "true",
 				"x-ep-application-domain-name": "Shipping",
-				"x-ep-event-version-id": "bhfcathym0j",
+				"x-ep-event-version-id": "fakeeventversionid",
 				"payload": {
 					"namespace": "io.confluent.examples.streams.avro.microservices",
 					"name": "Shipping",
@@ -137,15 +137,15 @@
 				"x-ep-event-state-id": "2"
 			},
 			"Shipment Updated": {
-				"x-ep-event-id": "5af0er8w8sf",
+				"x-ep-event-id": "fakeeventid102",
 				"x-ep-event-version-displayname": "",
 				"description": "",
-				"x-ep-application-domain-id": "jdjtm87hb63",
+				"x-ep-application-domain-id": "fakeappdomain",
 				"schemaFormat": "application/vnd.apache.avro+json;version=1.9.0",
 				"x-ep-event-state-name": "RELEASED",
 				"x-ep-shared": "true",
 				"x-ep-application-domain-name": "Shipping",
-				"x-ep-event-version-id": "id2hckno3cf",
+				"x-ep-event-version-id": "fakeeventversion120",
 				"payload": {
 					"namespace": "io.confluent.examples.streams.avro.microservices",
 					"name": "Shipping",
@@ -171,15 +171,15 @@
 				"x-ep-event-state-id": "2"
 			},
 			"Customer Created": {
-				"x-ep-event-id": "hibv6txn0fn",
+				"x-ep-event-id": "fakeeventid105",
 				"x-ep-event-version-displayname": "",
 				"description": "Shows changes to customer information including name, address and loyalty status",
-				"x-ep-application-domain-id": "tqq4yat791e",
+				"x-ep-application-domain-id": "fakeappdomain",
 				"schemaFormat": "application/vnd.apache.avro+json;version=1.9.0",
 				"x-ep-event-state-name": "RELEASED",
 				"x-ep-shared": "true",
 				"x-ep-application-domain-name": "OnlineServices",
-				"x-ep-event-version-id": "kk8mmcdslhz",
+				"x-ep-event-version-id": "fakeeventversion121",
 				"payload": {
 					"namespace": "io.confluent.examples.streams.avro.microservices",
 					"name": "Customer",
@@ -218,15 +218,15 @@
 				"x-ep-event-state-id": "2"
 			},
 			"Customer Updated": {
-				"x-ep-event-id": "10jmkh5ijq1",
+				"x-ep-event-id": "jkadfoi23",
 				"x-ep-event-version-displayname": "",
 				"description": "",
-				"x-ep-application-domain-id": "tqq4yat791e",
+				"x-ep-application-domain-id": "afnoi23409",
 				"schemaFormat": "application/vnd.apache.avro+json;version=1.9.0",
 				"x-ep-event-state-name": "RELEASED",
 				"x-ep-shared": "true",
 				"x-ep-application-domain-name": "OnlineServices",
-				"x-ep-event-version-id": "x59tl9w1phv",
+				"x-ep-event-version-id": "hroiawrgjo",
 				"payload": {
 					"namespace": "io.confluent.examples.streams.avro.microservices",
 					"name": "Customer",
@@ -478,12 +478,12 @@
 	"asyncapi": "2.5.0",
 	"info": {
 		"x-ep-application-version": "0.1.2",
-		"x-ep-application-version-id": "no95i2vlifo",
-		"x-ep-application-id": "pvmnilubh38",
+		"x-ep-application-version-id": "angoiawro24",
+		"x-ep-application-id": "eampiojgi4",
 		"description": "A streaming service leveraging the solace Streams API. This service reacts to orders as they are created, updating the Shipping topic as notifications are received from the delivery company.\n\n[GitHub Source](https://github.com/confluentinc/solace-streams-examples)",
 		"x-ep-state-name": "RELEASED",
 		"title": "Shipping Service",
-		"x-ep-application-domain-id": "jdjtm87hb63",
+		"x-ep-application-domain-id": "aregpij409",
 		"version": "0.1.2",
 		"x-ep-state-id": "2",
 		"x-ep-application-domain-name": "Shipping"

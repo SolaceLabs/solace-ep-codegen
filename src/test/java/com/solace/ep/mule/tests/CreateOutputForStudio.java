@@ -1,5 +1,8 @@
 package com.solace.ep.mule.tests;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import java.io.File;
 
 import org.junit.jupiter.api.Test;
@@ -24,13 +27,16 @@ import com.solace.ep.muleflow.mule.util.XmlMapperUtils;
 
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Rough tests for Mule Flow XML with Solace artifacts
+ */
 @Slf4j
 public class CreateOutputForStudio {
     
     @Test
     public void createOutput1() {
 
-        log.info("Start 'createOutput1'");
+        log.info("Start 'createOutput1 test'");
 
         // Solace Configuration
         SolaceConfiguration solaceConfiguration = new SolaceConfiguration();
@@ -39,11 +45,11 @@ public class CreateOutputForStudio {
 
         // Event Portal Configuration
         solaceConfiguration.setEventPortalConfiguration( new EventPortalConfiguration() );
-        solaceConfiguration.getEventPortalConfiguration().setCloudApiToken("eySecretCloudApiTokenhiouqhfeuohwaeoiufhwoefhaefiohw83hh984357348tqyuheakfj");
+        solaceConfiguration.getEventPortalConfiguration().setCloudApiToken("eySecretCloudApiTokenTHISISNOTREALalskdjfaskldfjhw83hh984357348tqyuheakfj");
 
         // Solace Connection
         solaceConfiguration.setSolaceConnection( new SolaceConnection() );
-        solaceConfiguration.getSolaceConnection().setBrokerHost("tcps://mr-connection-bpeyke548a8.messaging.solace.cloud:55443");
+        solaceConfiguration.getSolaceConnection().setBrokerHost("tcps://mr-connection-SAMPLEHOST.messaging.solace.cloud:55443");
         solaceConfiguration.getSolaceConnection().setMsgVpn("testVpn");
         solaceConfiguration.getSolaceConnection().setClientUserName("solace-cloud-client");
         solaceConfiguration.getSolaceConnection().setPassword("football1");
@@ -88,13 +94,6 @@ public class CreateOutputForStudio {
 
         flow1.setFlowRef(new MuleFlowRef("BizLogic.SHIPPING.CATALOG.queue", "Business Logic"));
 
-        // ValidateXmlSchema vXml = new ValidateXmlSchema();
-        // vXml.setDocNameAndGenerateDocId("Validate Xml");
-        // vXml.setSchemaLocation("schemas/myschema.xsd");
-        // vXml.setSchemaContents("Super content!!!!");
-
-        // flow1.setValidateXmlSchema(vXml);
-
         MuleFlow subFlow1 = new MuleFlow();
 //        subFlow1.generateDocId();
         subFlow1.setName(flow1.getFlowRef().getName());
@@ -134,15 +133,22 @@ public class CreateOutputForStudio {
         mule.getSubFlow().add(subFlow2);
 
         XmlMapper xmlMapper = XmlMapperUtils.createXmlMapperForMuleDoc();
+        String outXml = "";
 
         try {
-            xmlMapper.writeValue(new File("src/test/resources/test-output/createOutput1.xml"), mule);
+            outXml = xmlMapper.writeValueAsString(mule);
+            System.out.println(outXml);
+            log.info("Serialized Xml output");
         } catch ( Exception exc ) {
             log.error( exc.getLocalizedMessage() );
             exc.printStackTrace();
+            fail(exc.getMessage());
             return;
         }
-        log.info("End 'createOutput1'");
+        assertTrue(outXml.contains("variableName=\"someVariable"));
+        assertTrue(outXml.contains("Validate schema Json"));
+        assertTrue(outXml.contains("Egress.ShipmentCreated.topic"));
+        log.info("End 'createOutput1 test'");
     }
 
 }

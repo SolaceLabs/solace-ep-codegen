@@ -1,7 +1,14 @@
 package com.solace.ep.mule.tests;
 
+/**
+ * Unit test data
+ */
 public class TestData {
     
+    /**
+     * Sample Avro schema
+     * @return
+     */
     public static String getSampleJson1() {
         String s = "{\"namespace\": \"io.confluent.examples.streams.avro.microservices\",\n" + //
                         " \"type\": \"record\",\n" + //

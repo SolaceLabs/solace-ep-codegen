@@ -17,8 +17,11 @@ import com.solace.ep.muleflow.mule.util.XmlMapperUtils;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class Demo {
+public class CreateMuleFlowsFromEpAsyncApi {
     
+    /**
+     * Create Mule Flow XML for Inventory Service
+     */
     @Test
     public void testInventoryService() {
 
@@ -27,6 +30,9 @@ public class Demo {
             "src/test/resources/test-output/inventory-service-02.xml");
     }
 
+    /**
+     * Create Mule Flow XML for Catalogue Service
+     */
     @Test
     public void testCatalogueService() {
 
@@ -35,8 +41,7 @@ public class Demo {
             "src/test/resources/test-output/catalogue-service-01.xml");
     }
 
-    @Test
-    public void createMuleDocFromAsyncApi( String inputFile, String outputFile ) {
+    private static void createMuleDocFromAsyncApi( String inputFile, String outputFile ) {
 
         final String asyncApi = TestAsyncApiParsing.getAsyncApi(inputFile);
 

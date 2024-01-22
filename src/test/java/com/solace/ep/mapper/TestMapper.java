@@ -1,5 +1,6 @@
 package com.solace.ep.mapper;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.File;
@@ -8,6 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.solace.ep.asyncapi.tests.TestAsyncApiParsing;
+import com.solace.ep.muleflow.mapper.MapUtils;
 import com.solace.ep.muleflow.mapper.MuleDocMapper;
 import com.solace.ep.muleflow.mapper.asyncapi.AsyncApiToMuleDocMapper;
 import com.solace.ep.muleflow.mapper.model.MapMuleDoc;
@@ -16,6 +18,9 @@ import com.solace.ep.muleflow.mule.util.XmlMapperUtils;
 
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Test the mapping of AsyncApi --> MuleDocMapper intermediate format
+ */
 @Slf4j
 public class TestMapper {
     
@@ -37,8 +42,13 @@ public class TestMapper {
         if ( mapMuleDoc == null ) {
             fail( "Failed to create map doc" );
         }
+
+        assertTrue(mapMuleDoc.getGlobalProperties().size() > 0);
     }
 
+    /**
+     * Test ability to map AsyncApi --> MuleDocMapper --> MuleDoc
+     */
     @Test
     public void TestCreateMuleDocFromAsyncApi() {
 
@@ -77,6 +87,6 @@ public class TestMapper {
             exc.printStackTrace();
             return;
         }
-        log.info("End 'createOutput1'");
+        log.info("Success - TestCreateMuleDocFromAsyncApi()");
     }
 }
