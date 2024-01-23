@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.StringTokenizer;
 
 import com.solace.ep.muleflow.MuleFlowGenerator;
-import com.solace.ep.muleflow.util.FileUtls;
+import com.solace.ep.muleflow.util.FileUtils;
 import com.solace.ep.muleflow.util.Zipper;
 
 import lombok.extern.slf4j.Slf4j;
@@ -65,6 +65,15 @@ public class EclipseProjectGenerator {
         projectPathList.add( PATH_SRC_TEST_MUNIT        );
     }
 
+    /**
+     * 
+     * @param groupId
+     * @param flowNameArtifactId
+     * @param version
+     * @param asyncApiAsString
+     * @param projectOutputPathAsString
+     * @throws Exception
+     */
     public void generateEclipseArchiveForMuleFlowFromAsyncApi( 
         String groupId,
         String flowNameArtifactId,
@@ -77,7 +86,7 @@ public class EclipseProjectGenerator {
 
         String newMuleArchivePath = createMuleProject(groupId, flowNameArtifactId, version, muleFlowXml);
 
-        FileUtls.copyFile(newMuleArchivePath, projectOutputPathAsString);
+        FileUtils.copyFile(newMuleArchivePath, projectOutputPathAsString);
     }
 
     /**
@@ -122,6 +131,11 @@ public class EclipseProjectGenerator {
         return compressedFilePath;
     }
 
+    /**
+     * Create static files (same for every Mule project)
+     * in the new Mule project
+     * @throws IOException
+     */
     protected void createCreateStaticFiles() throws IOException {
 
         log.debug("Start creating static Mule project files");
@@ -147,6 +161,12 @@ public class EclipseProjectGenerator {
         log.debug("Completed creating static Mule project files");
     }
 
+    /**
+     * Create the src/main/resources/log4j.xml configuration file in the 
+     * new Mule project
+     * @param flowName
+     * @throws Exception
+     */
     protected void createLog4jFile( String flowName ) throws Exception {
 
         log.debug("Start creating log4j2.xml config file for Mule Project");
@@ -162,6 +182,13 @@ public class EclipseProjectGenerator {
         log.debug("Completed creating log4j2.xml config file for Mule Project");
     }
 
+    /**
+     * Create pom.xml file in the new Mule Project
+     * @param groupId
+     * @param artifactId
+     * @param version
+     * @throws Exception
+     */
     protected void createPomFile( String groupId, String artifactId, String version ) throws Exception {
 
         log.debug("Start creating pom.xml for Mule Project");
@@ -179,6 +206,12 @@ public class EclipseProjectGenerator {
         log.debug("Completed creating pom.xml for Mule Project");
     }
 
+    /**
+     * Create Mule Flow XML file in the new Mule project
+     * @param xmlData
+     * @param flowName
+     * @throws Exception
+     */
     protected void createMuleFlow( String xmlData, String flowName ) throws Exception {
 
         log.debug("Start creating Mule Flow {}.xml for Mule Project", flowName);
