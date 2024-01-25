@@ -8,6 +8,10 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+/**
+ * Class to read content of asyncapi document parsed using Gson
+ * to a JsonObject
+ */
 public class AsyncApiAccessor {
     
     protected JsonObject root;

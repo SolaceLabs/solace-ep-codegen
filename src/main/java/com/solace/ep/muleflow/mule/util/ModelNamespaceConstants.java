@@ -1,5 +1,9 @@
-package com.solace.ep.muleflow.mule.model;
+package com.solace.ep.muleflow.mule.util;
 
+/**
+ * Namespace constants for Mule Flow XML model
+ * Prefixes and namespace definitions
+ */
 public class ModelNamespaceConstants {
     
     public static final String

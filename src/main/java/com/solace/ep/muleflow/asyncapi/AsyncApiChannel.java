@@ -8,6 +8,10 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+/**
+ * Class to provide access to fields in AsyncApi 'channel' objects
+ * parsed as Gson 'JsonObject'
+ */
 public class AsyncApiChannel {
     
     private JsonObject asyncApiChannel;
@@ -42,8 +46,6 @@ public class AsyncApiChannel {
                         JsonObject parmObject = ( JsonObject )parmElement;
                         if ( parmObject.has(EpFieldConstants.EP_PARAMETER_NAME) ) {
                             parameterName = parmObject.get( EpFieldConstants.EP_PARAMETER_NAME ).getAsString();
-                                                // .getAsJsonObject( EpFieldConstants.EP_PARAMETER_NAME )
-                                                // .getAsString();
                         }
                     }
                     if ( parameterName == null ) {

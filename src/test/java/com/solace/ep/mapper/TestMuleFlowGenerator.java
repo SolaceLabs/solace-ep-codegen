@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 import org.junit.jupiter.api.Test;
 
 import com.solace.ep.muleflow.MuleFlowGenerator;
+import com.solace.ep.muleflow.util.FileUtils;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -42,7 +43,7 @@ public class TestMuleFlowGenerator {
 
         String asyncApi;
         try {
-            asyncApi = MuleFlowGenerator.getFileAsString(CATALOGUE_SERVICE);
+            asyncApi = FileUtils.getFileAsString(CATALOGUE_SERVICE);
         } catch ( Exception exc ) {
             log.error("Failed to read the input file {}", CATALOGUE_SERVICE);
             log.error("Test {} failed", test);
@@ -86,7 +87,7 @@ public class TestMuleFlowGenerator {
 
         String asyncApi;
         try {
-            asyncApi = MuleFlowGenerator.getFileAsString(CATALOGUE_SERVICE);
+            asyncApi = FileUtils.getFileAsString(CATALOGUE_SERVICE);
         } catch ( Exception exc ) {
             log.error("Failed to read the input file {}", CATALOGUE_SERVICE);
             log.error("Test {} failed", test);

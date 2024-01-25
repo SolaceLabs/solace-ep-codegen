@@ -3,10 +3,18 @@ package com.solace.ep.muleflow.asyncapi;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+/**
+ * Class to access fields in AsyncApi 'info' element
+ * parsed as Gson 'JsonObject'
+ */
 public class AsyncApiInfo {
     
     private JsonObject asyncApiInfo;
 
+    /**
+     * Public constructor - requires the asyncapi 'info' object as JsonObject
+     * @param info
+     */
     public AsyncApiInfo( JsonObject info ) {
         if (info == null) {
             throw new IllegalArgumentException( "AsyncApi [info] block cannot be null" );

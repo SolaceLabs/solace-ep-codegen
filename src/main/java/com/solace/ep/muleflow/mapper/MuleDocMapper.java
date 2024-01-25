@@ -3,30 +3,19 @@ package com.solace.ep.muleflow.mapper;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.solace.ep.muleflow.mapper.model.MapConfig;
-import com.solace.ep.muleflow.mapper.model.MapFlow;
-import com.solace.ep.muleflow.mapper.model.MapMuleDoc;
-import com.solace.ep.muleflow.mapper.model.MapSubFlowEgress;
-import com.solace.ep.muleflow.mule.model.core.GlobalProperty;
-import com.solace.ep.muleflow.mule.model.core.MuleDoc;
-import com.solace.ep.muleflow.mule.model.core.MuleFlow;
-import com.solace.ep.muleflow.mule.model.core.MuleFlowRef;
-import com.solace.ep.muleflow.mule.model.core.SetVariable;
+import com.solace.ep.muleflow.mapper.model.*;
+import com.solace.ep.muleflow.mule.model.core.*;
 import com.solace.ep.muleflow.mule.model.ee.TransformOperation;
 import com.solace.ep.muleflow.mule.model.json.ValidateJsonSchema;
-import com.solace.ep.muleflow.mule.model.solace.SolaceConfiguration;
-import com.solace.ep.muleflow.mule.model.solace.SolaceConnection;
-import com.solace.ep.muleflow.mule.model.solace.SolaceMessage;
-import com.solace.ep.muleflow.mule.model.solace.SolacePublish;
-import com.solace.ep.muleflow.mule.model.solace.SolaceQueueListener;
-import com.solace.ep.muleflow.mule.model.solace.SolaceTopicListener;
+import com.solace.ep.muleflow.mule.model.solace.*;
 import com.solace.ep.muleflow.mule.model.solace.SolaceConfiguration.EventPortalConfiguration;
 import com.solace.ep.muleflow.mule.model.xml_module.ValidateXmlSchema;
 
 import lombok.extern.slf4j.Slf4j;
 
 /** 
- * 'MuleDocMapper' class 
+ * Class to map internal 'MapMuleDoc' format to MuleDoc XML model
+ * Includes business logic for output object names
  */
 @Slf4j
 public class MuleDocMapper {

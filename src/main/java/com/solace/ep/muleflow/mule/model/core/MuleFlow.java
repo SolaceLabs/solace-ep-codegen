@@ -10,9 +10,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.solace.ep.muleflow.mule.model.base.BaseElement;
 import com.solace.ep.muleflow.mule.model.ee.TransformOperation;
 import com.solace.ep.muleflow.mule.model.json.ValidateJsonSchema;
-import com.solace.ep.muleflow.mule.model.solace.SolacePublish;
-import com.solace.ep.muleflow.mule.model.solace.SolaceQueueListener;
-import com.solace.ep.muleflow.mule.model.solace.SolaceTopicListener;
+import com.solace.ep.muleflow.mule.model.solace.*;
 import com.solace.ep.muleflow.mule.model.xml_module.ValidateXmlSchema;
 
 import lombok.Data;

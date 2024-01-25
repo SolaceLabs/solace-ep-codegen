@@ -1,5 +1,8 @@
 package com.solace.ep.muleflow.asyncapi;
 
+/**
+ * Class containing static field names in standard AsyncApi
+ */
 public class AsyncApiFieldConstants {
     
     public static final String

@@ -27,7 +27,6 @@ public class GlobalProperty extends BaseElement {
     public GlobalProperty( String name, String value, String docName ) {
         this.setPropertyNameValue(name, value);
         this.setDocName(docName);
-//        super.setDocNameAndGenerateDocId(docName);
     }
 
     public void setPropertyNameValue( String name, String value ) {

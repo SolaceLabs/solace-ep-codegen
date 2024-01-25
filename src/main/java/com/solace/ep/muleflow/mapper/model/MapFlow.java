@@ -6,6 +6,10 @@ import java.util.List;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * Intermediate mapping object equivalent to a Mule Flow object in a Mule Flow Document
+ * One object of this type will be created for each Ingress (mule 'flow') in a Mule Doc
+ */
 @Data
 @NoArgsConstructor
 public class MapFlow {

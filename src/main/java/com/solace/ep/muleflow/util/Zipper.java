@@ -19,6 +19,12 @@ public class Zipper {
 
     private static int BYTE_SZ = 1024;
     
+    /**
+     * Create new zipped archive from directory
+     * @param dirToZip - java.io.File of input directory
+     * @param compressedFilePath
+     * @throws Exception
+     */
     public static void zipDirectoryToArchive( File dirToZip, String compressedFilePath ) throws Exception {
         FileOutputStream fos = new FileOutputStream(compressedFilePath);
         ZipOutputStream zipOut = new ZipOutputStream(fos);

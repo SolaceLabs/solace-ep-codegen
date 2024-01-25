@@ -17,11 +17,11 @@ The MuleFlow Generator uses a two-step translation process:
 * MapMuleDoc - A simple internal format to facilitate mapping from sources and to insulate source mapping from the business logic required to produce Mule Flow documents
 * MuleDoc - A model created for the XML representation of Mule Flows. Unlike the actual mule flow docs used by studio (which uses jaxb), the mapper uses Faster Jackson parsers to serialize the XML data.
 
-## Build
+# Build
 
 `mvn clean install`
 
-## Implement
+# Implement
 
 The mapper procedure can be called statically using one of four methods in `com.solace.ep.muleflow.MuleFlowGenerator` class. Each of the four methods map AsyncApi to Mule Flow XML the same way. The distinctions are the inputs (AsyncApi File Path or String) and outputs (XML to File or return as String)
 
@@ -29,4 +29,5 @@ The mapper procedure can be called statically using one of four methods in `com.
 |---|---|---|
 |**Input String**|`getMuleDocXmlFromAsyncApiString`|`writeMuleXmlFileFromAsyncApiString`|
 |**Input File Path**|`getMuleDocXmlFromAsyncApiFile`|`writeMuleXmlFileFromAsyncApiFile`|
+
 

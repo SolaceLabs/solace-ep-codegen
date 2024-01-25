@@ -1,5 +1,8 @@
 package com.solace.ep.muleflow.asyncapi;
 
+/**
+ * AsyncApi extension field names for Solace Event Portal
+ */
 public class EpFieldConstants {
     
     public static String

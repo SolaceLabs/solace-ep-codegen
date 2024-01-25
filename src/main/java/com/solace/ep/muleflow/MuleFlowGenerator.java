@@ -1,13 +1,6 @@
 package com.solace.ep.muleflow;
 
 import java.io.File;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.InvalidPathException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.List;
 
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.solace.ep.muleflow.mapper.MuleDocMapper;
@@ -15,6 +8,7 @@ import com.solace.ep.muleflow.mapper.asyncapi.AsyncApiToMuleDocMapper;
 import com.solace.ep.muleflow.mapper.model.MapMuleDoc;
 import com.solace.ep.muleflow.mule.model.core.MuleDoc;
 import com.solace.ep.muleflow.mule.util.XmlMapperUtils;
+import com.solace.ep.muleflow.util.FileUtils;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -36,7 +30,7 @@ public class MuleFlowGenerator {
                     throws Exception {
 
         try {
-            final String asyncApiString = getFileAsString(inputAsyncApiFile);
+            final String asyncApiString = FileUtils.getFileAsString(inputAsyncApiFile);
             final MuleDoc muleDoc = createMuleDocFromAsyncApi( asyncApiString );
             writeMuleDocToXmlFile(muleDoc, outputMuleXmlFile);
         } catch ( Exception exc ) {
@@ -68,13 +62,14 @@ public class MuleFlowGenerator {
     /**
      * Reads AsyncApi from Storage and returns serialized Mule Flow XML content as String.
      * Parameter for AsyncApi is file path.
+     * Returns null if the operation fails.
      * @param inputAsyncApiFile
      * @return
      */
     public static String getMuleDocXmlFromAsyncApiFile( String inputAsyncApiFile ) {
 
         try {
-            final String asyncApiString = getFileAsString(inputAsyncApiFile);
+            final String asyncApiString = FileUtils.getFileAsString(inputAsyncApiFile);
             final MuleDoc muleDoc = createMuleDocFromAsyncApi( asyncApiString );
             return writeMuleDocToXmlString( muleDoc );
         } catch ( Exception exc ) {
@@ -86,6 +81,7 @@ public class MuleFlowGenerator {
     /**
      * Accepts AsyncApi as String parameter and returns serialized Mule Flow XML
      * content as String. Parameter for AsyncApi is the content as String.
+     * Returns null if the operation fails.
      * @param inputAsyncApiString
      * @return
      */
@@ -119,39 +115,5 @@ public class MuleFlowGenerator {
 
         XmlMapper xmlMapper = XmlMapperUtils.createXmlMapperForMuleDoc();
         return xmlMapper.writeValueAsString( muleDoc );
-    }
-
-    /**
-     * Self-Explanatory
-     * @param filePath
-     * @return
-     * @throws Exception
-     */
-    public static String getFileAsString( String filePath ) throws Exception {
-
-        StringBuilder data = new StringBuilder();
-        try {
-            Path path = Paths.get(filePath);
-            List<String> allLines = Files.readAllLines(path, StandardCharsets.UTF_8);
-
-            for ( String s : allLines ) {
-                data.append(s);
-                data.append('\n');
-            }
-        } catch (InvalidPathException ipExc) {
-            log.error("The file path '{}' is invalid", filePath);
-            log.error( ipExc.getMessage() );
-            throw ipExc;
-        } catch (IOException ioExc) {
-            log.error("Error reading file '{}' -- Does the file exist?", filePath);
-            log.error( ioExc.getMessage() );
-            throw ioExc;
-        } catch (Exception exc) {
-            log.error( "Failed to read file {}", filePath );
-            log.error( exc.getLocalizedMessage() );
-            throw exc;
-        }
-        log.info("Read contents of file '{}'", filePath);
-        return data.toString();
     }
 }

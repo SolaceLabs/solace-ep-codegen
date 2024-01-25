@@ -5,14 +5,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.google.gson.JsonElement;
-import com.solace.ep.muleflow.asyncapi.AsyncApiAccessor;
-import com.solace.ep.muleflow.asyncapi.AsyncApiChannel;
-import com.solace.ep.muleflow.asyncapi.AsyncApiMessage;
-import com.solace.ep.muleflow.asyncapi.AsyncApiUtils;
+import com.solace.ep.muleflow.asyncapi.*;
 import com.solace.ep.muleflow.mapper.MapUtils;
-import com.solace.ep.muleflow.mapper.model.MapFlow;
-import com.solace.ep.muleflow.mapper.model.MapMuleDoc;
-import com.solace.ep.muleflow.mapper.model.MapSubFlowEgress;
+import com.solace.ep.muleflow.mapper.model.*;
 
 import lombok.extern.slf4j.Slf4j;
 

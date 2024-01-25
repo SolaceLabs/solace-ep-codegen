@@ -10,6 +10,7 @@ import java.nio.file.Paths;
 import org.junit.jupiter.api.Test;
 
 import com.solace.ep.muleflow.MuleFlowGenerator;
+import com.solace.ep.muleflow.util.FileUtils;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -38,8 +39,6 @@ public class TestEclipseProjectGenerator {
 
         Path newProjectPath = Paths.get( newProject );
         assertTrue( Files.exists( newProjectPath ) );
-        
-        // log.info("Success - createStructure1");
     }
 
     /**
@@ -55,7 +54,7 @@ public class TestEclipseProjectGenerator {
 
         String asyncApi;
         try {
-            asyncApi = MuleFlowGenerator.getFileAsString(INVENTORY_SERVICE);
+            asyncApi = FileUtils.getFileAsString(INVENTORY_SERVICE);
         } catch ( Exception exc ) {
             log.error("Failed to read the input file {}", INVENTORY_SERVICE);
             log.error("Test {} failed", "createMuleProject");
@@ -99,7 +98,7 @@ public class TestEclipseProjectGenerator {
 
         String asyncApi;
         try {
-            asyncApi = MuleFlowGenerator.getFileAsString(INVENTORY_SERVICE);
+            asyncApi = FileUtils.getFileAsString(INVENTORY_SERVICE);
             EclipseProjectGenerator epg = new EclipseProjectGenerator();
             epg.generateEclipseArchiveForMuleFlowFromAsyncApi(groupId, artifactId, version, asyncApi, generatedArchive);
         } catch ( Exception exc ) {
@@ -112,4 +111,67 @@ public class TestEclipseProjectGenerator {
 
     }
 
+    @Test
+    public void testGenerateShippingService0_1_2() {
+
+        final String SHIPPING_SERVICE_ASYNCAPI = "src/test/resources/asyncapi/Shipping Service-0.1.2.json";
+
+        final String 
+            groupId = "com.solace.ep.awesome",
+            artifactId = "shipping-service",
+            version = "0.1.2";
+        final String
+            generatedArchive = "src/test/resources/test-output/generated-archive/" + artifactId  + ".jar";
+
+        String asyncApi;
+        try {
+            // Read asyncapi into string
+            asyncApi = FileUtils.getFileAsString(SHIPPING_SERVICE_ASYNCAPI);
+            // Instantiate Generator
+            EclipseProjectGenerator epg = new EclipseProjectGenerator();
+            // Generate Mule Flow Project Archive
+            epg.generateEclipseArchiveForMuleFlowFromAsyncApi(groupId, artifactId, version, asyncApi, generatedArchive);
+        } catch ( Exception exc ) {
+            log.error("Failed to create the archive file for {}", SHIPPING_SERVICE_ASYNCAPI);
+            fail( exc.getMessage() );
+            return;
+        }
+
+        // Test for existance of output
+        Path generatedArchivePath = Paths.get( generatedArchive );
+        assertTrue( Files.exists( generatedArchivePath ) );
+
+    }
+
+    @Test
+    public void testGenerateShippingService0_1_3() {
+
+        final String SHIPPING_SERVICE_ASYNCAPI = "src/test/resources/asyncapi/Shipping Service-0.1.3 (1).json";
+
+        final String 
+            groupId = "com.solace.ep.awesome",
+            artifactId = "shipping-service",
+            version = "0.1.3";
+        final String
+            generatedArchive = "src/test/resources/test-output/generated-archive/" + artifactId + ".jar";
+
+        String asyncApi;
+        try {
+            // Read asyncapi into string
+            asyncApi = FileUtils.getFileAsString(SHIPPING_SERVICE_ASYNCAPI);
+            // Instantiate Generator
+            EclipseProjectGenerator epg = new EclipseProjectGenerator();
+            // Generate Mule Flow Project Archive
+            epg.generateEclipseArchiveForMuleFlowFromAsyncApi(groupId, artifactId, version, asyncApi, generatedArchive);
+        } catch ( Exception exc ) {
+            log.error("Failed to create the archive file for {}", SHIPPING_SERVICE_ASYNCAPI);
+            fail( exc.getMessage() );
+            return;
+        }
+
+        // Test for existance of output
+        Path generatedArchivePath = Paths.get( generatedArchive );
+        assertTrue( Files.exists( generatedArchivePath ) );
+
+    }
 }

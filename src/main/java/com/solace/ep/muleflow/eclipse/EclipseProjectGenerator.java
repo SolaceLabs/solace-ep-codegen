@@ -1,29 +1,24 @@
 package com.solace.ep.muleflow.eclipse;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.StringTokenizer;
 
 import com.solace.ep.muleflow.MuleFlowGenerator;
-import com.solace.ep.muleflow.util.FileUtils;
-import com.solace.ep.muleflow.util.Zipper;
+import com.solace.ep.muleflow.util.*;
 
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Class to generate Mule Flow Project and project archive as jar file
+ */
 @Slf4j
 public class EclipseProjectGenerator {
     
-    // The actual path separator doesn't matter, it's used as a String tokenizer
-    protected static final String
-                        STATIC_PATH_SEPARATOR = "/";
-
     protected static final String
                         PATH_TMP                    = "$$_TEMP_$$",
                         PATH_META_INF               = "META-INF",
@@ -36,7 +31,7 @@ public class EclipseProjectGenerator {
                         PATH_SRC_TEST_JAVA          = "src/test/java",
                         PATH_SRC_TEST_RESOURCES     = "src/test/resources",
                         PATH_SRC_TEST_MUNIT         = "src/test/munit";
-
+    //
     private static final String
                         ARCHIVE_EXT_STRING          = ".jar",
                         FILE_SEPARATOR              = File.separator;
@@ -54,7 +49,8 @@ public class EclipseProjectGenerator {
      * Default constructor
      */
     public EclipseProjectGenerator() {
-        // Defining list of paths to create in for new Mule Project        
+        // Defining list of paths to create in for new Mule Project under
+        // project root
         projectPathList.add( PATH_EXCHANGE_DOCS         );
         projectPathList.add( PATH_SRC_MAIN_JAVA         );
         projectPathList.add( PATH_SRC_MAIN_MULE         );
@@ -143,17 +139,17 @@ public class EclipseProjectGenerator {
         File exchangeDocs = projectPaths.get( PATH_EXCHANGE_DOCS );
         File srcTestResources = projectPaths.get( PATH_SRC_TEST_RESOURCES );
 
-        writeStringToFile( 
+        FileUtils.writeStringToFile( 
             MuleProjectContent.CONTENT_MULE_ARTIFACT__JSON, 
             projectRoot, 
             MuleProjectContent.FILE_MULE_ARTIFACT__JSON);
         
-        writeStringToFile( 
+        FileUtils.writeStringToFile( 
             MuleProjectContent.CONTENT_HOME__MD,
             exchangeDocs,
             MuleProjectContent.FILE_HOME__MD);
 
-        writeStringToFile(
+        FileUtils.writeStringToFile(
             MuleProjectContent.CONTENT_LOG4J2_TEST__XML, 
             srcTestResources, 
             MuleProjectContent.FILE_LOG4J2_TEST__XML);
@@ -174,7 +170,7 @@ public class EclipseProjectGenerator {
         String log4jXml = MuleProjectContent.CONTENT_LOG4J2__XML.replaceAll(
                                 MuleProjectContent.TOKEN_FLOW_NAME, flowName );
 
-        writeStringToFile(
+        FileUtils.writeStringToFile(
             log4jXml, 
             srcMainResources, 
             MuleProjectContent.FILE_LOG4J2__XML);
@@ -198,7 +194,7 @@ public class EclipseProjectGenerator {
                             .replaceAll(MuleProjectContent.TOKEN_ARTIFACT_ID, artifactId)
                             .replaceAll(MuleProjectContent.TOKEN_VERSION, version );
         
-        writeStringToFile(
+        FileUtils.writeStringToFile(
             pomXml,
             projectRoot,
             MuleProjectContent.FILE_POM__XML);
@@ -217,7 +213,7 @@ public class EclipseProjectGenerator {
         log.debug("Start creating Mule Flow {}.xml for Mule Project", flowName);
         File srcMainMule = projectPaths.get( PATH_SRC_MAIN_MULE );
 
-        writeStringToFile( 
+        FileUtils.writeStringToFile( 
             xmlData, 
             srcMainMule, 
             flowName + ".xml" );
@@ -225,6 +221,12 @@ public class EclipseProjectGenerator {
         log.debug("Completed creating Mule Flow {}.xml for Mule Project", flowName);
     }
 
+    /**
+     * Creates Mule Flow project with sub-directories in system temporary directory
+     * @param newProjectName
+     * @return
+     * @throws Exception
+     */
     protected String createProjectStructure( String newProjectName ) throws Exception {
 
         log.debug("Start creating Mule Project folder structure in temp directory");
@@ -233,16 +235,16 @@ public class EclipseProjectGenerator {
             tempDirectory = Files.createTempDirectory( newProjectName + "_" ).toFile();
             projectPaths.put( PATH_TMP, tempDirectory );
             // Create META-INFO Directory
-            metaInfDirectory = createDirectory(tempDirectory, PATH_META_INF);
+            metaInfDirectory = FileUtils.createDirectory(tempDirectory, PATH_META_INF);
             projectPaths.put( PATH_META_INF, metaInfDirectory );
             // Create Project Root Directory
-            newProjectRoot = createDirectory(
+            newProjectRoot = FileUtils.createDirectory(
                                 tempDirectory, 
                                 String.format(PATH_PROJECT_ROOT, newProjectName) );
             projectPaths.put( PATH_PROJECT_ROOT, newProjectRoot );
 
             for ( String subPath : projectPathList ) {
-                File subDir = createDirectory(newProjectRoot, subPath);
+                File subDir = FileUtils.createDirectory(newProjectRoot, subPath);
                 projectPaths.put( subPath, subDir );
             }
         } catch ( IOException ioExc ) {
@@ -254,33 +256,4 @@ public class EclipseProjectGenerator {
         return newProjectRoot.getAbsolutePath();
     }
 
-    private void writeStringToFile( String dataToWrite, File dir, String fileName )  
-    throws IOException {
-
-        BufferedWriter writer = new BufferedWriter(
-            new FileWriter( 
-                new File( dir, fileName ), 
-                false ) );
-        writer.write(dataToWrite);
-        writer.close();
-    }
-
-    private File createDirectory( File rootPath, String subPath ) throws Exception {
-
-        StringTokenizer pathTokenizer = new StringTokenizer(subPath, STATIC_PATH_SEPARATOR);
-        File newDirectory = rootPath;
-
-        while ( pathTokenizer.hasMoreTokens() ) {
-            String s = pathTokenizer.nextToken();
-            File workingDir = new File(newDirectory, s);
-            if ( ! workingDir.exists() ) {
-                // Use mkdir() instead of mkdirs() to avoid file separator problems
-                workingDir.mkdir();
-            }
-            // TODO - Error handling
-            newDirectory = workingDir;
-        }
-
-        return newDirectory;
-    }
 }

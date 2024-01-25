@@ -5,6 +5,9 @@ import java.security.NoSuchAlgorithmException;
 
 import com.solace.ep.muleflow.mapper.model.MapConfig;
 
+/**
+ * Class to containing constants and convenience methods to support MuleDocMapper class
+ */
 public class MapUtils {
     
     public static final String

@@ -6,6 +6,10 @@ import java.util.Map;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * Intermediate format for mapping Egress (Mule sub-flow) for 
+ * applications using the Solace Mule extension for message publication
+ */
 @Data
 @NoArgsConstructor
 public class MapSubFlowEgress {

@@ -1,6 +1,11 @@
 package com.solace.ep.muleflow.eclipse;
 
+/**
+ * Static content with tokens to find/replace to create project-specific files
+ */
 public class MuleProjectContent {
+
+    // TODO - Replace POM and LOG4J static content with a content builder
     
     public static final String
                 FILE_MULE_ARTIFACT__JSON = "mule-artifact.json",

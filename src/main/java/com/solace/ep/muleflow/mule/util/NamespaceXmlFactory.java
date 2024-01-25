@@ -14,8 +14,11 @@ import javax.xml.stream.XMLStreamWriter;
 import com.fasterxml.jackson.core.io.IOContext;
 import com.fasterxml.jackson.dataformat.xml.XmlFactory;
 import com.fasterxml.jackson.dataformat.xml.util.StaxUtil;
-import com.solace.ep.muleflow.mule.model.ModelNamespaceConstants;
 
+/**
+ * Class to set up namespaces and prefixes for Mule Flow Model
+ * using FasterJackson parsers
+ */
 public class NamespaceXmlFactory extends XmlFactory {
 
     private final String defaultNamespace;
@@ -70,7 +73,6 @@ public class NamespaceXmlFactory extends XmlFactory {
                         }
                     }
                     return "";
-//                    throw new Exception("Could not find prefix for namespace: " + namespaceURI);
                 }
 
                 @Override
@@ -113,7 +115,6 @@ public class NamespaceXmlFactory extends XmlFactory {
                         }
                     }
                     return "";
-//                    throw new Exception("Could not find prefix for namespace: " + namespaceURI);
                 }
 
                 @Override
