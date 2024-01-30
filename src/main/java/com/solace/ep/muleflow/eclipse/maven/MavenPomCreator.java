@@ -27,7 +27,6 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Data
-@NoArgsConstructor
 public class MavenPomCreator {
 
     private static final String
@@ -231,5 +230,12 @@ public class MavenPomCreator {
         FileUtils.writeStringToFile( stringWriter.toString(), dir, fileName);
         stringWriter.close();
         log.info( "Wrote Maven pom.xml to: {}", dir.getAbsolutePath() );
+    }
+
+    public static MavenPomConfigSettings getMavenPomConfigSettingsFromFile() {
+        // TODO - Get the MavenPomConfigSettings from file
+        MavenPomConfigSettings mavenPomConfigSettings = null;
+
+        return mavenPomConfigSettings;
     }
 }

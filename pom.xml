@@ -57,11 +57,11 @@
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.mule/mule-maven-pom-parser-api -->
-        <dependency>
+        <!-- <dependency>
             <groupId>org.mule</groupId>
             <artifactId>mule-maven-pom-parser-api</artifactId>
             <version>2.0.1</version>
-        </dependency>
+        </dependency> -->
         
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
