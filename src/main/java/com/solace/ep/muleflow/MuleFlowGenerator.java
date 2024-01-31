@@ -66,7 +66,8 @@ public class MuleFlowGenerator {
      * @param inputAsyncApiFile
      * @return
      */
-    public static String getMuleDocXmlFromAsyncApiFile( String inputAsyncApiFile ) {
+    public static String getMuleDocXmlFromAsyncApiFile( String inputAsyncApiFile ) 
+        throws Exception {
 
         try {
             final String asyncApiString = FileUtils.getFileAsString(inputAsyncApiFile);
@@ -74,7 +75,7 @@ public class MuleFlowGenerator {
             return writeMuleDocToXmlString( muleDoc );
         } catch ( Exception exc ) {
             log.error( "Failed to create Mule Doc XML output file from the AsyncApi input file" );
-            return null;
+            throw exc;
         }
     }
 
@@ -85,14 +86,15 @@ public class MuleFlowGenerator {
      * @param inputAsyncApiString
      * @return
      */
-    public static String getMuleDocXmlFromAsyncApiString( String inputAsyncApiString ) {
+    public static String getMuleDocXmlFromAsyncApiString( String inputAsyncApiString ) 
+        throws Exception {
 
         try {
             final MuleDoc muleDoc = createMuleDocFromAsyncApi( inputAsyncApiString );
             return writeMuleDocToXmlString( muleDoc );
         } catch ( Exception exc ) {
             log.error( "Failed to create Mule Doc XML output file from the AsyncApi input file" );
-            return null;
+            throw exc;
         }
     }
 

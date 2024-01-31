@@ -78,4 +78,68 @@
         </dependency>
       
     </dependencies>
+
+    <build>
+        <plugins>
+          <!-- clean lifecycle, see https://maven.apache.org/ref/current/maven-core/lifecycles.html#clean_Lifecycle -->
+          <plugin>
+            <artifactId>maven-clean-plugin</artifactId>
+            <version>3.2.0</version>
+          </plugin>
+          <!-- default lifecycle, jar packaging: see https://maven.apache.org/ref/current/maven-core/default-bindings.html#Plugin_bindings_for_jar_packaging -->
+          <plugin>
+            <artifactId>maven-resources-plugin</artifactId>
+            <version>3.2.0</version>
+            <executions>
+              <execution>
+                  <id>copy-config</id>
+                  <phase>generate-sources</phase>
+                  <goals>
+                      <goal>copy-resources</goal>
+                  </goals>
+                  <configuration>
+                      <outputDirectory>${basedir}/target/src/main/resources</outputDirectory>
+                      <resources>
+                          <resource>
+                              <directory>src/main/resources</directory>
+                              <includes>
+                                  <include>*.properties</include>
+                                  <include>*.yaml</include>
+                              </includes>
+                          </resource>
+                      </resources>
+                  </configuration>
+              </execution>
+            </executions>          
+          </plugin>
+          <plugin>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <version>3.8.0</version>
+              <configuration>
+                  <source>${maven.compiler.source}</source>
+                  <target>${maven.compiler.target}</target>
+              </configuration>
+          </plugin>
+          <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-assembly-plugin</artifactId>
+              <version>3.4.1</version>
+              <configuration>
+                <descriptorRefs>
+                    jar-with-dependencies
+                </descriptorRefs>
+                <attach>false</attach>
+              </configuration>
+              <executions>
+                <execution>
+                  <id>create-archive</id>
+                  <phase>package</phase>
+                    <goals>
+                      <goal>single</goal>
+                    </goals>
+                </execution>
+              </executions>
+          </plugin>
+        </plugins>
+    </build>
 </project>

@@ -9,6 +9,7 @@ import java.nio.file.Paths;
 
 import org.junit.jupiter.api.Test;
 
+import com.solace.ep.asyncapi.tests.TestAsyncApiParsing;
 import com.solace.ep.muleflow.MuleFlowGenerator;
 import com.solace.ep.muleflow.util.FileUtils;
 
@@ -174,4 +175,31 @@ public class TestEclipseProjectGenerator {
         assertTrue( Files.exists( generatedArchivePath ) );
 
     }
+
+    @Test
+    public void testGenerateEclipseArchiveForMuleFlowFromAsyncApi_() {
+
+        final String 
+            groupId = "com.solace.ep.awesome",
+            artifactId = "another-sample",
+            version = "1.0.2";
+        final String
+            generatedArchive = "src/test/resources/test-output/generated-archive/" + artifactId + ".jar";
+
+        String asyncApi;
+        try {
+//            asyncApi = FileUtils.getFileAsString(INVENTORY_SERVICE);
+            asyncApi = TestAsyncApiParsing.getSampleAsyncApi();
+            EclipseProjectGenerator epg = new EclipseProjectGenerator();
+            epg.generateEclipseArchiveForMuleFlowFromAsyncApi(groupId, artifactId, version, asyncApi, generatedArchive);
+        } catch ( Exception exc ) {
+            log.error("Failed to create the archive file for {}", INVENTORY_SERVICE);
+            fail( exc.getMessage() );
+            return;
+        }
+        Path generatedArchivePath = Paths.get( generatedArchive );
+        assertTrue( Files.exists( generatedArchivePath ) );
+
+    }
+
 }

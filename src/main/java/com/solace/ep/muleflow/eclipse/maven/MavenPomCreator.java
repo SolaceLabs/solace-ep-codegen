@@ -141,6 +141,7 @@ public class MavenPomCreator {
 
         Model pomModel = new Model();
 
+        // G:A:V, Packaging, Name
         pomModel.setModelVersion(MAVEN_MODEL_VERSION);
         pomModel.setGroupId(groupId);
         pomModel.setArtifactId(artifactId);
@@ -148,17 +149,20 @@ public class MavenPomCreator {
         pomModel.setPackaging(packaging);
         pomModel.setName(name);
 
+        // Properties
         pomModel.setProperties( new Properties() );
         pomModel.getProperties().setProperty(PROP_SOURCE_ENCODING, sourceEncoding);
         pomModel.getProperties().setProperty(PROP_OUTPUT_ENCODING, outputEncoding);
         pomModel.getProperties().setProperty(PROP_APP_RUNTIME, appRuntimeVersion);
         pomModel.getProperties().setProperty(PROP_MULE_PLUGIN_VERSION, muleMavenPluginVersion);
 
+        // Add build plugins: clean, mule maven, compiler
         List<Plugin> buildPlugins = new ArrayList<Plugin>();
         {
             Plugin clean = new Plugin(), muleMaven = new Plugin(), compiler = new Plugin();
+
             clean.setGroupId("org.apache.maven.plugins");
-            clean.setArtifactId("maven-clean-plugi");
+            clean.setArtifactId("maven-clean-plugin");
             clean.setVersion(mavenCleanPluginVersion);
 
             muleMaven.setGroupId("org.mule.tools.maven");
@@ -178,6 +182,7 @@ public class MavenPomCreator {
         pomModel.setBuild( new Build() );
         pomModel.getBuild().setPlugins( buildPlugins );
 
+        // Add project dependencies; filter by mule module / protocol types
         pomModel.setDependencies( new ArrayList<Dependency>() );
         for ( DependencyConfig dc : mavenPomConfigSettings.getDependencies() ) {
             if ( dc.getAppliesTo() == ModuleProtocolType.ALL || moduleProtocolTypes.contains( dc.getAppliesTo() ) ) {
@@ -190,6 +195,7 @@ public class MavenPomCreator {
             }
         }
 
+        // Add repositories and plugin repositories
         pomModel.setRepositories( new ArrayList<Repository>() );
         pomModel.setPluginRepositories( new ArrayList<Repository>() );
         for ( RepositoryConfig rc : mavenPomConfigSettings.getRepositories() ) {

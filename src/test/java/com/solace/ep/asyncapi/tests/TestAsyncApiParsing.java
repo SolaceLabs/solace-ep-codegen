@@ -277,4 +277,43 @@ public class TestAsyncApiParsing {
         }
         return data.toString();
     }
+
+    public static String getSampleAsyncApi() {
+        return "{\"components\":{\"schemas\":{\"Invoice_Received\":{\"x-ep-schema-version\":\"0.1.0\",\"x-ep-schema-version-id\":\"i5j8l2ga066\",\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"x-ep-schema-state-name\":\"DRAFT\",\"x-ep-schema-name\":\"Invoice Received\",\"title\":\"Invoice Received\",\"type\":\"object\",\"x-ep-application-domain-id\":\"bex7ddi7ke5\",\"required\":[\"event_type\",\"event_id\",\"timestamp\",\"invoice\"],\"x-ep-schema-version-displayname\":\"0.1.0\",\"x-ep-shared\":\"true\",\"x-ep-application-domain-name\":\"Acme Retail - Supply Chain Optimisation\",\"x-ep-schema-state-id\":\"1\",\"x-ep-schema-id\":\"jj5la1u8rj8\",\"properties\":{\"event_type\":{\"type\":\"string\",\"enum\":[\"Invoice Received\"]},\"event_id\":{\"type\":\"string\"},\"invoice\":{\"type\":\"object\",\"properties\":{\"total_price\":{\"type\":\"number\"},\"due_date\":{\"format\":\"date\",\"type\":\"string\"},\"supplier_name\":{\"type\":\"string\"},\"invoice_number\":{\"type\":\"string\"},\"supplier_id\":{\"type\":\"string\"},\"items\":{\"type\":\"array\",\"items\":{\"type\":\"object\",\"properties\":{\"quantity\":{\"type\":\"integer\"},\"total_price\":{\"type\":\"number\"},\"product_id\":{\"type\":\"string\"},\"unit_price\":{\"type\":\"number\"},\"product_name\":{\"type\":\"string\"}},\"required\":[\"product_id\",\"product_name\",\"quantity\",\"unit_price\",\"total_price\"]}},\"invoice_date\":{\"format\":\"date\",\"type\":\"string\"},\"status\":{\"type\":\"string\",\"enum\":[\"Pending\",\"Paid\",\"Partially Paid\",\"Cancelled\"]}},\"required\":[\"invoice_number\",\"supplier_name\",\"supplier_id\",\"invoice_date\",\"due_date\",\"items\",\"total_price\",\"status\"]},\"timestamp\":{\"format\":\"date-time\",\"type\":\"string\"}}}},\"messages\":{\"Invoice_Received\":{\"x-ep-event-id\":\"dvmxhwp5t38\",\"x-ep-event-version-displayname\":\"0.1.0\",\"description\":\"\",\"x-ep-application-domain-id\":\"bex7ddi7ke5\",\"schemaFormat\":\"application/vnd.aai.asyncapi+json;version=2.0.0\",\"x-ep-event-state-name\":\"DRAFT\",\"x-ep-shared\":\"false\",\"x-ep-application-domain-name\":\"Acme Retail - Supply Chain Optimisation\",\"x-ep-event-version-id\":\"w15nstc9joz\",\"payload\":{\"$ref\":\"#/components/schemas/Invoice_Received\"},\"x-ep-event-version\":\"0.1.0\",\"x-ep-event-name\":\"Invoice Received\",\"contentType\":\"application/json\",\"x-ep-event-state-id\":\"1\"}}},\"channels\":{\"acmeRetail/sc/procurement/invoicing/invoice/received/v1/{supplierID}/{invoiceID}/{invoiceAmount}\":{\"subscribe\":{\"message\":{\"$ref\":\"#/components/messages/Invoice_Received\"}},\"parameters\":{\"supplierID\":{\"schema\":{\"type\":\"string\"},\"x-ep-parameter-name\":\"supplierID\"},\"invoiceID\":{\"schema\":{\"type\":\"string\"},\"x-ep-parameter-name\":\"invoiceID\"},\"invoiceAmount\":{\"schema\":{\"type\":\"string\"},\"x-ep-parameter-name\":\"invoiceAmount\"}}}},\"asyncapi\":\"2.5.0\",\"info\":{\"x-ep-application-version\":\"0.1.0\",\"x-ep-application-version-id\":\"oawbyn6fili\",\"x-ep-application-id\":\"1i9tjh7t65x\",\"description\":\"An accounts payable system is a financial management system that helps businesses track and manage their outstanding bills and invoices from suppliers and vendors. Its main functions include processing and recording vendor invoices, managing payments and cash flow, and ensuring timely and accurate payment of bills to vendors. The system helps businesses streamline their payment processes, reduce errors and fraud, and improve their financial visibility and control. Accounts payable systems typically integrate with other financial and procurement systems to provide end-to-end automation of the procure-to-pay process.\",\"x-ep-displayname\":\"0.1.0\",\"x-ep-state-name\":\"DRAFT\",\"title\":\"Accounts Payable\",\"x-ep-application-domain-id\":\"bex7ddi7ke5\",\"version\":\"0.1.0\",\"x-ep-state-id\":\"1\",\"x-ep-application-domain-name\":\"Acme Retail - Supply Chain Optimisation\"}}";
+    }
+
+    @Test 
+    void testValidateAsyncApiSubscribeChannels_() {
+        final String asyncApi = getSampleAsyncApi();
+
+        AsyncApiAccessor accessor = new AsyncApiAccessor(AsyncApiAccessor.parseAsyncApi(asyncApi));
+
+        try {
+
+            for ( String channelId : accessor.getChannels().keySet() ) {
+
+                AsyncApiChannel channel = new AsyncApiChannel( accessor.getChannels().get(channelId).getAsJsonObject(), accessor );
+
+                if ( channel.hasSubscribeOperation() ) {
+                    System.out.println( channel.getSubscribeOpMessage().getPayloadAsString() );
+
+                    assertTrue( 
+                        channel.getSubscribeOpMessage().getPayloadAsString().contains("namespace") ||
+                        channel.getSubscribeOpMessage().getPayloadAsString().contains( "properties" ));
+
+                    for (String p : channel.getParameters() ) {
+                        System.out.println( "Parameter: " + p );
+                    }
+
+                    System.out.println();
+                }
+            }
+
+        } catch( Exception e) {
+            fail(e.getLocalizedMessage());
+        }
+    }
+
+
+
 }
