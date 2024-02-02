@@ -17,20 +17,32 @@ public class MapUtils {
                     DEFAULT_SOLACE_CONFIG_DOC_NAME = "Solace PubSub+ Connector Config",
                     DEFAULT_TRANSFORM_MESSAGE_DOC_NAME = "Transform Message";
 
+    // public static final String 
+    //                 DEFAULT_CONNECT_BROKER_HOST = "tcps://mr-connection-service.messaging.solace.cloud:55443",
+    //                 DEFAULT_CONNECT_MSGVPN = "defaultVpn",
+    //                 DEFAULT_CONNECT_CLIENT_USERNAME = "defaultClientUser",
+    //                 DEFAULT_CONNECT_PASSWORD = "defaultPassword1",
+    //                 DEFAULT_EP_CLOUD_API_TOKEN = "eySetYourCloudApiTokenHere";
+    //
     public static final String 
-                    DEFAULT_CONNECT_BROKER_HOST = "http://mr-connection-service.messaging.solace.cloud:55443",
-                    DEFAULT_CONNECT_MSGVPN = "defaultVpn",
-                    DEFAULT_CONNECT_CLIENT_USERNAME = "defaultClientUser",
-                    DEFAULT_CONNECT_PASSWORD = "defaultPassword1",
-                    DEFAULT_EP_CLOUD_API_TOKEN = "eySetYourCloudApiTokenHere";
-
+                    DEFAULT_CONNECT_BROKER_HOST = "${solace.connection.brokerHost}",
+                    DEFAULT_CONNECT_MSGVPN = "${solace.connection.messageVpn}",
+                    DEFAULT_CONNECT_CLIENT_USERNAME = "${solace.connection.clientUsername}",
+                    DEFAULT_CONNECT_PASSWORD = "${solace.connection.clientPassword}",
+                    DEFAULT_EP_CLOUD_API_TOKEN = "${solace.eventPortal.apiToken}";
+    //
     public static final String
                     FLOW_REF_DOC_NAME_TO_BIZ_LOGIC = "Business Logic",
                     FLOW_REF_DOC_NAME_TO_EGRESS = "Connect this to the correct egress flow";
 
     public static final String
                     GLOBAL_PROPERTY_DOC_NAME = "Global Property",
-                    GLOBAL_NAME_EP_APP_VERSION_ID = "epApplicationVersionId";
+                    GLOBAL_NAME_EP_APP_VERSION_ID = "epApplicationVersionId",
+                    GLOBAL_PROPERTY_DEFAULT_ENV_VAR_NAME = "env",
+                    GLOBAL_PROPERTY_DEFAULT_ENV = "dev";
+    //
+    public static final String
+                    CONFIG_PROPERTY_DOC_NAME = "Configuration Properties File";
 
     public static final String
                     MSG_TYPE_TEXT_MESSAGE = "TEXT_MESSAGE",
@@ -49,7 +61,8 @@ public class MapUtils {
                     PATTERN_BIZLOGIC_SUBFLOW_NAME = "BizLogic.%s.%s",
                     PATTERN_EGRESS_SUBFLOW_NAME = "Egress.%s.%s",
                     PATTERN_EGRESS_SUBFLOW_DOC_NAME = "Publish %s Event",
-                    PATTERN_SETVARIABLE_DOC_NAME_FOR_TOPIC_PARAMETER = "Dynamic Topic Parameter: %s";
+                    PATTERN_SETVARIABLE_DOC_NAME_FOR_TOPIC_PARAMETER = "Dynamic Topic Parameter: %s",
+                    PATTERN_CONFIG_PROPERTY_FILE = "${%s}.yaml";
 
     private static final String
                     TOPIC = "topic",
@@ -146,6 +159,16 @@ public class MapUtils {
             .connectPassword(DEFAULT_CONNECT_PASSWORD)
             .epCloudApiToken(DEFAULT_EP_CLOUD_API_TOKEN)
             .build();
+    }
+
+    /**
+     * Get the 'file name' to use for Configuration Properties
+     * file name contains environment variable token
+     * @param environmentString
+     * @return
+     */
+    public static String getConfigPropertiesFileWithEnvToken( String environmentVariable ) {
+        return String.format( PATTERN_CONFIG_PROPERTY_FILE, environmentVariable );
     }
     
     /**
