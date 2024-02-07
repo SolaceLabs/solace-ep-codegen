@@ -3,6 +3,8 @@ package com.solace.ep.muleflow.mule.model.core;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
@@ -18,6 +20,7 @@ import lombok.NoArgsConstructor;
     namespace = "http://www.mulesoft.org/schema/mule/core",
     localName = "mule"
 )
+@JsonInclude( Include.NON_NULL )
 public class MuleDoc {
     
     @JacksonXmlProperty(
@@ -37,7 +40,7 @@ public class MuleDoc {
         namespace = "http://www.mulesoft.org/schema/mule/core",
         localName = "configuration-properties"
     )
-    protected ConfigurationProperties configurationProperties;
+    protected ConfigurationProperties configurationProperties = null;
 
     @JacksonXmlProperty(
         namespace = "http://www.mulesoft.org/schema/mule/core",

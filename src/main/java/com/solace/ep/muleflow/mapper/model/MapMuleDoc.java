@@ -16,6 +16,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class MapMuleDoc {
     
+    Map<byte[], SchemaInstance> schemaMap = new HashMap<>();
+
     MapConfig mapConfig = null;
 
     // Name-Value pairs

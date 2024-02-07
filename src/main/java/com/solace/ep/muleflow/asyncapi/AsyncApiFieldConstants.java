@@ -22,7 +22,8 @@ public class AsyncApiFieldConstants {
     public static final String 
                     API_SCHEMA_FORMAT = "schemaFormat",
                     API_PAYLOAD = "payload",
-                    API_CONTENT_TYPE = "contentType";
+                    API_CONTENT_TYPE = "contentType",
+                    API_SCHEMA_TITLE = "title";
 
     public static final String
                     API_$REF = "$ref";

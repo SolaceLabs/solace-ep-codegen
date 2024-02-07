@@ -143,8 +143,6 @@ public class AsyncApiMessage {
             return null;
         }
         if ( payload.has(AsyncApiFieldConstants.API_$REF) ) {
-            // TODO Get Reference to schemas and return as string
-            
             JsonElement refElement = payload.get( AsyncApiFieldConstants.API_$REF );
             if ( refElement.isJsonPrimitive() ) {
                 return this.asyncApi.getSchemaAsReference( refElement.getAsString() );
@@ -153,6 +151,22 @@ public class AsyncApiMessage {
         }
         Gson gson = new Gson();
         return gson.toJson(payload);
+    }
+
+    public String getPayloadRef() {
+        JsonObject payload = asyncApiMessage.getAsJsonObject( AsyncApiFieldConstants.API_PAYLOAD );
+        if ( payload == null ) {
+            return null;
+        }
+        if ( payload.has(AsyncApiFieldConstants.API_$REF) ) {
+            JsonElement refElement = payload.get( AsyncApiFieldConstants.API_$REF );
+            if ( refElement.isJsonPrimitive() ) {
+                try {
+                    return refElement.getAsString();
+                } catch ( Exception exc ) { }
+            }
+        }
+        return null;
     }
 
     /**

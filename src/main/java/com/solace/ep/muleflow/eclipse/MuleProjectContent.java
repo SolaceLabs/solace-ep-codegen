@@ -12,7 +12,8 @@ public class MuleProjectContent {
                 FILE_LOG4J2_TEST__XML = "log4j2-test.xml",
                 FILE_LOG4J2__XML = "log4j2.xml",
                 FILE_HOME__MD = "home.md",
-                FILE_POM__XML = "pom.xml";
+                FILE_POM__XML = "pom.xml",
+                FILE_GLOBAL_CONFIGS = "Global-Configs";
 
     public static final String
                 TOKEN_FLOW_NAME = "___FLOW_NAME___",

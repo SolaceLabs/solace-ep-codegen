@@ -77,7 +77,7 @@ public class TestMuleFlowGenerator {
             return;
         }
 
-        assertTrue( xmlString.contains("<solace:config") );
+        assertTrue( xmlString.contains("<set-variable") );
     }
 
     @Test
@@ -104,7 +104,7 @@ public class TestMuleFlowGenerator {
             return;
         }
 
-        assertTrue( xmlString.contains("<solace:config") );
+        assertTrue( xmlString.contains("<set-variable") );
 
     }
 }

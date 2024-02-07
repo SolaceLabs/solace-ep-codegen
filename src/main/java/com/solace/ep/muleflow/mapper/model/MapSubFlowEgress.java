@@ -20,7 +20,11 @@ public class MapSubFlowEgress {
 
     protected String jsonSchemaContent = null;
 
+    protected byte[] jsonSchemaReference = null;
+
     protected String xmlSchemaContent = null;
+
+    protected byte[] xmlSchemaReference = null;
 
     protected String publishAddress;
 

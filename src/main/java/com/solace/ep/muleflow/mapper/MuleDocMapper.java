@@ -1,5 +1,6 @@
 package com.solace.ep.muleflow.mapper;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,7 +29,9 @@ public class MuleDocMapper {
     /**
      * Global configs
      */
-    private MuleDoc globalConfigs;
+    private MuleDoc globalConfigsDoc;
+
+    private MapMuleDoc mapMuleDoc;
 
     // Keep track of direct consumer count for unique naming
     private int directConsumerCount = 0;
@@ -44,23 +47,25 @@ public class MuleDocMapper {
     /**
      * Default Constructor
      */
-    public MuleDocMapper() {
-        initialize();
+    public MuleDocMapper( MapMuleDoc mapMuleDoc ) {
+        // initialize();
+        this.mapMuleDoc = mapMuleDoc;
     }
 
-    private void initialize() {
-        muleDoc = new MuleDoc();
-        countByMessageName.clear();
-        countByFlowDesignation.clear();
-        directConsumerCount = 0;
-    }
+    // private void initialize() {
+    //     muleDoc = new MuleDoc();
+    //     countByMessageName.clear();
+    //     countByFlowDesignation.clear();
+    //     directConsumerCount = 0;
+    // }
 
-    public MuleDoc createGlobalConfigsDoc( MapMuleDoc mapMuleDoc ) {
-        if ( globalConfigs == null ) {
-            globalConfigs = new MuleDoc();
-            globalConfigs.setSolaceConfiguration( createSolaceConfiguration( mapMuleDoc.getMapConfig() ) );
+    public MuleDoc createGlobalConfigsDoc( ) {
+        if ( globalConfigsDoc == null ) {
+            globalConfigsDoc = new MuleDoc();
+            globalConfigsDoc.setSolaceConfiguration( createSolaceConfiguration() );
+            addDefaultEnvironmentAsGlobalProperty( globalConfigsDoc );
         }
-        return globalConfigs;
+        return globalConfigsDoc;
     }
 
     /**
@@ -72,8 +77,8 @@ public class MuleDocMapper {
      * @param mapMuleDoc
      * @return
      */
-    public MuleDoc createMuleDoc( MapMuleDoc mapMuleDoc ) {
-        return createMuleDoc(mapMuleDoc, false);
+    public MuleDoc createMuleDoc( ) {
+        return createMuleDoc(false);
     }
 
     /**
@@ -83,22 +88,29 @@ public class MuleDocMapper {
      * @param mapMuleDoc
      * @return
      */
-    public MuleDoc createMuleDoc( MapMuleDoc mapMuleDoc, boolean includeGlobalConfigs ) {
+    public MuleDoc createMuleDoc( boolean embeddedGlobalConfigs ) {
 
         // In case of instance re-use
-        initialize();
+//        initialize();
+
+        if ( this.muleDoc != null ) {
+            return this.muleDoc;
+        }
+
         log.info("BEGIN Mapping from MapMuleDoc --> Mule Flow");
 
-        if ( includeGlobalConfigs ) {
-            // Create solace:config block; null config is handled
-            muleDoc.setSolaceConfiguration( createSolaceConfiguration( mapMuleDoc.getMapConfig() ) );
-        }
+        this.muleDoc = new MuleDoc();
 
         // Add global-properties
         // 1. From MapMuleDoc
         // 2. Add Environment Property
         addGlobalProperties( mapMuleDoc.getGlobalProperties() );
-        addDefaultEnvironmentAsGlobalProperty();
+
+        if ( embeddedGlobalConfigs ) {
+            // Create solace:config block; null config is handled
+            addDefaultEnvironmentAsGlobalProperty( this.muleDoc );
+            muleDoc.setSolaceConfiguration( createSolaceConfiguration( ) );
+        }
 
         // Add Configuration Properties
         addConfigurationProperties( MapUtils.GLOBAL_PROPERTY_DEFAULT_ENV_VAR_NAME );
@@ -179,8 +191,8 @@ public class MuleDocMapper {
         }
 
         // Add validate blocks
-        addValidateXmlSchema(muleFlow, mapFromFlow.getXmlSchemaContent());
-        addValidateJsonSchema(muleFlow, mapFromFlow.getJsonSchemaContent());
+        addValidateXmlSchema(muleFlow, mapFromFlow.getXmlSchemaContent() );
+        addValidateJsonSchema(muleFlow, mapFromFlow.getJsonSchemaContent(), mapFromFlow.getJsonSchemaReference() );
 
         // Use the assigned designation (queue name or static topic subscriber) and append
         // integer to ensure uniqueness
@@ -240,7 +252,7 @@ public class MuleDocMapper {
         addSetVariables(subFlowEgress, mapFromSubFlow.getSetVariables());
 
         addValidateXmlSchema(subFlowEgress, mapFromSubFlow.getXmlSchemaContent());
-        addValidateJsonSchema(subFlowEgress, mapFromSubFlow.getJsonSchemaContent());
+        addValidateJsonSchema(subFlowEgress, mapFromSubFlow.getJsonSchemaContent(), mapFromSubFlow.getJsonSchemaReference() );
         addSolacePublish(subFlowEgress, mapFromSubFlow );
 
         muleDoc.getSubFlow().add(subFlowEgress);
@@ -312,16 +324,23 @@ public class MuleDocMapper {
      * @param muleFlow
      * @param jsonSchemaContents
      */
-    public static void addValidateJsonSchema( MuleFlow muleFlow, String jsonSchemaContents ) {
-        if (jsonSchemaContents == null) {
+    public void addValidateJsonSchema( MuleFlow muleFlow, String jsonSchemaContent, byte[] jsonSchemaReference ) {
+        if (jsonSchemaContent == null && jsonSchemaReference == null) {
             log.debug("jsonSchemaContents is empty for Mule Flow '{}' -- skipping", muleFlow.getName());
             return;
         }
 
         ValidateJsonSchema validateJsonSchema = new ValidateJsonSchema();
         validateJsonSchema.setDocName("Validate JSON schema");
-        if ( jsonSchemaContents.length() > 0 ) {
-            validateJsonSchema.setSchemaContents( jsonSchemaContents );
+
+        if ( jsonSchemaReference != null ) {
+            SchemaInstance si = mapMuleDoc.getSchemaMap().get( jsonSchemaReference );
+            if ( si != null ) {
+                validateJsonSchema.setSchemaLocation( schemaLocation( si.getFileName() ) );
+            }
+        }
+        if ( validateJsonSchema.getSchemaLocation() == null && jsonSchemaContent.length() > 0 ) {
+            validateJsonSchema.setSchemaContents( jsonSchemaContent );
         }
         muleFlow.setValidateJsonSchema(validateJsonSchema);
         log.debug("Added xml:validate-schema for Mule Flow '{}'", muleFlow.getName());
@@ -383,8 +402,8 @@ public class MuleDocMapper {
         log.info("Mapped {} Global Properties from input to MuleDoc", globalPropertyCount);
     }
 
-    protected void addDefaultEnvironmentAsGlobalProperty() {
-        muleDoc.getGlobalProperty().add(
+    protected void addDefaultEnvironmentAsGlobalProperty( MuleDoc doc ) {
+        doc.getGlobalProperty().add(
             new GlobalProperty(
                 MapUtils.GLOBAL_PROPERTY_DEFAULT_ENV_VAR_NAME,
                 MapUtils.GLOBAL_PROPERTY_DEFAULT_ENV,
@@ -409,7 +428,9 @@ public class MuleDocMapper {
      * @param mapFromConfig
      * @return
      */
-    public static SolaceConfiguration createSolaceConfiguration( MapConfig mapFromConfig ) {
+    public SolaceConfiguration createSolaceConfiguration( ) {
+        
+        MapConfig mapFromConfig = this.mapMuleDoc.getMapConfig();
         if (mapFromConfig == null) {
             mapFromConfig = MapUtils.getDefaultSolaceConfiguration();
             log.info("Solace Configuration not found in input - using Default");
@@ -441,12 +462,7 @@ public class MuleDocMapper {
         return solaceConfiguration;
     }
 
-    /**
-     * Create default solace:config for Mule Doc
-     * @return
-     */
-    public static SolaceConfiguration createDefaultSolaceConfiguration() {
-        return createSolaceConfiguration(null);
+    private static String schemaLocation( String filename ) {
+        return "schemas" + File.separator + filename;
     }
-
 }
