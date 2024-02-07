@@ -35,6 +35,12 @@ public class MuleDoc {
 
     @JacksonXmlProperty(
         namespace = "http://www.mulesoft.org/schema/mule/core",
+        localName = "configuration-properties"
+    )
+    protected ConfigurationProperties configurationProperties;
+
+    @JacksonXmlProperty(
+        namespace = "http://www.mulesoft.org/schema/mule/core",
         localName = "flow"
     )
     @JacksonXmlElementWrapper( useWrapping = false )

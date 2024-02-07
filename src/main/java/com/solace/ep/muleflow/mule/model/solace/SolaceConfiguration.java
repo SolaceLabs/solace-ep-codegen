@@ -30,7 +30,8 @@ public class SolaceConfiguration extends BaseElement {
 
     @JacksonXmlProperty(
         isAttribute = false,
-        namespace = "http://www.mulesoft.org/schema/mule/solace"
+        namespace = "http://www.mulesoft.org/schema/mule/solace",
+        localName = "event-portal-config"
     )
     protected EventPortalConfiguration eventPortalConfiguration;
 
@@ -59,8 +60,8 @@ public class SolaceConfiguration extends BaseElement {
         )
         protected String cloudOrgPrefix;
 
-        // public EventPortalConfiguration( String cloudApiToken ) {
-        //     this.cloudApiToken = cloudApiToken;
-        // }
+        public EventPortalConfiguration( String cloudApiToken ) {
+            this.cloudApiToken = cloudApiToken;
+        }
     }
 }

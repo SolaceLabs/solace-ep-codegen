@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.solace.ep.muleflow.MuleFlowGenerator;
+import com.solace.ep.muleflow.mule.MuleFlowGenerator;
 import com.solace.ep.muleflow.util.*;
 
 import lombok.extern.slf4j.Slf4j;
@@ -34,17 +34,18 @@ public class EclipseProjectGenerator {
     //
     private static final String
                         ARCHIVE_EXT_STRING          = ".jar",
-                        FILE_SEPARATOR              = File.separator;
+                        FILE_SEPARATOR              = File.separator,
+                        DEFAULT_ENV_STRING          = "dev";
 
     //
-    private static final List<String> projectPathList = new ArrayList<>();
+    private final List<String> projectPathList = new ArrayList<>();
     //
     private final Map<String, File> projectPaths = new HashMap<>();
     //
     private File tempDirectory;
     private File metaInfDirectory;
     private File newProjectRoot;
-    
+
     /**
      * Default constructor
      */
@@ -108,6 +109,7 @@ public class EclipseProjectGenerator {
                         groupId, flowNameArtifactId, version);
         createProjectStructure( flowNameArtifactId );
         createCreateStaticFiles();
+        createConfigPropertiesFile( DEFAULT_ENV_STRING );
         createLog4jFile(flowNameArtifactId);
         createPomFile(groupId, flowNameArtifactId, version);
         createMuleFlow(muleFlowXmlData, flowNameArtifactId);
@@ -176,6 +178,27 @@ public class EclipseProjectGenerator {
             MuleProjectContent.FILE_LOG4J2__XML);
 
         log.debug("Completed creating log4j2.xml config file for Mule Project");
+    }
+
+    /**
+     * Create default configuration properties file for this project
+     * @param environmentString
+     * @throws IOException
+     */
+    protected void createConfigPropertiesFile(
+        String environmentString
+    ) throws IOException
+    {
+        log.debug( "Start creating yaml properties file" );
+        String propertiesFileName = MuleProjectContent.getConfigurationPropertiesFileName(environmentString);
+        File resourcesDir = projectPaths.get( PATH_SRC_MAIN_RESOURCES );
+        
+        FileUtils.writeStringToFile( 
+            MuleProjectContent.CONTENT_CONFIG_PROPERTIES , 
+            resourcesDir, 
+            propertiesFileName
+        );
+        log.debug( "Completed creating config properties file: {}", propertiesFileName );
     }
 
     /**

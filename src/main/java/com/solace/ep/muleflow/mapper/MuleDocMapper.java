@@ -25,6 +25,11 @@ public class MuleDocMapper {
      */
     private MuleDoc muleDoc;
 
+    /**
+     * Global configs
+     */
+    private MuleDoc globalConfigs;
+
     // Keep track of direct consumer count for unique naming
     private int directConsumerCount = 0;
 
@@ -50,26 +55,53 @@ public class MuleDocMapper {
         directConsumerCount = 0;
     }
 
+    public MuleDoc createGlobalConfigsDoc( MapMuleDoc mapMuleDoc ) {
+        if ( globalConfigs == null ) {
+            globalConfigs = new MuleDoc();
+            globalConfigs.setSolaceConfiguration( createSolaceConfiguration( mapMuleDoc.getMapConfig() ) );
+        }
+        return globalConfigs;
+    }
+
     /**
      * Create MuleDoc model from 'MapMuleDoc' intermediate format
-     * Call this method to generate the MuleDoc output in full
+     * Call this method to generate the MuleDoc output
+     * Solace Configuration Block will not be included
+     * Solace Configuration should be created separately
+     * using createGlobalConfigsDoc() method
      * @param mapMuleDoc
      * @return
      */
     public MuleDoc createMuleDoc( MapMuleDoc mapMuleDoc ) {
+        return createMuleDoc(mapMuleDoc, false);
+    }
+
+    /**
+     * Create MuleDoc model from 'MapMuleDoc' intermediate format
+     * Call this method to generate the MuleDoc output in full
+     * Solace Configuration Block is optional
+     * @param mapMuleDoc
+     * @return
+     */
+    public MuleDoc createMuleDoc( MapMuleDoc mapMuleDoc, boolean includeGlobalConfigs ) {
 
         // In case of instance re-use
         initialize();
         log.info("BEGIN Mapping from MapMuleDoc --> Mule Flow");
 
-        // Create solace:config block; null config is handled
-        muleDoc.setSolaceConfiguration( createSolaceConfiguration( mapMuleDoc.getMapConfig() ) );
+        if ( includeGlobalConfigs ) {
+            // Create solace:config block; null config is handled
+            muleDoc.setSolaceConfiguration( createSolaceConfiguration( mapMuleDoc.getMapConfig() ) );
+        }
 
-        // Add global-property(ies)
-        // for ( MapGlobalProperty mgp : mapMuleDoc.getMapGlobalProperties() ) {
-        //     addGlobalProperty( mgp );
-        // }
+        // Add global-properties
+        // 1. From MapMuleDoc
+        // 2. Add Environment Property
         addGlobalProperties( mapMuleDoc.getGlobalProperties() );
+        addDefaultEnvironmentAsGlobalProperty();
+
+        // Add Configuration Properties
+        addConfigurationProperties( MapUtils.GLOBAL_PROPERTY_DEFAULT_ENV_VAR_NAME );
 
         // Add Mule Flow to Doc, one per MapMuleDoc instance
         // Each flow equates to an ingress: queue or direct subscription
@@ -334,7 +366,7 @@ public class MuleDocMapper {
      */
     public void addGlobalProperties( Map<String, String> mapFromGlobalProperties ) {
         if ( mapFromGlobalProperties == null ) {
-            log.debug("No Global Properties found");
+            log.debug("No Global Properties found in input");
             return;
         }
         int globalPropertyCount = 0;
@@ -348,7 +380,28 @@ public class MuleDocMapper {
             );
             globalPropertyCount++;
         }
-        log.info("Mapped {} Global Properties to MuleDoc", globalPropertyCount);
+        log.info("Mapped {} Global Properties from input to MuleDoc", globalPropertyCount);
+    }
+
+    protected void addDefaultEnvironmentAsGlobalProperty() {
+        muleDoc.getGlobalProperty().add(
+            new GlobalProperty(
+                MapUtils.GLOBAL_PROPERTY_DEFAULT_ENV_VAR_NAME,
+                MapUtils.GLOBAL_PROPERTY_DEFAULT_ENV,
+                MapUtils.GLOBAL_PROPERTY_DOC_NAME + ": Default Environment"
+            )
+        );
+    }
+
+    protected void addConfigurationProperties( String environmentString ) {
+        muleDoc.setConfigurationProperties(
+            new ConfigurationProperties(
+                MapUtils.getConfigPropertiesFileWithEnvToken(
+                    environmentString != null ? environmentString : "unknown" 
+                ),
+                MapUtils.CONFIG_PROPERTY_DOC_NAME
+            )
+        );
     }
 
     /**

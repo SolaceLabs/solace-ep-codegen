@@ -1,4 +1,4 @@
-package com.solace.ep.muleflow;
+package com.solace.ep.muleflow.mule;
 
 import java.io.File;
 

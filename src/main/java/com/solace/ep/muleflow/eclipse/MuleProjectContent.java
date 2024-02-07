@@ -19,12 +19,32 @@ public class MuleProjectContent {
                 TOKEN_ARTIFACT_ID = "___ARTIFACT_ID___",
                 TOKEN_GROUP_ID = "___GROUP_ID___",
                 TOKEN_VERSION = "___VERSION___";
+    //
+    public static final String
+        CONTENT_CONFIG_PROPERTIES =
+        "solace:\n" + //
+        "  connection:\n" + //
+        "    brokerHost: tcps://mr-your-service.messaging.solace.cloud:55443\n" + //
+        "    messageVpn: defaultVpn\n" + //
+        "    clientUsername: defaultUser\n" + //
+        "    clientPassword: defaultPassword\n" +
+        "  eventPortal:\n" +
+        "    apiToken: eySetYourCloudApiTokenHere\n";
 
     public static final String
         CONTENT_MULE_ARTIFACT__JSON = 
         "{\n" + //
         "  \"minMuleVersion\": \"4.4.0\"\n" + //
         "}";
+
+    /**
+     * Get the actual name of the properties configuration file given the environment string
+     * @param environmentString
+     * @return
+     */
+    public static String getConfigurationPropertiesFileName( String environmentString ) {
+        return ( environmentString != null ? environmentString : "UNKNOWN" ) + ".yaml";
+    }
 
     public static final String
         CONTENT_LOG4J2_TEST__XML =

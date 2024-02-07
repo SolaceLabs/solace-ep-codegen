@@ -157,8 +157,8 @@ public class MavenPomCreator {
         pomModel.getProperties().setProperty(PROP_MULE_PLUGIN_VERSION, muleMavenPluginVersion);
 
         // Add build plugins: clean, mule maven, compiler
-        List<Plugin> buildPlugins = new ArrayList<Plugin>();
         {
+            List<Plugin> buildPlugins = new ArrayList<Plugin>();
             Plugin clean = new Plugin(), muleMaven = new Plugin(), compiler = new Plugin();
 
             clean.setGroupId("org.apache.maven.plugins");
@@ -178,9 +178,10 @@ public class MavenPomCreator {
             buildPlugins.add( clean );
             buildPlugins.add( muleMaven );
             buildPlugins.add( compiler );
+
+            pomModel.setBuild( new Build() );
+            pomModel.getBuild().setPlugins( buildPlugins );
         }
-        pomModel.setBuild( new Build() );
-        pomModel.getBuild().setPlugins( buildPlugins );
 
         // Add project dependencies; filter by mule module / protocol types
         pomModel.setDependencies( new ArrayList<Dependency>() );
@@ -238,7 +239,11 @@ public class MavenPomCreator {
         log.info( "Wrote Maven pom.xml to: {}", dir.getAbsolutePath() );
     }
 
-    public static MavenPomConfigSettings getMavenPomConfigSettingsFromFile() {
+    protected MavenPomConfigSettings getMavenPomConfigSettingsFromFile() 
+    throws IOException {
+        if ( this.mavenPomConfigSettings != null ) {
+            return this.mavenPomConfigSettings;
+        }
         // TODO - Get the MavenPomConfigSettings from file
         MavenPomConfigSettings mavenPomConfigSettings = null;
 
