@@ -25,6 +25,11 @@ public class MuleDocMapper {
      */
     private MuleDoc muleDoc;
 
+    /**
+     * Global configs
+     */
+    private MuleDoc globalConfigs;
+
     // Keep track of direct consumer count for unique naming
     private int directConsumerCount = 0;
 
@@ -50,20 +55,44 @@ public class MuleDocMapper {
         directConsumerCount = 0;
     }
 
+    public MuleDoc createGlobalConfigsDoc( MapMuleDoc mapMuleDoc ) {
+        if ( globalConfigs == null ) {
+            globalConfigs = new MuleDoc();
+            globalConfigs.setSolaceConfiguration( createSolaceConfiguration( mapMuleDoc.getMapConfig() ) );
+        }
+        return globalConfigs;
+    }
+
     /**
      * Create MuleDoc model from 'MapMuleDoc' intermediate format
-     * Call this method to generate the MuleDoc output in full
+     * Call this method to generate the MuleDoc output
+     * Solace Configuration Block will not be included
+     * Solace Configuration should be created separately
+     * using createGlobalConfigsDoc() method
      * @param mapMuleDoc
      * @return
      */
     public MuleDoc createMuleDoc( MapMuleDoc mapMuleDoc ) {
+        return createMuleDoc(mapMuleDoc, false);
+    }
+
+    /**
+     * Create MuleDoc model from 'MapMuleDoc' intermediate format
+     * Call this method to generate the MuleDoc output in full
+     * Solace Configuration Block is optional
+     * @param mapMuleDoc
+     * @return
+     */
+    public MuleDoc createMuleDoc( MapMuleDoc mapMuleDoc, boolean includeGlobalConfigs ) {
 
         // In case of instance re-use
         initialize();
         log.info("BEGIN Mapping from MapMuleDoc --> Mule Flow");
 
-        // Create solace:config block; null config is handled
-        muleDoc.setSolaceConfiguration( createSolaceConfiguration( mapMuleDoc.getMapConfig() ) );
+        if ( includeGlobalConfigs ) {
+            // Create solace:config block; null config is handled
+            muleDoc.setSolaceConfiguration( createSolaceConfiguration( mapMuleDoc.getMapConfig() ) );
+        }
 
         // Add global-properties
         // 1. From MapMuleDoc

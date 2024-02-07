@@ -27,7 +27,9 @@ public class MuleProjectContent {
         "    brokerHost: tcps://mr-your-service.messaging.solace.cloud:55443\n" + //
         "    messageVpn: defaultVpn\n" + //
         "    clientUsername: defaultUser\n" + //
-        "    clientPassword: defaultPassword\n";
+        "    clientPassword: defaultPassword\n" +
+        "  eventPortal:\n" +
+        "    apiToken: eySetYourCloudApiTokenHere\n";
 
     public static final String
         CONTENT_MULE_ARTIFACT__JSON = 
