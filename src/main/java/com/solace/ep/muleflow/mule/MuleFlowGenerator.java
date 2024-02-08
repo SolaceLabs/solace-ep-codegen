@@ -102,18 +102,18 @@ public class MuleFlowGenerator {
                             String inputAsyncApiString ) throws Exception {
 
         MapMuleDoc mapMuleDoc = AsyncApiToMuleDocMapper.mapMuleDocFromAsyncApi(inputAsyncApiString);
-        MuleDocMapper muleDocMapper = new MuleDocMapper();
-        return muleDocMapper.createMuleDoc(mapMuleDoc);
+        MuleDocMapper muleDocMapper = new MuleDocMapper( mapMuleDoc );
+        return muleDocMapper.createMuleDoc();
     }
 
-    private static void writeMuleDocToXmlFile( MuleDoc muleDoc, String outputMuleXmlFile ) throws Exception {
+    public static void writeMuleDocToXmlFile( MuleDoc muleDoc, String outputMuleXmlFile ) throws Exception {
 
         XmlMapper xmlMapper = XmlMapperUtils.createXmlMapperForMuleDoc();
         xmlMapper.writeValue(new File(outputMuleXmlFile), muleDoc);
         log.info("Wrote Mule Flow XML to file: {}", outputMuleXmlFile);
     }
 
-    private static String writeMuleDocToXmlString( MuleDoc muleDoc ) throws Exception {
+    public static String writeMuleDocToXmlString( MuleDoc muleDoc ) throws Exception {
 
         XmlMapper xmlMapper = XmlMapperUtils.createXmlMapperForMuleDoc();
         return xmlMapper.writeValueAsString( muleDoc );

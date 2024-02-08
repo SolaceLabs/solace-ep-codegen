@@ -34,6 +34,10 @@ public class MapFlow {
     
     protected String jsonSchemaContent = null;
 
+    protected String jsonSchemaReference = null;
+
     protected String xmlSchemaContent = null;
+
+    protected String xmlSchemaReference = null;
 
 }

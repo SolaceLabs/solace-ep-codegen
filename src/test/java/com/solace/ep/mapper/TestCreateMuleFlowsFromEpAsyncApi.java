@@ -59,11 +59,13 @@ public class TestCreateMuleFlowsFromEpAsyncApi {
             fail( "Failed to create map doc" );
         }
 
-        MuleDocMapper muleDocMapper = new MuleDocMapper();
+        MuleDocMapper muleDocMapper = new MuleDocMapper( mapMuleDoc );
 
         MuleDoc muleDoc = null;
+        MuleDoc globalConfigsDoc = null;
         try {
-            muleDoc = muleDocMapper.createMuleDoc(mapMuleDoc);
+            muleDoc = muleDocMapper.createMuleDoc();
+            globalConfigsDoc = muleDocMapper.createGlobalConfigsDoc();
         } catch ( Exception exc ) {
             log.error(exc.getMessage());
             fail( exc.getMessage() );
@@ -73,6 +75,7 @@ public class TestCreateMuleFlowsFromEpAsyncApi {
 
         try {
             xmlMapper.writeValue(new File(outputFile), muleDoc);
+            xmlMapper.writeValue(new File("src/test/resources/test-output/Global.xml"), globalConfigsDoc );
         } catch ( Exception exc ) {
             log.error( exc.getLocalizedMessage() );
             exc.printStackTrace();

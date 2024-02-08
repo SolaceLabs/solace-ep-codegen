@@ -8,7 +8,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.solace.ep.muleflow.mapper.MuleDocMapper;
+import com.solace.ep.muleflow.mapper.asyncapi.AsyncApiToMuleDocMapper;
+import com.solace.ep.muleflow.mapper.model.MapMuleDoc;
+import com.solace.ep.muleflow.mapper.model.SchemaInstance;
 import com.solace.ep.muleflow.mule.MuleFlowGenerator;
+import com.solace.ep.muleflow.mule.model.core.MuleDoc;
 import com.solace.ep.muleflow.util.*;
 
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +32,7 @@ public class EclipseProjectGenerator {
                         PATH_SRC_MAIN_JAVA          = "src/main/java",
                         PATH_SRC_MAIN_MULE          = "src/main/mule",
                         PATH_SRC_MAIN_RESOURCES     = "src/main/resources",
+                        PATH_SCHEMAS                = "src/main/resources/schemas",
                         PATH_SRC_MAIN_RESOURCES_API = "src/main/resources/api",
                         PATH_SRC_TEST_JAVA          = "src/test/java",
                         PATH_SRC_TEST_RESOURCES     = "src/test/resources",
@@ -56,6 +62,7 @@ public class EclipseProjectGenerator {
         projectPathList.add( PATH_SRC_MAIN_JAVA         );
         projectPathList.add( PATH_SRC_MAIN_MULE         );
         projectPathList.add( PATH_SRC_MAIN_RESOURCES    );
+        projectPathList.add( PATH_SCHEMAS               );
         projectPathList.add( PATH_SRC_MAIN_RESOURCES_API);
         projectPathList.add( PATH_SRC_TEST_JAVA         );
         projectPathList.add( PATH_SRC_TEST_RESOURCES    );
@@ -79,11 +86,28 @@ public class EclipseProjectGenerator {
         String projectOutputPathAsString
      ) throws Exception {
 
-        String muleFlowXml = MuleFlowGenerator.getMuleDocXmlFromAsyncApiString( asyncApiAsString );
+//        String muleFlowXml = MuleFlowGenerator.getMuleDocXmlFromAsyncApiString( asyncApiAsString );
 
-        String newMuleArchivePath = createMuleProject(groupId, flowNameArtifactId, version, muleFlowXml);
+        final MapMuleDoc mapMuleDoc = AsyncApiToMuleDocMapper.mapMuleDocFromAsyncApi(asyncApiAsString);
+        final MuleDocMapper muleDocMapper = new MuleDocMapper( mapMuleDoc );
+
+        final MuleDoc muleFlowDoc = muleDocMapper.createMuleDoc();
+        final MuleDoc muleGlobalConfigsDoc = muleDocMapper.createGlobalConfigsDoc();
+
+        final String muleFlowXml = MuleFlowGenerator.writeMuleDocToXmlString(muleFlowDoc);
+        final String muleGlobalConfigsXml = MuleFlowGenerator.writeMuleDocToXmlString(muleGlobalConfigsDoc);
+
+//        String newMuleArchivePath = createMuleProject(groupId, flowNameArtifactId, version, muleFlowXml, muleGlobalConfigsXml);
+        createMuleProject(groupId, flowNameArtifactId, version, muleFlowXml, muleGlobalConfigsXml);
+        createSchemaFiles(mapMuleDoc);
+
+        final String newMuleArchivePath = createMuleArchive(flowNameArtifactId);
 
         FileUtils.copyFile(newMuleArchivePath, projectOutputPathAsString);
+
+        log.info("Done Creating Mule Project for Group:Artifact/Flow:Version {}:{}:{}",
+                        groupId, flowNameArtifactId, version);
+        log.info("Project structure written to: {}", projectOutputPathAsString);
     }
 
     /**
@@ -99,11 +123,12 @@ public class EclipseProjectGenerator {
      * @return The absolute path of the new Mule Project archive
      * @throws Exception
      */
-    public String createMuleProject(
+    public void createMuleProject(
         String groupId,
         String flowNameArtifactId,
         String version,
-        String muleFlowXmlData
+        String muleFlowXmlData,
+        String muleFlowGlobalConfigsXmlData
     ) throws Exception {
         log.info("Creating Mule Project for Group:Artifact/Flow:Version {}:{}:{}",
                         groupId, flowNameArtifactId, version);
@@ -113,18 +138,39 @@ public class EclipseProjectGenerator {
         createLog4jFile(flowNameArtifactId);
         createPomFile(groupId, flowNameArtifactId, version);
         createMuleFlow(muleFlowXmlData, flowNameArtifactId);
+        if ( muleFlowGlobalConfigsXmlData != null && ! muleFlowGlobalConfigsXmlData.isEmpty() ) {
+            String globalConfigsBaseFilename = MuleProjectContent.FILE_GLOBAL_CONFIGS;
+            if ( flowNameArtifactId.contentEquals( MuleProjectContent.FILE_GLOBAL_CONFIGS ) ) {
+                globalConfigsBaseFilename += "_2";
+            }
+            createMuleFlow(muleFlowGlobalConfigsXmlData, globalConfigsBaseFilename);
+        }
+
+        // String compressedFilePath = 
+        //             tempDirectory.getAbsolutePath() + 
+        //             FILE_SEPARATOR + 
+        //             flowNameArtifactId + 
+        //             ARCHIVE_EXT_STRING; 
+
+        // Zipper.zipDirectoryToArchive(metaInfDirectory, compressedFilePath);
+
+        // log.info("Done Creating Mule Project for Group:Artifact/Flow:Version {}:{}:{}",
+        //                 groupId, flowNameArtifactId, version);
+        // log.info("Project structure written to temp directory at: {}", compressedFilePath);
+
+        // return compressedFilePath;
+    }
+
+    public String createMuleArchive( 
+            String flowNameArtifactId ) throws Exception {
 
         String compressedFilePath = 
-                    tempDirectory.getAbsolutePath() + 
-                    FILE_SEPARATOR + 
-                    flowNameArtifactId + 
-                    ARCHIVE_EXT_STRING; 
+                tempDirectory.getAbsolutePath() + 
+                FILE_SEPARATOR + 
+                flowNameArtifactId + 
+                ARCHIVE_EXT_STRING; 
 
         Zipper.zipDirectoryToArchive(metaInfDirectory, compressedFilePath);
-
-        log.info("Done Creating Mule Project for Group:Artifact/Flow:Version {}:{}:{}",
-                        groupId, flowNameArtifactId, version);
-        log.info("Output written to temp directory at: {}", compressedFilePath);
 
         return compressedFilePath;
     }
@@ -157,6 +203,19 @@ public class EclipseProjectGenerator {
             MuleProjectContent.FILE_LOG4J2_TEST__XML);
 
         log.debug("Completed creating static Mule project files");
+    }
+
+    protected void createSchemaFiles( MapMuleDoc mapMuleDoc ) throws IOException {
+        log.debug("Start creating mule schema files");
+        File schemaDir = projectPaths.get( PATH_SCHEMAS );
+
+        for (Map.Entry<String, SchemaInstance> entry : mapMuleDoc.getSchemaMap().entrySet()) {
+            SchemaInstance si = entry.getValue();
+            FileUtils.writeStringToFile(
+                si.getPayload(), schemaDir, si.getFileName());
+        }
+
+        log.debug("Completed creating mule schema files");
     }
 
     /**

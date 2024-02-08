@@ -75,7 +75,8 @@ public class TestEclipseProjectGenerator {
         String generatedArchive = "NADA";
         EclipseProjectGenerator epg = new EclipseProjectGenerator();
         try {
-            generatedArchive = epg.createMuleProject(groupId, artifactId, version, xmlString);
+            epg.createMuleProject(groupId, artifactId, version, xmlString, null);
+            generatedArchive = epg.createMuleArchive(artifactId);
         } catch (Exception e) {
             log.error(e.getMessage());
             fail(e.getMessage());

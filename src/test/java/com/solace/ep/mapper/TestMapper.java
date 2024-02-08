@@ -67,11 +67,11 @@ public class TestMapper {
             fail( "Failed to create map doc" );
         }
 
-        MuleDocMapper muleDocMapper = new MuleDocMapper();
+        MuleDocMapper muleDocMapper = new MuleDocMapper( mapMuleDoc );
 
         MuleDoc muleDoc = null;
         try {
-            muleDoc = muleDocMapper.createMuleDoc(mapMuleDoc);
+            muleDoc = muleDocMapper.createMuleDoc();
         } catch ( Exception exc ) {
             log.error(exc.getMessage());
             fail( exc.getMessage() );

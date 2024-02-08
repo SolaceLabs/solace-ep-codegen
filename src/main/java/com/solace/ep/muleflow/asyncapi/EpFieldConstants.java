@@ -27,4 +27,8 @@ public class EpFieldConstants {
     public static String
                     EP_PARAMETER_NAME = "x-ep-parameter-name";
 
+    public static String
+                    EP_SCHEMA_NAME = "x-ep-schema-name",
+                    EP_SCHEMA_VERSION = "x-ep-schema-version";
+
 }

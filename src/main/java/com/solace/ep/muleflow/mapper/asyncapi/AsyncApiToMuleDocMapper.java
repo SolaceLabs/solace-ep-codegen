@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.solace.ep.muleflow.asyncapi.*;
 import com.solace.ep.muleflow.mapper.MapUtils;
 import com.solace.ep.muleflow.mapper.model.*;
@@ -35,6 +36,9 @@ public class AsyncApiToMuleDocMapper {
             );
             log.debug( "Added Global Property type: {} to Map Doc", MapUtils.GLOBAL_NAME_EP_APP_VERSION_ID );
         }
+
+        // Get all unique schema entries and store in a map payload hash --> schema entry
+        collectSchemas(mapMuleDoc, asyncApiAccessor);
 
         {
             log.debug("Check input [publish] channels for duplicate queue names");
@@ -108,6 +112,7 @@ public class AsyncApiToMuleDocMapper {
 
                 if ( channel.getPublishOpMessage().getContentType().toLowerCase().contains( "json" ) ) {
                     mapToFlow.setJsonSchemaContent(channel.getPublishOpMessage().getPayloadAsString());
+                    mapToFlow.setJsonSchemaReference( encodeHexString( MapUtils.getMd5Digest(mapToFlow.getJsonSchemaContent()) ) );
                 }
 
             } else {
@@ -142,6 +147,7 @@ public class AsyncApiToMuleDocMapper {
                     channel.getPublishOpMessage().getContentType().toLowerCase().contains( "json" ) )
                 {
                     mapToFlow.setJsonSchemaContent(channel.getPublishOpMessage().getPayloadAsString());
+                    mapToFlow.setJsonSchemaReference( encodeHexString( MapUtils.getMd5Digest(mapToFlow.getJsonSchemaContent()) ) );
                 } else {
                     mapToFlow.setXmlSchemaContent("");
                 }
@@ -175,14 +181,16 @@ public class AsyncApiToMuleDocMapper {
             String jsonPayload = channel.getSubscribeOpMessage().getPayloadAsString();
             if ( jsonPayload != null ) {
                 mapToSubFlowEgress.setJsonSchemaContent(jsonPayload);
+                mapToSubFlowEgress.setJsonSchemaReference( encodeHexString( MapUtils.getMd5Digest(jsonPayload) ) );
             }
 
-            mapToSubFlowEgress.setPublishAddress(
-                channelName.
-                    replace("/{", "/").
-                    replace("}/", "/").
-                    replaceAll("\\}$", "")
-            );
+            // mapToSubFlowEgress.setPublishAddress(
+            //     channelName.
+            //         replace("/{", "/").
+            //         replace("}/", "/").
+            //         replaceAll("\\}$", "")
+            // );
+            mapToSubFlowEgress.setPublishAddress( channelName );
 
             mapMuleDoc.getMapEgressSubFlows().add(mapToSubFlowEgress);
             log.info("Added Egress flow to intermediate MapMuleDoc object");
@@ -197,5 +205,128 @@ public class AsyncApiToMuleDocMapper {
         return mapMuleDocFromAsyncApi( new AsyncApiAccessor(
             AsyncApiAccessor.parseAsyncApi(asyncApiAsString)
         ) );
+    }
+
+    private static void collectSchemas( MapMuleDoc mapMuleDoc, AsyncApiAccessor asyncApiAccessor ) throws Exception {
+
+        int uniqueIncrementer = 0;
+
+        for ( Map.Entry<String, JsonElement> msgEntry : asyncApiAccessor.getMessages().entrySet() ) {
+            
+            String name = null, version = null, suffix = null, filename = null, payload = null;
+            byte[] hash;
+
+            AsyncApiMessage msg = new AsyncApiMessage( msgEntry.getValue().getAsJsonObject(), asyncApiAccessor);
+            payload = msg.getPayloadAsString();
+            if ( payload == null || payload.isEmpty() ) {
+                continue;
+            }
+            hash = MapUtils.getMd5Digest(payload);
+            if ( mapMuleDoc.getSchemaMap().containsKey( encodeHexString(hash) ) ) {
+                continue;
+            }
+
+            JsonObject schemaObject = AsyncApiAccessor.parseAsyncApi(payload);
+            if ( schemaObject == null ) {
+                throw new Exception( "Error parsing schema content: " + payload );
+            }
+
+            // Try to get schema name from metadata
+            if (
+                schemaObject.has( EpFieldConstants.EP_SCHEMA_NAME ) && 
+                schemaObject.get( EpFieldConstants.EP_SCHEMA_NAME ).isJsonPrimitive()
+            ) {
+                name = schemaObject.get( EpFieldConstants.EP_SCHEMA_NAME ).getAsString();
+            } else if (
+                schemaObject.has( AsyncApiFieldConstants.API_SCHEMA_TITLE ) &&
+                schemaObject.get( AsyncApiFieldConstants.API_SCHEMA_TITLE ).isJsonPrimitive()
+            ) {
+                name = schemaObject.get( AsyncApiFieldConstants.API_SCHEMA_TITLE ).getAsString();
+            } else {
+                String nameElt = null, namespaceElt = null;
+                if ( schemaObject.has( "name" ) && schemaObject.get("name").isJsonPrimitive() ) {
+                    nameElt = schemaObject.get("name").getAsString();
+                }
+                if ( 
+                    msg.getSchemaFormat() != null &&
+                    msg.getSchemaFormat().contains("avro") &&
+                    schemaObject.has( "namespace" ) && 
+                    schemaObject.get("namespace").isJsonPrimitive()
+                ) {
+                    namespaceElt = schemaObject.get("namespace").getAsString();
+                }
+                if ( nameElt != null && !nameElt.isEmpty() ) {
+                    name = ( namespaceElt != null && ! namespaceElt.isBlank() ? ( namespaceElt + "." ) : "" ) + nameElt;
+                }
+            }
+
+            // If name is blank, try to get schema name from reference to components.schemas
+            if ( name == null || name.isBlank() ) {
+                String payloadRef = msg.getPayloadRef();
+                if ( payloadRef != null ) {
+                    name = AsyncApiUtils.getLastElementFromRefString(payloadRef);
+                }
+            }
+
+            // If name is still blank, use hash-code value
+            if ( name == null || name.isBlank() ) {
+                name = encodeHexString( hash );
+            }
+
+            // Get version from schema if present
+            if (
+                schemaObject.has( EpFieldConstants.EP_SCHEMA_VERSION ) && 
+                schemaObject.get( EpFieldConstants.EP_SCHEMA_VERSION ).isJsonPrimitive()
+            ) {
+                version = schemaObject.get( EpFieldConstants.EP_SCHEMA_VERSION ).getAsString();
+                if (version.isBlank()) {
+                    version = null;
+                }
+            }
+
+            // TODO - remove assumption that schemas are json
+            suffix = "json";
+
+            filename = name + ( version != null ? "_" + version : "" ) + "." + suffix;
+
+            for ( Map.Entry<String, SchemaInstance> entry : mapMuleDoc.getSchemaMap().entrySet() ) {
+                SchemaInstance si = entry.getValue();
+                if ( si.getFileName().contentEquals( filename )) {
+                    filename = "DUPNAME" + ++uniqueIncrementer + "_" + filename;
+                    break;
+                }
+            }
+
+            // String hashString = encodeHexString(hash);
+
+            SchemaInstance schemaInstance = new SchemaInstance(name, version, suffix, filename, payload);
+            mapMuleDoc.getSchemaMap().put(encodeHexString(hash), schemaInstance);
+        }
+
+    }
+
+    /**
+     * Adopted from: https://www.baeldung.com/java-byte-arrays-hex-strings
+     * @param byteArray
+     * @return
+     */
+    private static String encodeHexString(byte[] byteArray) {
+        StringBuffer hexStringBuffer = new StringBuffer();
+        for (int i = 0; i < byteArray.length; i++) {
+            hexStringBuffer.append(byteToHex(byteArray[i]));
+        }
+        return hexStringBuffer.toString();
+    }
+
+    /**
+     * Adopted from: https://www.baeldung.com/java-byte-arrays-hex-strings
+     * @param num
+     * @return
+     */
+    private static String byteToHex(byte num) {
+        char[] hexDigits = new char[2];
+        hexDigits[0] = Character.forDigit((num >> 4) & 0xF, 16);
+        hexDigits[1] = Character.forDigit((num & 0xF), 16);
+        return new String(hexDigits);
     }
 }
