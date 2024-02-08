@@ -209,7 +209,7 @@ public class EclipseProjectGenerator {
         log.debug("Start creating mule schema files");
         File schemaDir = projectPaths.get( PATH_SCHEMAS );
 
-        for (Map.Entry<byte[], SchemaInstance> entry : mapMuleDoc.getSchemaMap().entrySet()) {
+        for (Map.Entry<String, SchemaInstance> entry : mapMuleDoc.getSchemaMap().entrySet()) {
             SchemaInstance si = entry.getValue();
             FileUtils.writeStringToFile(
                 si.getPayload(), schemaDir, si.getFileName());

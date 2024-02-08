@@ -3,6 +3,8 @@ package com.solace.ep.muleflow.mapper;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.StringTokenizer;
+import java.util.regex.Matcher;
 
 import com.solace.ep.muleflow.mapper.model.*;
 import com.solace.ep.muleflow.mule.model.core.*;
@@ -60,11 +62,13 @@ public class MuleDocMapper {
     // }
 
     public MuleDoc createGlobalConfigsDoc( ) {
-        if ( globalConfigsDoc == null ) {
-            globalConfigsDoc = new MuleDoc();
-            globalConfigsDoc.setSolaceConfiguration( createSolaceConfiguration() );
-            addDefaultEnvironmentAsGlobalProperty( globalConfigsDoc );
+        if ( globalConfigsDoc != null ) {
+            return this.globalConfigsDoc;
         }
+        globalConfigsDoc = new MuleDoc();
+        globalConfigsDoc.setSolaceConfiguration( createSolaceConfiguration() );
+        addDefaultEnvironmentAsGlobalProperty( this.globalConfigsDoc );
+        addConfigurationProperties( this.globalConfigsDoc, MapUtils.GLOBAL_PROPERTY_DEFAULT_ENV_VAR_NAME );
         return globalConfigsDoc;
     }
 
@@ -110,10 +114,9 @@ public class MuleDocMapper {
             // Create solace:config block; null config is handled
             addDefaultEnvironmentAsGlobalProperty( this.muleDoc );
             muleDoc.setSolaceConfiguration( createSolaceConfiguration( ) );
+            // Add Configuration Properties
+            addConfigurationProperties( this.muleDoc, MapUtils.GLOBAL_PROPERTY_DEFAULT_ENV_VAR_NAME );
         }
-
-        // Add Configuration Properties
-        addConfigurationProperties( MapUtils.GLOBAL_PROPERTY_DEFAULT_ENV_VAR_NAME );
 
         // Add Mule Flow to Doc, one per MapMuleDoc instance
         // Each flow equates to an ingress: queue or direct subscription
@@ -265,8 +268,46 @@ public class MuleDocMapper {
             return;
         }
 
+        // Resolve Publish Address to DataWeave script if it contains parameters (dynamic topic)
+        String publishTopicAddress = "";
+        if ( mapFromSubFlow.getPublishAddress() != null && ! mapFromSubFlow.getPublishAddress().isBlank() ) {
+            boolean dynamicTopic = false;
+            boolean firstToken = true;
+            final StringTokenizer t = new StringTokenizer(mapFromSubFlow.getPublishAddress(),"/");
+            final StringBuilder topicBuilder = new StringBuilder();
+            while (t.hasMoreTokens()) {
+
+                final String topicElement = t.nextToken();
+
+                if ( firstToken ) {
+                    firstToken = false;
+                } else {
+                    topicBuilder.append("/");
+                }
+
+                Matcher m = MapUtils.PATTERN_VAR_NODE.matcher( topicElement );
+                if ( m.matches() ) {
+                    dynamicTopic = true;
+                    topicBuilder.append( "$(vars." + m.group( 1 ) + ")" );
+                } else {
+                    topicBuilder.append(topicElement);
+                }
+            }
+
+            if ( dynamicTopic ) {
+                publishTopicAddress =
+                        "%dw 2.0\n" +
+                        "output text/plain\n" +
+                        "---\n" +
+                        "\"" + topicBuilder.toString() + "\"\n";
+
+            } else {
+                publishTopicAddress = mapFromSubFlow.getPublishAddress();
+            }
+        }
+
         SolacePublish solacePublish = new SolacePublish();
-        solacePublish.setAddress( mapFromSubFlow.getPublishAddress() );
+        solacePublish.setAddress( publishTopicAddress );
         solacePublish.setDocName( MapUtils.getEgressSubFlowDocNameFromMessageName( mapFromSubFlow.getMessageName() ) );
         solacePublish.setConfigRef(MapUtils.DEFAULT_CONFIG_REF);
 
@@ -324,7 +365,7 @@ public class MuleDocMapper {
      * @param muleFlow
      * @param jsonSchemaContents
      */
-    public void addValidateJsonSchema( MuleFlow muleFlow, String jsonSchemaContent, byte[] jsonSchemaReference ) {
+    public void addValidateJsonSchema( MuleFlow muleFlow, String jsonSchemaContent, String jsonSchemaReference ) {
         if (jsonSchemaContent == null && jsonSchemaReference == null) {
             log.debug("jsonSchemaContents is empty for Mule Flow '{}' -- skipping", muleFlow.getName());
             return;
@@ -412,8 +453,8 @@ public class MuleDocMapper {
         );
     }
 
-    protected void addConfigurationProperties( String environmentString ) {
-        muleDoc.setConfigurationProperties(
+    protected void addConfigurationProperties( MuleDoc doc, String environmentString ) {
+        doc.setConfigurationProperties(
             new ConfigurationProperties(
                 MapUtils.getConfigPropertiesFileWithEnvToken(
                     environmentString != null ? environmentString : "unknown" 

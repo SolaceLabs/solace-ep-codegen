@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.solace.ep.muleflow.asyncapi.*;
@@ -113,6 +112,7 @@ public class AsyncApiToMuleDocMapper {
 
                 if ( channel.getPublishOpMessage().getContentType().toLowerCase().contains( "json" ) ) {
                     mapToFlow.setJsonSchemaContent(channel.getPublishOpMessage().getPayloadAsString());
+                    mapToFlow.setJsonSchemaReference( encodeHexString( MapUtils.getMd5Digest(mapToFlow.getJsonSchemaContent()) ) );
                 }
 
             } else {
@@ -147,7 +147,7 @@ public class AsyncApiToMuleDocMapper {
                     channel.getPublishOpMessage().getContentType().toLowerCase().contains( "json" ) )
                 {
                     mapToFlow.setJsonSchemaContent(channel.getPublishOpMessage().getPayloadAsString());
-                    mapToFlow.setJsonSchemaReference( MapUtils.getMd5Digest(mapToFlow.getJsonSchemaContent()) );
+                    mapToFlow.setJsonSchemaReference( encodeHexString( MapUtils.getMd5Digest(mapToFlow.getJsonSchemaContent()) ) );
                 } else {
                     mapToFlow.setXmlSchemaContent("");
                 }
@@ -181,15 +181,16 @@ public class AsyncApiToMuleDocMapper {
             String jsonPayload = channel.getSubscribeOpMessage().getPayloadAsString();
             if ( jsonPayload != null ) {
                 mapToSubFlowEgress.setJsonSchemaContent(jsonPayload);
-                mapToSubFlowEgress.setJsonSchemaReference( MapUtils.getMd5Digest(jsonPayload));
+                mapToSubFlowEgress.setJsonSchemaReference( encodeHexString( MapUtils.getMd5Digest(jsonPayload) ) );
             }
 
-            mapToSubFlowEgress.setPublishAddress(
-                channelName.
-                    replace("/{", "/").
-                    replace("}/", "/").
-                    replaceAll("\\}$", "")
-            );
+            // mapToSubFlowEgress.setPublishAddress(
+            //     channelName.
+            //         replace("/{", "/").
+            //         replace("}/", "/").
+            //         replaceAll("\\}$", "")
+            // );
+            mapToSubFlowEgress.setPublishAddress( channelName );
 
             mapMuleDoc.getMapEgressSubFlows().add(mapToSubFlowEgress);
             log.info("Added Egress flow to intermediate MapMuleDoc object");
@@ -221,7 +222,7 @@ public class AsyncApiToMuleDocMapper {
                 continue;
             }
             hash = MapUtils.getMd5Digest(payload);
-            if ( mapMuleDoc.getSchemaMap().containsKey( hash ) ) {
+            if ( mapMuleDoc.getSchemaMap().containsKey( encodeHexString(hash) ) ) {
                 continue;
             }
 
@@ -246,11 +247,16 @@ public class AsyncApiToMuleDocMapper {
                 if ( schemaObject.has( "name" ) && schemaObject.get("name").isJsonPrimitive() ) {
                     nameElt = schemaObject.get("name").getAsString();
                 }
-                if ( schemaObject.has( "namespace" ) && schemaObject.get("namespace").isJsonPrimitive() ) {
+                if ( 
+                    msg.getSchemaFormat() != null &&
+                    msg.getSchemaFormat().contains("avro") &&
+                    schemaObject.has( "namespace" ) && 
+                    schemaObject.get("namespace").isJsonPrimitive()
+                ) {
                     namespaceElt = schemaObject.get("namespace").getAsString();
                 }
                 if ( nameElt != null && !nameElt.isEmpty() ) {
-                    name = ( namespaceElt != null && namespaceElt.isBlank() ? ( namespaceElt + "." ) : "" ) + nameElt;
+                    name = ( namespaceElt != null && ! namespaceElt.isBlank() ? ( namespaceElt + "." ) : "" ) + nameElt;
                 }
             }
 
@@ -283,7 +289,7 @@ public class AsyncApiToMuleDocMapper {
 
             filename = name + ( version != null ? "_" + version : "" ) + "." + suffix;
 
-            for ( Map.Entry<byte[], SchemaInstance> entry : mapMuleDoc.getSchemaMap().entrySet() ) {
+            for ( Map.Entry<String, SchemaInstance> entry : mapMuleDoc.getSchemaMap().entrySet() ) {
                 SchemaInstance si = entry.getValue();
                 if ( si.getFileName().contentEquals( filename )) {
                     filename = "DUPNAME" + ++uniqueIncrementer + "_" + filename;
@@ -291,8 +297,10 @@ public class AsyncApiToMuleDocMapper {
                 }
             }
 
+            // String hashString = encodeHexString(hash);
+
             SchemaInstance schemaInstance = new SchemaInstance(name, version, suffix, filename, payload);
-            mapMuleDoc.getSchemaMap().put(hash, schemaInstance);
+            mapMuleDoc.getSchemaMap().put(encodeHexString(hash), schemaInstance);
         }
 
     }

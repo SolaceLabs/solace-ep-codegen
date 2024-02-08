@@ -2,6 +2,7 @@ package com.solace.ep.muleflow.mapper;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.regex.Pattern;
 
 import com.solace.ep.muleflow.mapper.model.MapConfig;
 
@@ -67,6 +68,17 @@ public class MapUtils {
     private static final String
                     TOPIC = "topic",
                     QUEUE = "queue";
+    //
+    public static final String
+                    REGEX_SOLACE_TOPIC_CHAR_CLASS = "[" + 
+                            "A-Za-z0-9" +
+                            "\\!\\#\\$\\&\\(\\)\\*\\+\\," +
+                            "\\-\\.\\:\\;\\=\\[\\]\\_\\~" +
+                            "]",
+                    REGEX_VAR_NODE = "^\\{(" + REGEX_SOLACE_TOPIC_CHAR_CLASS + "+)\\}$";
+    //
+    public static final Pattern
+                    PATTERN_VAR_NODE = Pattern.compile( REGEX_VAR_NODE );
 
     /**
      * Get Ingress flow name attribute from Designation (queueName or 'Direct Topic') and isDirectConsumer flag
@@ -182,7 +194,7 @@ public class MapUtils {
         byte[] digest = null;
         try {
             MessageDigest md = MessageDigest.getInstance("MD5");
-            digest = md.digest();
+            digest = md.digest( value.getBytes() );
         } catch ( NoSuchAlgorithmException nsaExc ) {
         }
 
