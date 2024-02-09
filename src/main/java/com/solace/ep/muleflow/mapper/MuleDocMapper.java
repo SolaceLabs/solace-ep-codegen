@@ -50,16 +50,8 @@ public class MuleDocMapper {
      * Default Constructor
      */
     public MuleDocMapper( MapMuleDoc mapMuleDoc ) {
-        // initialize();
         this.mapMuleDoc = mapMuleDoc;
     }
-
-    // private void initialize() {
-    //     muleDoc = new MuleDoc();
-    //     countByMessageName.clear();
-    //     countByFlowDesignation.clear();
-    //     directConsumerCount = 0;
-    // }
 
     public MuleDoc createGlobalConfigsDoc( ) {
         if ( globalConfigsDoc != null ) {
@@ -93,9 +85,6 @@ public class MuleDocMapper {
      * @return
      */
     public MuleDoc createMuleDoc( boolean embeddedGlobalConfigs ) {
-
-        // In case of instance re-use
-//        initialize();
 
         if ( this.muleDoc != null ) {
             return this.muleDoc;
@@ -469,7 +458,7 @@ public class MuleDocMapper {
      * @param mapFromConfig
      * @return
      */
-    public SolaceConfiguration createSolaceConfiguration( ) {
+    protected SolaceConfiguration createSolaceConfiguration( ) {
         
         MapConfig mapFromConfig = this.mapMuleDoc.getMapConfig();
         if (mapFromConfig == null) {

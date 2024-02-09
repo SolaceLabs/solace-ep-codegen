@@ -1,3 +1,20 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.solace.ep.muleflow.eclipse.maven;
 
 import java.io.File;
@@ -25,6 +42,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Class to create Maven pom.xml for the generated project
+ * The POM should include dependencies referenced in the generated Mule Flow
+ */
 @Slf4j
 @Data
 public class MavenPomCreator {
@@ -135,6 +156,10 @@ public class MavenPomCreator {
         public String classifier = "mule-application";
     }
 
+    /**
+     * Create and return the Maven POM Model using configs passed by the constructor
+     * @return
+     */
     public Model createMavenPomModel() {
 
         log.debug("Start - Creating Maven POM Model");
@@ -220,6 +245,10 @@ public class MavenPomCreator {
         return this.mulePomModel;
     }
 
+    /**
+     * Returns the generated POM model
+     * @return
+     */
     public Model getMulePomModel() {
         if ( this.mulePomModel == null ) {
             return this.createMavenPomModel();
@@ -227,6 +256,13 @@ public class MavenPomCreator {
         return this.mulePomModel;
     }
 
+    /**
+     * Write the generated POM file to file
+     * This method will generate the POM if that step has not been called
+     * @param dir
+     * @param fileName
+     * @throws IOException
+     */
     public void writeMulePomToFile( File dir, String fileName ) throws IOException {
         MavenXpp3Writer mavenXpp3Writer = new MavenXpp3Writer();
         mavenXpp3Writer.setFileComment(
