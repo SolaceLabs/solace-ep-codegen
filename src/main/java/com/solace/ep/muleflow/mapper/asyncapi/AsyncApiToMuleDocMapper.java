@@ -300,7 +300,8 @@ public class AsyncApiToMuleDocMapper {
             // TODO - remove assumption that schemas are json
             suffix = "json";
 
-            filename = name + ( version != null ? "_" + version : "" ) + "." + suffix;
+            // TODO - improve file name logic -- cannot contain spaces
+            filename = ( name + ( version != null ? "_" + version : "" ) + "." + suffix ).replaceAll("\\s", "_");
 
             for ( Map.Entry<String, SchemaInstance> entry : mapMuleDoc.getSchemaMap().entrySet() ) {
                 SchemaInstance si = entry.getValue();

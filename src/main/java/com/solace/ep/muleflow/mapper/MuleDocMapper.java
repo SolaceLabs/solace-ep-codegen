@@ -277,18 +277,18 @@ public class MuleDocMapper {
                 Matcher m = MapUtils.PATTERN_VAR_NODE.matcher( topicElement );
                 if ( m.matches() ) {
                     dynamicTopic = true;
-                    topicBuilder.append( "$(vars." + m.group( 1 ) + ")" );
+                    topicBuilder.append( "$(vars." + m.group( 1 ) + " as String)" );
                 } else {
                     topicBuilder.append(topicElement);
                 }
             }
 
             if ( dynamicTopic ) {
-                publishTopicAddress =
-                        "%dw 2.0\n" +
-                        "output text/plain\n" +
-                        "---\n" +
-                        "\"" + topicBuilder.toString() + "\"\n";
+                publishTopicAddress = topicBuilder.toString();
+                        // "%dw 2.0\n" +
+                        // "output text/plain\n" +
+                        // "---\n" +
+                        // "\"" + topicBuilder.toString() + "\"\n";
 
             } else {
                 publishTopicAddress = mapFromSubFlow.getPublishAddress();

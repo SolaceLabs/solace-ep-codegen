@@ -1,0 +1,30 @@
+{
+  "countryCode": "USA",
+  "requestId": "5440cc82-e3d2-44c2-a4da-4caf2a9cae3d",
+  "source": "App",
+  "storeId": "STORE023",
+  "orderId": "ORD12355",
+  "region" : "Ontario",
+  "customer": {
+    "name": "John Doe",
+    "email": "john.doe@example.com",
+    "phone": "123-456-7890"
+  },
+  "items": [
+    {
+      "productID": "COF001",
+      "productName": "Americano",
+      "quantity": 2,
+      "size": "Medium",
+      "options": ["Extra Shot", "Whipped Cream"]
+    },
+    {
+      "productID": "PST001",
+      "productName": "Chocolate Croissant",
+      "quantity": 1
+    }
+  ],
+  "totalPrice": 12.50,
+  "pickupTime": "2024-01-05T14:30:00",
+  "specialInstructions": "Please make it extra hot."
+}

@@ -204,6 +204,33 @@ public class TestEclipseProjectGenerator {
     }
 
     @Test
+    public void testCoffeeShopOrderManagement0_1_1() {
+
+        final String 
+            groupId = "com.solace.ep.awesome",
+            artifactId = "coffee-shop-order-mgt",
+            version = "0.1.1";
+        final String
+            generatedArchive = "src/test/resources/test-output/generated-archive/" + artifactId + ".jar";
+        final String ASYNC_API_FILE = "src/test/resources/ep-demo/asyncapi/Order Management-0.1.1.json";
+
+        String asyncApi;
+        try {
+            asyncApi = FileUtils.getFileAsString(ASYNC_API_FILE);
+    //            asyncApi = TestAsyncApiParsing.getSampleAsyncApi();
+            EclipseProjectGenerator epg = new EclipseProjectGenerator();
+            epg.generateEclipseArchiveForMuleFlowFromAsyncApi(groupId, artifactId, version, asyncApi, generatedArchive);
+        } catch ( Exception exc ) {
+            log.error("Failed to create the archive file for {}", ASYNC_API_FILE);
+            fail( exc.getMessage() );
+            return;
+        }
+        Path generatedArchivePath = Paths.get( generatedArchive );
+        assertTrue( Files.exists( generatedArchivePath ) );
+
+    }
+
+    @Test
     public void testGenerateEclipseArchiveCustomerFacingMobileApp016() {
 
         final String 

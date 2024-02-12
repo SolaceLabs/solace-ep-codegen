@@ -1,0 +1,24 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "countryCode": {
+      "type": "string"
+    },
+    "requestId": {
+      "type": "string"
+    },
+    "source": {
+      "type": "string"
+    },
+    "storeId": {
+      "type": "string"
+    },
+    "orderId": {
+      "type": "string"
+    },
+    "eta": {
+      "type": "string"
+    }
+  }
+}

@@ -1,0 +1,94 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "countryCode": {
+      "type": "string"
+    },
+    "requestId": {
+      "type": "string"
+    },
+    "source": {
+      "type": "string"
+    },
+    "storeId": {
+      "type": "string"
+    },
+    "orderId": {
+      "type": "string"
+    },
+    "region": {
+      "type": "string"
+    },
+    "customer": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "phone": {
+          "type": "string"
+        }
+      }
+    },
+    "items": {
+      "type": "array",
+      "items": [
+        {
+          "type": "object",
+          "properties": {
+            "productID": {
+              "type": "string"
+            },
+            "productName": {
+              "type": "string"
+            },
+            "quantity": {
+              "type": "integer"
+            },
+            "size": {
+              "type": "string"
+            },
+            "options": {
+              "type": "array",
+              "items": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "string"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "type": "object",
+          "properties": {
+            "productID": {
+              "type": "string"
+            },
+            "productName": {
+              "type": "string"
+            },
+            "quantity": {
+              "type": "integer"
+            }
+          }
+        }
+      ]
+    },
+    "totalPrice": {
+      "type": "number"
+    },
+    "pickupTime": {
+      "type": "string"
+    },
+    "specialInstructions": {
+      "type": "string"
+    }
+  }
+}
