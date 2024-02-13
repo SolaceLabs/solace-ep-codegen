@@ -284,7 +284,7 @@ public class MuleDocMapper {
             }
 
             if ( dynamicTopic ) {
-                publishTopicAddress = topicBuilder.toString();
+                publishTopicAddress = String.format( "\"%s\"", topicBuilder.toString() );
                         // "%dw 2.0\n" +
                         // "output text/plain\n" +
                         // "---\n" +
