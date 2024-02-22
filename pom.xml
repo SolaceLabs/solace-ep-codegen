@@ -6,7 +6,7 @@
 
     <groupId>com.solace.ep.muleflow</groupId>
     <artifactId>solace-ep-muleflow</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.2</version>
 
     <name>Solace-EventPortal-to-MuleFlow-Generator</name>
     <description>
