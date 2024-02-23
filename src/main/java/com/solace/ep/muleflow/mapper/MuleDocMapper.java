@@ -262,58 +262,36 @@ public class MuleDocMapper {
         if ( mapFromSubFlow.getPublishAddress() != null && ! mapFromSubFlow.getPublishAddress().isBlank() ) {
             boolean dynamicTopic = false;
             boolean firstToken = true;
-            boolean lastTokenWasVar = false;
             final StringTokenizer t = new StringTokenizer(mapFromSubFlow.getPublishAddress(),"/");
             final StringBuilder topicBuilder = new StringBuilder();
             while (t.hasMoreTokens()) {
 
                 final String topicElement = t.nextToken();
 
+                if ( firstToken ) {
+                    firstToken = false;
+                } else {
+                    topicBuilder.append("/");
+                }
+
                 Matcher m = MapUtils.PATTERN_VAR_NODE.matcher( topicElement );
                 if ( m.matches() ) {
-                    // Variable topic element
                     dynamicTopic = true;
-                    if ( firstToken ) {
-                        firstToken = false;
-                    } else {
-                        if ( lastTokenWasVar ) {
-                            topicBuilder.append(" ++ \"/\" ++ ");
-                        } else {
-                            topicBuilder.append("/\" ++ ");
-                        }
-                    }
-                    topicBuilder.append( "vars." + m.group( 1 ));
-                    lastTokenWasVar = true;
+                    topicBuilder.append( "$(vars." + m.group( 1 ) + " as String)" );
                 } else {
-                    // Not a variable topic element
-                    if ( firstToken ) {
-                        topicBuilder.append("\"");
-                        firstToken = false;
-                    } else {
-                        if ( lastTokenWasVar ) {
-                            topicBuilder.append(" ++ \"/");
-                        } else {
-                            topicBuilder.append("/");
-                        }
-                    }
                     topicBuilder.append(topicElement);
-                    lastTokenWasVar = false;
                 }
             }
 
-            if ( ! lastTokenWasVar ) {
-                topicBuilder.append( "\"" );
-            }
-
             if ( dynamicTopic ) {
-                // publishTopicAddress = String.format( "\"%s\"", topicBuilder.toString() );
+                // Use Constructed topic string
                 publishTopicAddress = topicBuilder.toString();
             } else {
                 // Ignore what was built and just use the static topic
                 publishTopicAddress = mapFromSubFlow.getPublishAddress();
             }
         }
-
+        
         SolacePublish solacePublish = new SolacePublish();
         solacePublish.setAddress( publishTopicAddress );
         solacePublish.setDocName( MapUtils.getEgressSubFlowDocNameFromMessageName( mapFromSubFlow.getMessageName() ) );
