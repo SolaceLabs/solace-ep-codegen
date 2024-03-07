@@ -25,6 +25,10 @@ The MuleFlow Generator uses a two-step translation process:
 ## Build for use as Lib
 `mvn clean install`
 
+## List out dependencies
+`mvn dependency:copy-dependencies -DincludeScope=runtime -DoutputDirectory=./mydeps`
+
+
 # Implement
 
 The mapper procedure can be called statically using one of four methods in `com.solace.ep.muleflow.MuleFlowGenerator` class. Each of the four methods map AsyncApi to Mule Flow XML the same way. The distinctions are the inputs (AsyncApi File Path or String) and outputs (XML to File or return as String)
