@@ -104,6 +104,8 @@ public class MavenPomCreator {
 
     protected String javaRuntimeVersionTarget   = JAVA_RUNTIME_VERSION_TARGET;
 
+    protected boolean cloudHubDeployment = false;
+
     protected MavenPomConfigSettings mavenPomConfigSettings;
 
     protected Set<ModuleProtocolType> moduleProtocolTypes;
@@ -112,7 +114,8 @@ public class MavenPomCreator {
 
     public MavenPomCreator( 
         MavenPomConfigSettings mavenPomConfigSettings, 
-        Set<ModuleProtocolType> moduleProtocolTypes ) 
+        Set<ModuleProtocolType> moduleProtocolTypes,
+        boolean cloudHubDeployment ) 
         throws Exception
     {
         if ( mavenPomConfigSettings == null || moduleProtocolTypes == null ) {
@@ -120,17 +123,19 @@ public class MavenPomCreator {
         }
         this.mavenPomConfigSettings = mavenPomConfigSettings;
         this.moduleProtocolTypes = moduleProtocolTypes;
+        this.cloudHubDeployment = cloudHubDeployment;
     }
 
     public MavenPomCreator(
         MavenPomConfigSettings mavenPomConfigSettings,
         Set<ModuleProtocolType> moduleProtocolTypes,
+        boolean cloudHubDeployment,
         String groupId,
         String artifactId,
         String version
     )   throws Exception 
     {
-        this( mavenPomConfigSettings, moduleProtocolTypes );
+        this( mavenPomConfigSettings, moduleProtocolTypes, cloudHubDeployment );
         this.groupId = groupId;
         this.artifactId = artifactId;
         this.version = version;
@@ -152,8 +157,44 @@ public class MavenPomCreator {
 
     @Data
     @NoArgsConstructor
+    private static class CloudHubDeployment {
+
+        protected String uri                = "${anypoint.uri:https://anypoint.mulesoft.com}";
+
+        protected String muleVersion        = "${app.runtime}";
+
+        protected String username           = "${anypoint.username}";
+
+        protected String password           = "${anypoint.password}";
+
+        protected String applicationName    = "${app.name}";
+
+        protected String environment        = "${env}";
+
+        protected String workerType         = "${anypoint.workerType:MICRO}";
+
+        protected String region             = "${anypoint.region}";
+
+        protected String workers            = "${anypoint.workers:1}";
+
+        protected String objectStoreV2      = "${anypoint.objectStoreV2:true}";
+
+    }
+
+    @Data
+    @NoArgsConstructor
     private static class MulePluginConfiguration {
-        public String classifier = "mule-application";
+
+        protected CloudHubDeployment cloudHubDeployment = null;
+
+        protected String classifier = "mule-application";
+
+        public MulePluginConfiguration( boolean chd ) {
+            if ( chd ) {
+                this.cloudHubDeployment = new CloudHubDeployment();
+            }
+        }
+
     }
 
     /**
@@ -194,7 +235,7 @@ public class MavenPomCreator {
             muleMaven.setArtifactId("mule-maven-plugin");
             muleMaven.setVersion("${mule.maven.plugin.version}");
             muleMaven.setExtensions(true);
-            muleMaven.setConfiguration( new MulePluginConfiguration() );
+            muleMaven.setConfiguration( new MulePluginConfiguration( isCloudHubDeployment() ) );
 
             compiler.setGroupId("org.apache.maven.plugins");
             compiler.setArtifactId("maven-compiler-plugin");
