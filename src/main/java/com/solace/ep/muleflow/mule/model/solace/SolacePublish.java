@@ -48,6 +48,18 @@ public class SolacePublish extends BaseElement {
     protected String configRef;
 
     @JacksonXmlProperty(
+        isAttribute = true,
+        localName = "contentType"
+    )
+    protected String contentType;
+
+    @JacksonXmlProperty(
+        isAttribute = true,
+        localName = "encoding"
+    )
+    protected String encoding;
+
+    @JacksonXmlProperty(
         isAttribute = false,
         namespace = "http://www.mulesoft.org/schema/mule/solace",
         localName = "message"

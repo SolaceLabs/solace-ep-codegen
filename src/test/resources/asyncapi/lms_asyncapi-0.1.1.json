@@ -1,0 +1,2334 @@
+{
+	"components": {
+		"schemas": {
+			"User_Created_0_1_0": {
+				"x-ep-schema-version": "0.1.0",
+				"x-ep-schema-version-id": "l8r16fgl57f",
+				"$schema": "http://json-schema.org/draft-04/schema#",
+				"x-ep-schema-state-name": "RELEASED",
+				"x-ep-schema-name": "User Created",
+				"type": "object",
+				"x-ep-application-domain-id": "satn8hi2uco",
+				"required": [
+					"event",
+					"fired_by_batch_action",
+					"message_id",
+					"payload"
+				],
+				"x-ep-schema-version-displayname": "",
+				"x-ep-shared": "false",
+				"x-ep-application-domain-name": "LMS Automation",
+				"x-ep-schema-state-id": "2",
+				"x-ep-schema-id": "ikwdeu9qph5",
+				"properties": {
+					"payload": {
+						"type": "object",
+						"properties": {
+							"firstname": {
+								"type": "string"
+							},
+							"provisioned": {
+								"type": "string"
+							},
+							"user_id": {
+								"type": "integer"
+							},
+							"level": {
+								"type": "string"
+							},
+							"extra_data": {
+								"type": "object",
+								"properties": {
+									"additional_fields": {
+										"type": "object",
+										"properties": {
+											"language": {
+												"type": "string"
+											},
+											"list": {
+												"type": "array",
+												"items": {
+												}
+											}
+										},
+										"required": [
+											"language",
+											"list"
+										]
+									}
+								},
+								"required": [
+									"additional_fields"
+								]
+							},
+							"fired_at": {
+								"type": "string"
+							},
+							"creation_date": {
+								"type": "string"
+							},
+							"expiration_date": {
+								"type": "null"
+							},
+							"uuid": {
+								"type": "string"
+							},
+							"email": {
+								"type": "string"
+							},
+							"username": {
+								"type": "string"
+							},
+							"lastname": {
+								"type": "string"
+							}
+						},
+						"required": [
+							"fired_at",
+							"user_id",
+							"username",
+							"email",
+							"creation_date",
+							"level",
+							"provisioned",
+							"extra_data"
+						]
+					},
+					"message_id": {
+						"type": "string"
+					},
+					"event": {
+						"type": "string"
+					},
+					"fired_by_batch_action": {
+						"type": "boolean"
+					}
+				}
+			},
+			"Course_Enrollment_Updated_0_1_0": {
+				"x-ep-schema-version": "0.1.0",
+				"x-ep-schema-version-id": "ddvqtftpr5u",
+				"$schema": "http://json-schema.org/draft-07/schema#",
+				"x-ep-schema-state-name": "RELEASED",
+				"x-ep-schema-name": "Course Enrollment Updated",
+				"title": "Root",
+				"type": "object",
+				"x-ep-application-domain-id": "satn8hi2uco",
+				"required": [
+					"event",
+					"fired_by_batch_action",
+					"message_id",
+					"payload"
+				],
+				"x-ep-schema-version-displayname": "",
+				"x-ep-shared": "false",
+				"x-ep-application-domain-name": "LMS Automation",
+				"x-ep-schema-state-id": "2",
+				"x-ep-schema-id": "duy2vc8k470",
+				"definitions": {
+				},
+				"properties": {
+					"payload": {
+						"title": "Payload",
+						"type": "object",
+						"required": [
+							"fired_at",
+							"user_id",
+							"course_id",
+							"status",
+							"level",
+							"enrollment_date",
+							"enrollment_date_begin_validity",
+							"enrollment_date_end_validity",
+							"subscribed_by_id",
+							"extra_data"
+						],
+						"properties": {
+							"course_id": {
+								"default": 0,
+								"examples": [
+									382
+								],
+								"title": "Course_id",
+								"type": "integer",
+								"$id": "#root/payload/course_id"
+							},
+							"subscribed_by_id": {
+								"default": 0,
+								"examples": [
+									13018
+								],
+								"title": "Subscribed_by_id",
+								"type": "integer",
+								"$id": "#root/payload/subscribed_by_id"
+							},
+							"user_id": {
+								"default": 0,
+								"examples": [
+									21617
+								],
+								"title": "User_id",
+								"type": "integer",
+								"$id": "#root/payload/user_id"
+							},
+							"level": {
+								"default": "",
+								"examples": [
+									"learner"
+								],
+								"pattern": "^.*$",
+								"title": "Level",
+								"type": "string",
+								"$id": "#root/payload/level"
+							},
+							"extra_data": {
+								"title": "Extra_data",
+								"type": "object",
+								"required": [
+									"score",
+									"additional_fields"
+								],
+								"properties": {
+									"score": {
+										"default": 0,
+										"examples": [
+											0
+										],
+										"title": "Score",
+										"type": "integer",
+										"$id": "#root/payload/extra_data/score"
+									},
+									"additional_fields": {
+										"default": null,
+										"title": "Additional_fields",
+										"type": "null",
+										"$id": "#root/payload/extra_data/additional_fields"
+									}
+								},
+								"$id": "#root/payload/extra_data"
+							},
+							"enrollment_date_end_validity": {
+								"default": null,
+								"title": "Enrollment_date_end_validity",
+								"type": "null",
+								"$id": "#root/payload/enrollment_date_end_validity"
+							},
+							"fired_at": {
+								"default": "",
+								"examples": [
+									"2023-03-01 02:14:17"
+								],
+								"pattern": "^.*$",
+								"title": "Fired_at",
+								"type": "string",
+								"$id": "#root/payload/fired_at"
+							},
+							"enrollment_date": {
+								"default": "",
+								"examples": [
+									"2022-08-31 15:08:09"
+								],
+								"pattern": "^.*$",
+								"title": "Enrollment_date",
+								"type": "string",
+								"$id": "#root/payload/enrollment_date"
+							},
+							"status": {
+								"default": "",
+								"examples": [
+									"in_progress"
+								],
+								"pattern": "^.*$",
+								"title": "Status",
+								"type": "string",
+								"$id": "#root/payload/status"
+							},
+							"enrollment_date_begin_validity": {
+								"default": null,
+								"title": "Enrollment_date_begin_validity",
+								"type": "null",
+								"$id": "#root/payload/enrollment_date_begin_validity"
+							}
+						},
+						"$id": "#root/payload"
+					},
+					"message_id": {
+						"default": "",
+						"examples": [
+							"wh-20230301-021418-a63d81ee-4e1b-4ed4-afdd-b935cb7211f4"
+						],
+						"pattern": "^.*$",
+						"title": "Message_id",
+						"type": "string",
+						"$id": "#root/message_id"
+					},
+					"event": {
+						"default": "",
+						"examples": [
+							"course.enrollment.updated"
+						],
+						"pattern": "^.*$",
+						"title": "Event",
+						"type": "string",
+						"$id": "#root/event"
+					},
+					"fired_by_batch_action": {
+						"default": true,
+						"examples": [
+							false
+						],
+						"title": "Fired_by_batch_action",
+						"type": "boolean",
+						"$id": "#root/fired_by_batch_action"
+					}
+				},
+				"$id": "https://example.com/object1677704602.json"
+			},
+			"User_Deleted_0_1_0": {
+				"x-ep-schema-version": "0.1.0",
+				"x-ep-schema-version-id": "fbo1fdp75hz",
+				"$schema": "http://json-schema.org/draft-04/schema#",
+				"x-ep-schema-state-name": "RELEASED",
+				"x-ep-schema-name": "User Deleted",
+				"type": "object",
+				"x-ep-application-domain-id": "satn8hi2uco",
+				"required": [
+					"event",
+					"fired_by_batch_action",
+					"message_id",
+					"payload"
+				],
+				"x-ep-schema-version-displayname": "",
+				"x-ep-shared": "false",
+				"x-ep-application-domain-name": "LMS Automation",
+				"x-ep-schema-state-id": "2",
+				"x-ep-schema-id": "n3ifa3eu02q",
+				"properties": {
+					"payload": {
+						"type": "object",
+						"properties": {
+							"user_id": {
+								"type": "integer"
+							},
+							"deletion_date": {
+								"type": "string"
+							},
+							"fired_at": {
+								"type": "string"
+							},
+							"username": {
+								"type": "string"
+							}
+						},
+						"required": [
+							"fired_at",
+							"user_id",
+							"username",
+							"deletion_date"
+						]
+					},
+					"message_id": {
+						"type": "string"
+					},
+					"event": {
+						"type": "string"
+					},
+					"fired_by_batch_action": {
+						"type": "boolean"
+					}
+				}
+			},
+			"Course_Enrollment_Created_0_1_0": {
+				"x-ep-schema-version": "0.1.0",
+				"x-ep-schema-version-id": "7iicc4j3b8g",
+				"$schema": "http://json-schema.org/draft-07/schema#",
+				"x-ep-schema-state-name": "RELEASED",
+				"x-ep-schema-name": "Course Enrollment Created",
+				"title": "Root",
+				"type": "object",
+				"x-ep-application-domain-id": "satn8hi2uco",
+				"required": [
+					"event",
+					"fired_by_batch_action",
+					"message_id",
+					"payload"
+				],
+				"x-ep-schema-version-displayname": "",
+				"x-ep-shared": "false",
+				"x-ep-application-domain-name": "LMS Automation",
+				"x-ep-schema-state-id": "2",
+				"x-ep-schema-id": "ug4mt507v32",
+				"definitions": {
+				},
+				"properties": {
+					"payload": {
+						"title": "Payload",
+						"type": "object",
+						"required": [
+							"fired_at",
+							"user_id",
+							"username",
+							"course_id",
+							"course_name",
+							"level",
+							"enrollment_date",
+							"enrollment_date_begin_validity",
+							"enrollment_date_end_validity",
+							"subscribed_by_id",
+							"status",
+							"extra_data"
+						],
+						"properties": {
+							"course_id": {
+								"default": 0,
+								"examples": [
+									382
+								],
+								"title": "Course_id",
+								"type": "integer",
+								"$id": "#root/payload/course_id"
+							},
+							"subscribed_by_id": {
+								"default": 0,
+								"examples": [
+									13018
+								],
+								"title": "Subscribed_by_id",
+								"type": "integer",
+								"$id": "#root/payload/subscribed_by_id"
+							},
+							"user_id": {
+								"default": 0,
+								"examples": [
+									20124
+								],
+								"title": "User_id",
+								"type": "integer",
+								"$id": "#root/payload/user_id"
+							},
+							"course_name": {
+								"default": "",
+								"examples": [
+									"Solace Recertification Test Course"
+								],
+								"pattern": "^.*$",
+								"title": "Course_name",
+								"type": "string",
+								"$id": "#root/payload/course_name"
+							},
+							"level": {
+								"default": "",
+								"examples": [
+									"learner"
+								],
+								"pattern": "^.*$",
+								"title": "Level",
+								"type": "string",
+								"$id": "#root/payload/level"
+							},
+							"extra_data": {
+								"title": "Extra_data",
+								"type": "object",
+								"required": [
+									"score",
+									"additional_fields"
+								],
+								"properties": {
+									"score": {
+										"default": 0,
+										"examples": [
+											0
+										],
+										"title": "Score",
+										"type": "integer",
+										"$id": "#root/payload/extra_data/score"
+									},
+									"additional_fields": {
+										"default": null,
+										"title": "Additional_fields",
+										"type": "null",
+										"$id": "#root/payload/extra_data/additional_fields"
+									}
+								},
+								"$id": "#root/payload/extra_data"
+							},
+							"enrollment_date_end_validity": {
+								"default": null,
+								"title": "Enrollment_date_end_validity",
+								"type": "null",
+								"$id": "#root/payload/enrollment_date_end_validity"
+							},
+							"fired_at": {
+								"default": "",
+								"examples": [
+									"2023-03-01 02:14:44"
+								],
+								"pattern": "^.*$",
+								"title": "Fired_at",
+								"type": "string",
+								"$id": "#root/payload/fired_at"
+							},
+							"enrollment_date": {
+								"default": "",
+								"examples": [
+									"2023-03-01 02:14:44"
+								],
+								"pattern": "^.*$",
+								"title": "Enrollment_date",
+								"type": "string",
+								"$id": "#root/payload/enrollment_date"
+							},
+							"username": {
+								"default": "",
+								"examples": [
+									"test.user@acme.com"
+								],
+								"pattern": "^.*$",
+								"title": "Username",
+								"type": "string",
+								"$id": "#root/payload/username"
+							},
+							"enrollment_date_begin_validity": {
+								"default": null,
+								"title": "Enrollment_date_begin_validity",
+								"type": "null",
+								"$id": "#root/payload/enrollment_date_begin_validity"
+							},
+							"status": {
+								"default": "",
+								"examples": [
+									"subscribed"
+								],
+								"pattern": "^.*$",
+								"title": "Status",
+								"type": "string",
+								"$id": "#root/payload/status"
+							}
+						},
+						"$id": "#root/payload"
+					},
+					"message_id": {
+						"default": "",
+						"examples": [
+							"wh-20230301-021445-1af3c989-e83d-45e9-b9b7-0fb274c38062"
+						],
+						"pattern": "^.*$",
+						"title": "Message_id",
+						"type": "string",
+						"$id": "#root/message_id"
+					},
+					"event": {
+						"default": "",
+						"examples": [
+							"course.enrollment.created"
+						],
+						"pattern": "^.*$",
+						"title": "Event",
+						"type": "string",
+						"$id": "#root/event"
+					},
+					"fired_by_batch_action": {
+						"default": true,
+						"examples": [
+							false
+						],
+						"title": "Fired_by_batch_action",
+						"type": "boolean",
+						"$id": "#root/fired_by_batch_action"
+					}
+				},
+				"$id": "https://example.com/object1677704704.json"
+			},
+			"User_Reactivated_0_1_0": {
+				"x-ep-schema-version": "0.1.0",
+				"x-ep-schema-version-id": "o337gqrfbtz",
+				"$schema": "http://json-schema.org/draft-07/schema#",
+				"x-ep-schema-state-name": "RELEASED",
+				"x-ep-schema-name": "User Reactivated",
+				"title": "Generated schema for Root",
+				"type": "object",
+				"x-ep-application-domain-id": "satn8hi2uco",
+				"required": [
+					"event",
+					"fired_by_batch_action",
+					"message_id",
+					"payload"
+				],
+				"x-ep-schema-version-displayname": "",
+				"x-ep-shared": "false",
+				"x-ep-application-domain-name": "LMS Automation",
+				"x-ep-schema-state-id": "2",
+				"x-ep-schema-id": "ydt50lc35yt",
+				"properties": {
+					"payload": {
+						"type": "object",
+						"properties": {
+							"firstname": {
+								"type": "string"
+							},
+							"user_id": {
+								"type": "number"
+							},
+							"level": {
+								"type": "string"
+							},
+							"reactivation_date": {
+								"type": "string"
+							},
+							"fired_at": {
+								"type": "string"
+							},
+							"uuid": {
+								"type": "string"
+							},
+							"email": {
+								"type": "string"
+							},
+							"username": {
+								"type": "string"
+							},
+							"lastname": {
+								"type": "string"
+							}
+						},
+						"required": [
+							"fired_at",
+							"user_id",
+							"username",
+							"email",
+							"reactivation_date",
+							"level"
+						]
+					},
+					"message_id": {
+						"type": "string"
+					},
+					"event": {
+						"type": "string"
+					},
+					"fired_by_batch_action": {
+						"type": "boolean"
+					}
+				}
+			},
+			"ILT_Session_Enrollment_Created_0_1_1": {
+				"x-ep-schema-version": "0.1.1",
+				"x-ep-schema-version-id": "r4k346y1akj",
+				"$schema": "http://json-schema.org/draft-07/schema#",
+				"x-ep-schema-state-name": "RELEASED",
+				"x-ep-schema-name": "ILT Session Enrollment Created",
+				"title": "Root",
+				"type": "object",
+				"x-ep-application-domain-id": "satn8hi2uco",
+				"required": [
+					"event",
+					"fired_by_batch_action",
+					"message_id",
+					"payload"
+				],
+				"x-ep-schema-version-displayname": "With Session Code",
+				"x-ep-shared": "false",
+				"x-ep-application-domain-name": "LMS Automation",
+				"x-ep-schema-state-id": "2",
+				"x-ep-schema-id": "a6jotx8j6xr",
+				"definitions": {
+				},
+				"properties": {
+					"payload": {
+						"title": "Payload",
+						"type": "object",
+						"required": [
+							"fired_at",
+							"user_id",
+							"username",
+							"course_id",
+							"session_id",
+							"session_name",
+							"level",
+							"enrollment_date",
+							"enrollment_date_begin_validity",
+							"enrollment_date_end_validity",
+							"subscribed_by_id",
+							"status",
+							"migrated_webinar_session_id",
+							"extra_data"
+						],
+						"properties": {
+							"course_id": {
+								"default": 0,
+								"examples": [
+									409
+								],
+								"title": "Course_id",
+								"type": "integer",
+								"$id": "#root/payload/course_id"
+							},
+							"session_name": {
+								"default": "",
+								"examples": [
+									"Session 1"
+								],
+								"pattern": "^.*$",
+								"title": "Session_name",
+								"type": "string",
+								"$id": "#root/payload/session_name"
+							},
+							"level": {
+								"default": "",
+								"examples": [
+									"learner"
+								],
+								"pattern": "^.*$",
+								"title": "Level",
+								"type": "string",
+								"$id": "#root/payload/level"
+							},
+							"migrated_webinar_session_id": {
+								"default": null,
+								"title": "Migrated_webinar_session_id",
+								"type": "null",
+								"$id": "#root/payload/migrated_webinar_session_id"
+							},
+							"enrollment_date_end_validity": {
+								"default": null,
+								"title": "Enrollment_date_end_validity",
+								"type": "null",
+								"$id": "#root/payload/enrollment_date_end_validity"
+							},
+							"session_code": {
+								"default": "",
+								"examples": [
+									"12345"
+								],
+								"pattern": "^.*$",
+								"title": "Session_code",
+								"type": [
+									"string",
+									"null"
+								],
+								"$id": "#root/payload/session_code"
+							},
+							"fired_at": {
+								"default": "",
+								"examples": [
+									"2023-03-01 02:48:34"
+								],
+								"pattern": "^.*$",
+								"title": "Fired_at",
+								"type": "string",
+								"$id": "#root/payload/fired_at"
+							},
+							"session_id": {
+								"default": 0,
+								"examples": [
+									188
+								],
+								"title": "Session_id",
+								"type": "integer",
+								"$id": "#root/payload/session_id"
+							},
+							"enrollment_date_begin_validity": {
+								"default": null,
+								"title": "Enrollment_date_begin_validity",
+								"type": "null",
+								"$id": "#root/payload/enrollment_date_begin_validity"
+							},
+							"subscribed_by_id": {
+								"default": 0,
+								"examples": [
+									13018
+								],
+								"title": "Subscribed_by_id",
+								"type": "integer",
+								"$id": "#root/payload/subscribed_by_id"
+							},
+							"user_id": {
+								"default": 0,
+								"examples": [
+									21617
+								],
+								"title": "User_id",
+								"type": "integer",
+								"$id": "#root/payload/user_id"
+							},
+							"extra_data": {
+								"title": "Extra_data",
+								"type": "object",
+								"required": [
+									"additional_fields"
+								],
+								"properties": {
+									"additional_fields": {
+										"default": null,
+										"title": "Additional_fields",
+										"type": "null",
+										"$id": "#root/payload/extra_data/additional_fields"
+									}
+								},
+								"$id": "#root/payload/extra_data"
+							},
+							"enrollment_date": {
+								"default": "",
+								"examples": [
+									"2023-03-01 02:48:25"
+								],
+								"pattern": "^.*$",
+								"title": "Enrollment_date",
+								"type": "string",
+								"$id": "#root/payload/enrollment_date"
+							},
+							"username": {
+								"default": "",
+								"examples": [
+									"dishantlangayan@gmail.com"
+								],
+								"pattern": "^.*$",
+								"title": "Username",
+								"type": "string",
+								"$id": "#root/payload/username"
+							},
+							"status": {
+								"default": "",
+								"examples": [
+									"subscribed"
+								],
+								"pattern": "^.*$",
+								"title": "Status",
+								"type": "string",
+								"$id": "#root/payload/status"
+							}
+						},
+						"$id": "#root/payload"
+					},
+					"message_id": {
+						"default": "",
+						"examples": [
+							"wh-20230301-024835-ace96f9c-89c0-4875-a701-57eb7b1fefba"
+						],
+						"pattern": "^.*$",
+						"title": "Message_id",
+						"type": "string",
+						"$id": "#root/message_id"
+					},
+					"event": {
+						"default": "",
+						"examples": [
+							"ilt.session.enrollment.created"
+						],
+						"pattern": "^.*$",
+						"title": "Event",
+						"type": "string",
+						"$id": "#root/event"
+					},
+					"fired_by_batch_action": {
+						"default": true,
+						"examples": [
+							false
+						],
+						"title": "Fired_by_batch_action",
+						"type": "boolean",
+						"$id": "#root/fired_by_batch_action"
+					}
+				},
+				"$id": "https://example.com/object1677704750.json"
+			},
+			"Course_Enrollment_Completed_0_1_0": {
+				"x-ep-schema-version": "0.1.0",
+				"x-ep-schema-version-id": "tqarn1seka5",
+				"$schema": "http://json-schema.org/draft-07/schema#",
+				"x-ep-schema-state-name": "RELEASED",
+				"x-ep-schema-name": "Course Enrollment Completed",
+				"title": "Root",
+				"type": "object",
+				"x-ep-application-domain-id": "satn8hi2uco",
+				"required": [
+					"event",
+					"fired_by_batch_action",
+					"message_id",
+					"payload"
+				],
+				"x-ep-schema-version-displayname": "",
+				"x-ep-shared": "false",
+				"x-ep-application-domain-name": "LMS Automation",
+				"x-ep-schema-state-id": "2",
+				"x-ep-schema-id": "4a9f7xt9b5f",
+				"definitions": {
+				},
+				"properties": {
+					"payload": {
+						"title": "Payload",
+						"type": "object",
+						"required": [
+							"fired_at",
+							"user_id",
+							"course_id",
+							"completion_date",
+							"subscribed_by_id",
+							"status",
+							"level",
+							"enrollment_date",
+							"enrollment_date_begin_validity",
+							"enrollment_date_end_validity",
+							"extra_data"
+						],
+						"properties": {
+							"course_id": {
+								"default": 0,
+								"examples": [
+									382
+								],
+								"title": "Course_id",
+								"type": "integer",
+								"$id": "#root/payload/course_id"
+							},
+							"subscribed_by_id": {
+								"default": 0,
+								"examples": [
+									13018
+								],
+								"title": "Subscribed_by_id",
+								"type": "integer",
+								"$id": "#root/payload/subscribed_by_id"
+							},
+							"user_id": {
+								"default": 0,
+								"examples": [
+									21617
+								],
+								"title": "User_id",
+								"type": "integer",
+								"$id": "#root/payload/user_id"
+							},
+							"level": {
+								"default": "",
+								"examples": [
+									"learner"
+								],
+								"pattern": "^.*$",
+								"title": "Level",
+								"type": "string",
+								"$id": "#root/payload/level"
+							},
+							"extra_data": {
+								"title": "Extra_data",
+								"type": "object",
+								"required": [
+									"total_time",
+									"score",
+									"additional_fields"
+								],
+								"properties": {
+									"score": {
+										"default": 0,
+										"examples": [
+											100
+										],
+										"title": "Score",
+										"type": "integer",
+										"$id": "#root/payload/extra_data/score"
+									},
+									"additional_fields": {
+										"default": null,
+										"title": "Additional_fields",
+										"type": "null",
+										"$id": "#root/payload/extra_data/additional_fields"
+									},
+									"total_time": {
+										"default": 0,
+										"examples": [
+											0
+										],
+										"title": "Total_time",
+										"type": "integer",
+										"$id": "#root/payload/extra_data/total_time"
+									}
+								},
+								"$id": "#root/payload/extra_data"
+							},
+							"enrollment_date_end_validity": {
+								"default": null,
+								"title": "Enrollment_date_end_validity",
+								"type": "null",
+								"$id": "#root/payload/enrollment_date_end_validity"
+							},
+							"fired_at": {
+								"default": "",
+								"examples": [
+									"2023-03-01 02:25:09"
+								],
+								"pattern": "^.*$",
+								"title": "Fired_at",
+								"type": "string",
+								"$id": "#root/payload/fired_at"
+							},
+							"completion_date": {
+								"default": "",
+								"examples": [
+									"2023-02-28 05:00:00"
+								],
+								"pattern": "^.*$",
+								"title": "Completion_date",
+								"type": "string",
+								"$id": "#root/payload/completion_date"
+							},
+							"enrollment_date": {
+								"default": "",
+								"examples": [
+									"2022-08-31 15:08:09"
+								],
+								"pattern": "^.*$",
+								"title": "Enrollment_date",
+								"type": "string",
+								"$id": "#root/payload/enrollment_date"
+							},
+							"status": {
+								"default": "",
+								"examples": [
+									"completed"
+								],
+								"pattern": "^.*$",
+								"title": "Status",
+								"type": "string",
+								"$id": "#root/payload/status"
+							},
+							"enrollment_date_begin_validity": {
+								"default": null,
+								"title": "Enrollment_date_begin_validity",
+								"type": "null",
+								"$id": "#root/payload/enrollment_date_begin_validity"
+							}
+						},
+						"$id": "#root/payload"
+					},
+					"message_id": {
+						"default": "",
+						"examples": [
+							"wh-20230301-022512-d4e7fbad-80d0-4da6-a6ee-083339b0028b"
+						],
+						"pattern": "^.*$",
+						"title": "Message_id",
+						"type": "string",
+						"$id": "#root/message_id"
+					},
+					"event": {
+						"default": "",
+						"examples": [
+							"course.enrollment.completed"
+						],
+						"pattern": "^.*$",
+						"title": "Event",
+						"type": "string",
+						"$id": "#root/event"
+					},
+					"fired_by_batch_action": {
+						"default": true,
+						"examples": [
+							false
+						],
+						"title": "Fired_by_batch_action",
+						"type": "boolean",
+						"$id": "#root/fired_by_batch_action"
+					}
+				},
+				"$id": "https://example.com/object1677704516.json"
+			},
+			"User_Deactivated_0_1_0": {
+				"x-ep-schema-version": "0.1.0",
+				"x-ep-schema-version-id": "hcomngtx6b6",
+				"$schema": "http://json-schema.org/draft-04/schema#",
+				"x-ep-schema-state-name": "RELEASED",
+				"x-ep-schema-name": "User Deactivated",
+				"type": "object",
+				"x-ep-application-domain-id": "satn8hi2uco",
+				"required": [
+					"event",
+					"fired_by_batch_action",
+					"message_id",
+					"payload"
+				],
+				"x-ep-schema-version-displayname": "",
+				"x-ep-shared": "false",
+				"x-ep-application-domain-name": "LMS Automation",
+				"x-ep-schema-state-id": "2",
+				"x-ep-schema-id": "4pjc72li5nv",
+				"properties": {
+					"payload": {
+						"type": "object",
+						"properties": {
+							"firstname": {
+								"type": "string"
+							},
+							"user_id": {
+								"type": "integer"
+							},
+							"level": {
+								"type": "string"
+							},
+							"fired_at": {
+								"type": "string"
+							},
+							"email": {
+								"type": "string"
+							},
+							"username": {
+								"type": "string"
+							},
+							"deactivation_date": {
+								"type": "string"
+							},
+							"lastname": {
+								"type": "string"
+							}
+						},
+						"required": [
+							"fired_at",
+							"user_id",
+							"username",
+							"email",
+							"deactivation_date",
+							"level"
+						]
+					},
+					"message_id": {
+						"type": "string"
+					},
+					"event": {
+						"type": "string"
+					},
+					"fired_by_batch_action": {
+						"type": "boolean"
+					}
+				}
+			},
+			"ILT_Session_Enrollment_Updated_0_1_0": {
+				"x-ep-schema-version": "0.1.0",
+				"x-ep-schema-version-id": "f2pf88v6mmz",
+				"$schema": "http://json-schema.org/draft-07/schema#",
+				"x-ep-schema-state-name": "RELEASED",
+				"x-ep-schema-name": "ILT Session Enrollment Updated",
+				"title": "Root",
+				"type": "object",
+				"x-ep-application-domain-id": "satn8hi2uco",
+				"required": [
+					"event",
+					"fired_by_batch_action",
+					"message_id",
+					"payload"
+				],
+				"x-ep-schema-version-displayname": "",
+				"x-ep-shared": "false",
+				"x-ep-application-domain-name": "LMS Automation",
+				"x-ep-schema-state-id": "2",
+				"x-ep-schema-id": "5aqewal4kne",
+				"definitions": {
+				},
+				"properties": {
+					"payload": {
+						"title": "Payload",
+						"type": "object",
+						"required": [
+							"fired_at",
+							"user_id",
+							"course_id",
+							"session_id",
+							"session_name",
+							"level",
+							"enrollment_date",
+							"enrollment_date_begin_validity",
+							"enrollment_date_end_validity",
+							"subscribed_by_id",
+							"status",
+							"migrated_webinar_session_id",
+							"extra_data"
+						],
+						"properties": {
+							"course_id": {
+								"default": 0,
+								"examples": [
+									409
+								],
+								"title": "Course_id",
+								"type": "integer",
+								"$id": "#root/payload/course_id"
+							},
+							"session_name": {
+								"default": "",
+								"examples": [
+									"Session 1"
+								],
+								"pattern": "^.*$",
+								"title": "Session_name",
+								"type": "string",
+								"$id": "#root/payload/session_name"
+							},
+							"level": {
+								"default": "",
+								"examples": [
+									"learner"
+								],
+								"pattern": "^.*$",
+								"title": "Level",
+								"type": "string",
+								"$id": "#root/payload/level"
+							},
+							"migrated_webinar_session_id": {
+								"default": null,
+								"title": "Migrated_webinar_session_id",
+								"type": "null",
+								"$id": "#root/payload/migrated_webinar_session_id"
+							},
+							"enrollment_date_end_validity": {
+								"default": null,
+								"title": "Enrollment_date_end_validity",
+								"type": "null",
+								"$id": "#root/payload/enrollment_date_end_validity"
+							},
+							"fired_at": {
+								"default": "",
+								"examples": [
+									"2023-03-01 02:50:07"
+								],
+								"pattern": "^.*$",
+								"title": "Fired_at",
+								"type": "string",
+								"$id": "#root/payload/fired_at"
+							},
+							"session_id": {
+								"default": 0,
+								"examples": [
+									188
+								],
+								"title": "Session_id",
+								"type": "integer",
+								"$id": "#root/payload/session_id"
+							},
+							"enrollment_date_begin_validity": {
+								"default": null,
+								"title": "Enrollment_date_begin_validity",
+								"type": "null",
+								"$id": "#root/payload/enrollment_date_begin_validity"
+							},
+							"subscribed_by_id": {
+								"default": 0,
+								"examples": [
+									13018
+								],
+								"title": "Subscribed_by_id",
+								"type": "integer",
+								"$id": "#root/payload/subscribed_by_id"
+							},
+							"user_id": {
+								"default": 0,
+								"examples": [
+									21617
+								],
+								"title": "User_id",
+								"type": "integer",
+								"$id": "#root/payload/user_id"
+							},
+							"extra_data": {
+								"title": "Extra_data",
+								"type": "object",
+								"required": [
+									"additional_fields"
+								],
+								"properties": {
+									"additional_fields": {
+										"default": null,
+										"title": "Additional_fields",
+										"type": "null",
+										"$id": "#root/payload/extra_data/additional_fields"
+									}
+								},
+								"$id": "#root/payload/extra_data"
+							},
+							"enrollment_date": {
+								"default": "",
+								"examples": [
+									"2023-03-01 02:48:25"
+								],
+								"pattern": "^.*$",
+								"title": "Enrollment_date",
+								"type": "string",
+								"$id": "#root/payload/enrollment_date"
+							},
+							"status": {
+								"default": "",
+								"examples": [
+									"in_progress"
+								],
+								"pattern": "^.*$",
+								"title": "Status",
+								"type": "string",
+								"$id": "#root/payload/status"
+							}
+						},
+						"$id": "#root/payload"
+					},
+					"message_id": {
+						"default": "",
+						"examples": [
+							"wh-20230301-025008-d7ceee1f-70eb-4770-83ac-fa1d02836b4b"
+						],
+						"pattern": "^.*$",
+						"title": "Message_id",
+						"type": "string",
+						"$id": "#root/message_id"
+					},
+					"event": {
+						"default": "",
+						"examples": [
+							"ilt.session.enrollment.updated"
+						],
+						"pattern": "^.*$",
+						"title": "Event",
+						"type": "string",
+						"$id": "#root/event"
+					},
+					"fired_by_batch_action": {
+						"default": true,
+						"examples": [
+							false
+						],
+						"title": "Fired_by_batch_action",
+						"type": "boolean",
+						"$id": "#root/fired_by_batch_action"
+					}
+				},
+				"$id": "https://example.com/object1677704783.json"
+			},
+			"ILT_Session_Enrollment_Updated_0_1_1": {
+				"x-ep-schema-version": "0.1.1",
+				"x-ep-schema-version-id": "tonl4hkd9fo",
+				"$schema": "http://json-schema.org/draft-07/schema#",
+				"x-ep-schema-state-name": "RELEASED",
+				"x-ep-schema-name": "ILT Session Enrollment Updated",
+				"title": "Root",
+				"type": "object",
+				"x-ep-application-domain-id": "satn8hi2uco",
+				"required": [
+					"event",
+					"fired_by_batch_action",
+					"message_id",
+					"payload"
+				],
+				"x-ep-schema-version-displayname": "With Session Code",
+				"x-ep-shared": "false",
+				"x-ep-application-domain-name": "LMS Automation",
+				"x-ep-schema-state-id": "2",
+				"x-ep-schema-id": "5aqewal4kne",
+				"definitions": {
+				},
+				"properties": {
+					"payload": {
+						"title": "Payload",
+						"type": "object",
+						"required": [
+							"fired_at",
+							"user_id",
+							"course_id",
+							"session_id",
+							"session_name",
+							"level",
+							"enrollment_date",
+							"enrollment_date_begin_validity",
+							"enrollment_date_end_validity",
+							"subscribed_by_id",
+							"status",
+							"migrated_webinar_session_id",
+							"extra_data"
+						],
+						"properties": {
+							"course_id": {
+								"default": 0,
+								"examples": [
+									409
+								],
+								"title": "Course_id",
+								"type": "integer",
+								"$id": "#root/payload/course_id"
+							},
+							"session_name": {
+								"default": "",
+								"examples": [
+									"Session 1"
+								],
+								"pattern": "^.*$",
+								"title": "Session_name",
+								"type": "string",
+								"$id": "#root/payload/session_name"
+							},
+							"level": {
+								"default": "",
+								"examples": [
+									"learner"
+								],
+								"pattern": "^.*$",
+								"title": "Level",
+								"type": "string",
+								"$id": "#root/payload/level"
+							},
+							"migrated_webinar_session_id": {
+								"default": null,
+								"title": "Migrated_webinar_session_id",
+								"type": "null",
+								"$id": "#root/payload/migrated_webinar_session_id"
+							},
+							"enrollment_date_end_validity": {
+								"default": null,
+								"title": "Enrollment_date_end_validity",
+								"type": "null",
+								"$id": "#root/payload/enrollment_date_end_validity"
+							},
+							"session_code": {
+								"default": "",
+								"examples": [
+									"12345"
+								],
+								"pattern": "^.*$",
+								"title": "Session_code",
+								"type": [
+									"string",
+									"null"
+								],
+								"$id": "#root/payload/session_code"
+							},
+							"fired_at": {
+								"default": "",
+								"examples": [
+									"2023-03-01 02:50:07"
+								],
+								"pattern": "^.*$",
+								"title": "Fired_at",
+								"type": "string",
+								"$id": "#root/payload/fired_at"
+							},
+							"session_id": {
+								"default": 0,
+								"examples": [
+									188
+								],
+								"title": "Session_id",
+								"type": "integer",
+								"$id": "#root/payload/session_id"
+							},
+							"enrollment_date_begin_validity": {
+								"default": null,
+								"title": "Enrollment_date_begin_validity",
+								"type": "null",
+								"$id": "#root/payload/enrollment_date_begin_validity"
+							},
+							"subscribed_by_id": {
+								"default": 0,
+								"examples": [
+									13018
+								],
+								"title": "Subscribed_by_id",
+								"type": "integer",
+								"$id": "#root/payload/subscribed_by_id"
+							},
+							"user_id": {
+								"default": 0,
+								"examples": [
+									21617
+								],
+								"title": "User_id",
+								"type": "integer",
+								"$id": "#root/payload/user_id"
+							},
+							"extra_data": {
+								"title": "Extra_data",
+								"type": "object",
+								"required": [
+									"additional_fields"
+								],
+								"properties": {
+									"additional_fields": {
+										"default": null,
+										"title": "Additional_fields",
+										"type": "null",
+										"$id": "#root/payload/extra_data/additional_fields"
+									}
+								},
+								"$id": "#root/payload/extra_data"
+							},
+							"enrollment_date": {
+								"default": "",
+								"examples": [
+									"2023-03-01 02:48:25"
+								],
+								"pattern": "^.*$",
+								"title": "Enrollment_date",
+								"type": "string",
+								"$id": "#root/payload/enrollment_date"
+							},
+							"status": {
+								"default": "",
+								"examples": [
+									"in_progress"
+								],
+								"pattern": "^.*$",
+								"title": "Status",
+								"type": "string",
+								"$id": "#root/payload/status"
+							}
+						},
+						"$id": "#root/payload"
+					},
+					"message_id": {
+						"default": "",
+						"examples": [
+							"wh-20230301-025008-d7ceee1f-70eb-4770-83ac-fa1d02836b4b"
+						],
+						"pattern": "^.*$",
+						"title": "Message_id",
+						"type": "string",
+						"$id": "#root/message_id"
+					},
+					"event": {
+						"default": "",
+						"examples": [
+							"ilt.session.enrollment.updated"
+						],
+						"pattern": "^.*$",
+						"title": "Event",
+						"type": "string",
+						"$id": "#root/event"
+					},
+					"fired_by_batch_action": {
+						"default": true,
+						"examples": [
+							false
+						],
+						"title": "Fired_by_batch_action",
+						"type": "boolean",
+						"$id": "#root/fired_by_batch_action"
+					}
+				},
+				"$id": "https://example.com/object1677704783.json"
+			},
+			"User_Updated_0_1_0": {
+				"x-ep-schema-version": "0.1.0",
+				"x-ep-schema-version-id": "ccb3i535764",
+				"$schema": "http://json-schema.org/draft-04/schema#",
+				"x-ep-schema-state-name": "RELEASED",
+				"x-ep-schema-name": "User Updated",
+				"type": "object",
+				"x-ep-application-domain-id": "satn8hi2uco",
+				"required": [
+					"event",
+					"fired_by_batch_action",
+					"message_id",
+					"payload"
+				],
+				"x-ep-schema-version-displayname": "",
+				"x-ep-shared": "false",
+				"x-ep-application-domain-name": "LMS Automation",
+				"x-ep-schema-state-id": "2",
+				"x-ep-schema-id": "llozl2fihnp",
+				"properties": {
+					"payload": {
+						"type": "object",
+						"properties": {
+							"firstname": {
+								"type": "string"
+							},
+							"user_id": {
+								"type": "integer"
+							},
+							"level": {
+								"type": "string"
+							},
+							"fired_at": {
+								"type": "string"
+							},
+							"uuid": {
+								"type": "string"
+							},
+							"email": {
+								"type": "string"
+							},
+							"update_date": {
+								"type": "string"
+							},
+							"username": {
+								"type": "string"
+							},
+							"lastname": {
+								"type": "string"
+							}
+						},
+						"required": [
+							"fired_at",
+							"user_id",
+							"username",
+							"email",
+							"update_date",
+							"level"
+						]
+					},
+					"message_id": {
+						"type": "string"
+					},
+					"event": {
+						"type": "string"
+					},
+					"fired_by_batch_action": {
+						"type": "boolean"
+					}
+				}
+			}
+		},
+		"messages": {
+			"user.created": {
+				"x-ep-event-id": "w9hrrd3ju9j",
+				"x-ep-event-version-displayname": "",
+				"description": "Fired when a user is created.",
+				"x-ep-application-domain-id": "satn8hi2uco",
+				"schemaFormat": "application/vnd.aai.asyncapi+json;version=2.0.0",
+				"x-ep-event-state-name": "RELEASED",
+				"x-ep-shared": "false",
+				"x-ep-application-domain-name": "LMS Automation",
+				"x-ep-event-version-id": "92jaryvanl6",
+				"payload": {
+					"$ref": "#/components/schemas/User_Created_0_1_0"
+				},
+				"x-ep-event-version": "0.1.1",
+				"x-ep-event-name": "user.created",
+				"contentType": "application/json",
+				"x-ep-event-state-id": "2"
+			},
+			"course.enrollment.updated": {
+				"x-ep-event-id": "667t72zs2ei",
+				"x-ep-event-version-displayname": "",
+				"description": "Fired when user's enrollment status on a course changes.",
+				"x-ep-application-domain-id": "satn8hi2uco",
+				"schemaFormat": "application/vnd.aai.asyncapi+json;version=2.0.0",
+				"x-ep-event-state-name": "RELEASED",
+				"x-ep-shared": "false",
+				"x-ep-application-domain-name": "LMS Automation",
+				"x-ep-event-version-id": "6zauh2ubjb8",
+				"payload": {
+					"$ref": "#/components/schemas/Course_Enrollment_Updated_0_1_0"
+				},
+				"x-ep-event-version": "0.1.0",
+				"x-ep-event-name": "course.enrollment.updated",
+				"contentType": "application/json",
+				"x-ep-event-state-id": "2"
+			},
+			"user.updated": {
+				"x-ep-event-id": "p1jtja7ld1d",
+				"x-ep-event-version-displayname": "",
+				"description": "Fired when a user information has been updated.",
+				"x-ep-application-domain-id": "satn8hi2uco",
+				"schemaFormat": "application/vnd.aai.asyncapi+json;version=2.0.0",
+				"x-ep-event-state-name": "RELEASED",
+				"x-ep-shared": "false",
+				"x-ep-application-domain-name": "LMS Automation",
+				"x-ep-event-version-id": "00d2e49i88c",
+				"payload": {
+					"$ref": "#/components/schemas/User_Updated_0_1_0"
+				},
+				"x-ep-event-version": "0.1.1",
+				"x-ep-event-name": "user.updated",
+				"contentType": "application/json",
+				"x-ep-event-state-id": "2"
+			},
+			"User_Reactivated": {
+				"x-ep-event-id": "fzwe2f6tlcd",
+				"x-ep-event-version-displayname": "",
+				"description": "Fired when a previously deactivated user is reactivated by an Admin.",
+				"x-ep-application-domain-id": "satn8hi2uco",
+				"schemaFormat": "application/vnd.aai.asyncapi+json;version=2.0.0",
+				"x-ep-event-state-name": "RELEASED",
+				"x-ep-shared": "false",
+				"x-ep-application-domain-name": "LMS Automation",
+				"x-ep-event-version-id": "7cu31ytjlix",
+				"payload": {
+					"$ref": "#/components/schemas/User_Reactivated_0_1_0"
+				},
+				"x-ep-event-version": "0.1.0",
+				"x-ep-event-name": "User Reactivated",
+				"contentType": "application/json",
+				"x-ep-event-state-id": "2"
+			},
+			"course.enrollment.completed": {
+				"x-ep-event-id": "1289lcgn6xb",
+				"x-ep-event-version-displayname": "",
+				"description": "Fired when user has completed a course.",
+				"x-ep-application-domain-id": "satn8hi2uco",
+				"schemaFormat": "application/vnd.aai.asyncapi+json;version=2.0.0",
+				"x-ep-event-state-name": "RELEASED",
+				"x-ep-shared": "false",
+				"x-ep-application-domain-name": "LMS Automation",
+				"x-ep-event-version-id": "a6x29pdtrgx",
+				"payload": {
+					"$ref": "#/components/schemas/Course_Enrollment_Completed_0_1_0"
+				},
+				"x-ep-event-version": "0.1.0",
+				"x-ep-event-name": "course.enrollment.completed",
+				"contentType": "application/json",
+				"x-ep-event-state-id": "2"
+			},
+			"Course_Enrollment_Created": {
+				"x-ep-event-id": "dre912q5uwu",
+				"x-ep-event-version-displayname": "",
+				"description": "Fired when a user is enrolled in a course.",
+				"x-ep-application-domain-id": "satn8hi2uco",
+				"schemaFormat": "application/vnd.aai.asyncapi+json;version=2.0.0",
+				"x-ep-event-state-name": "RELEASED",
+				"x-ep-shared": "false",
+				"x-ep-application-domain-name": "LMS Automation",
+				"x-ep-event-version-id": "3v6e7ru6qc2",
+				"payload": {
+					"$ref": "#/components/schemas/Course_Enrollment_Created_0_1_0"
+				},
+				"x-ep-event-version": "0.1.0",
+				"x-ep-event-name": "Course Enrollment Created",
+				"contentType": "application/json",
+				"x-ep-event-state-id": "2"
+			},
+			"course.enrollment.deleted": {
+				"x-ep-event-id": "t8sc51c6qql",
+				"x-ep-event-version-displayname": "",
+				"x-ep-event-version-id": "c8k1qf5nscy",
+				"x-ep-event-version": "0.1.0",
+				"x-ep-event-name": "course.enrollment.deleted",
+				"description": "Fired when a user is unenrolled from a course.",
+				"x-ep-application-domain-id": "satn8hi2uco",
+				"x-ep-event-state-id": "2",
+				"x-ep-event-state-name": "RELEASED",
+				"x-ep-shared": "false",
+				"x-ep-application-domain-name": "LMS Automation"
+			},
+			"ilt.session.enrollment.created": {
+				"x-ep-event-id": "5sgbzvg2q2g",
+				"x-ep-event-version-displayname": "",
+				"x-ep-event-version-id": "zbxaswull7j",
+				"x-ep-event-version": "0.1.0",
+				"x-ep-event-name": "ilt.session.enrollment.created",
+				"description": "Fired when a user is enrolled in a session for an instructor-led training course.",
+				"x-ep-application-domain-id": "satn8hi2uco",
+				"x-ep-event-state-id": "2",
+				"x-ep-event-state-name": "RELEASED",
+				"x-ep-shared": "false",
+				"x-ep-application-domain-name": "LMS Automation"
+			},
+			"Course_Enrollment_Completed": {
+				"x-ep-event-id": "lptjn605bzz",
+				"x-ep-event-version-displayname": "",
+				"description": "Fired when user has completed a course.",
+				"x-ep-application-domain-id": "satn8hi2uco",
+				"schemaFormat": "application/vnd.aai.asyncapi+json;version=2.0.0",
+				"x-ep-event-state-name": "RELEASED",
+				"x-ep-shared": "false",
+				"x-ep-application-domain-name": "LMS Automation",
+				"x-ep-event-version-id": "zmgcq7f2mmk",
+				"payload": {
+					"$ref": "#/components/schemas/Course_Enrollment_Completed_0_1_0"
+				},
+				"x-ep-event-version": "0.1.0",
+				"x-ep-event-name": "Course Enrollment Completed",
+				"contentType": "application/json",
+				"x-ep-event-state-id": "2"
+			},
+			"ILT_Session_Enrollment_Created": {
+				"x-ep-event-id": "hbcii45xlei",
+				"x-ep-event-version-displayname": "",
+				"description": "Published when a user enrolls in an instructor-led training session.",
+				"x-ep-application-domain-id": "satn8hi2uco",
+				"schemaFormat": "application/vnd.aai.asyncapi+json;version=2.0.0",
+				"x-ep-event-state-name": "RELEASED",
+				"x-ep-shared": "false",
+				"x-ep-application-domain-name": "LMS Automation",
+				"x-ep-event-version-id": "k74j4x2fshk",
+				"payload": {
+					"$ref": "#/components/schemas/ILT_Session_Enrollment_Created_0_1_1"
+				},
+				"x-ep-event-version": "0.2.0",
+				"x-ep-event-name": "ILT Session Enrollment Created",
+				"contentType": "application/json",
+				"x-ep-event-state-id": "2"
+			},
+			"User_Deactivated": {
+				"x-ep-event-id": "raj9f8vcuyb",
+				"x-ep-event-version-displayname": "",
+				"description": "Fired when a user has been deactivated.",
+				"x-ep-application-domain-id": "satn8hi2uco",
+				"schemaFormat": "application/vnd.aai.asyncapi+json;version=2.0.0",
+				"x-ep-event-state-name": "RELEASED",
+				"x-ep-shared": "false",
+				"x-ep-application-domain-name": "LMS Automation",
+				"x-ep-event-version-id": "kzfz5ck30c2",
+				"payload": {
+					"$ref": "#/components/schemas/User_Deactivated_0_1_0"
+				},
+				"x-ep-event-version": "0.1.1",
+				"x-ep-event-name": "User Deactivated",
+				"contentType": "application/json",
+				"x-ep-event-state-id": "2"
+			},
+			"Course_Enrollment_Deleted": {
+				"x-ep-event-id": "c4wejreoou3",
+				"x-ep-event-version-displayname": "",
+				"x-ep-event-version-id": "rmn2j9r2sx0",
+				"x-ep-event-version": "0.1.0",
+				"x-ep-event-name": "Course Enrollment Deleted",
+				"description": "Fired when a user is unenrolled from a course.",
+				"x-ep-application-domain-id": "satn8hi2uco",
+				"x-ep-event-state-id": "2",
+				"x-ep-event-state-name": "RELEASED",
+				"x-ep-shared": "false",
+				"x-ep-application-domain-name": "LMS Automation"
+			},
+			"user.deactivated": {
+				"x-ep-event-id": "7ffmkrrbp5x",
+				"x-ep-event-version-displayname": "",
+				"description": "Fired when a user's status is disabled/deactivated.",
+				"x-ep-application-domain-id": "satn8hi2uco",
+				"schemaFormat": "application/vnd.aai.asyncapi+json;version=2.0.0",
+				"x-ep-event-state-name": "RELEASED",
+				"x-ep-shared": "false",
+				"x-ep-application-domain-name": "LMS Automation",
+				"x-ep-event-version-id": "ag9iluzgux1",
+				"payload": {
+					"$ref": "#/components/schemas/User_Deactivated_0_1_0"
+				},
+				"x-ep-event-version": "0.1.1",
+				"x-ep-event-name": "user.deactivated",
+				"contentType": "application/json",
+				"x-ep-event-state-id": "2"
+			},
+			"Course_Enrollment_Updated": {
+				"x-ep-event-id": "ak4lpjmpuoz",
+				"x-ep-event-version-displayname": "",
+				"description": "Fired when a user's enrollment status on a course is updated. ",
+				"x-ep-application-domain-id": "satn8hi2uco",
+				"schemaFormat": "application/vnd.aai.asyncapi+json;version=2.0.0",
+				"x-ep-event-state-name": "RELEASED",
+				"x-ep-shared": "false",
+				"x-ep-application-domain-name": "LMS Automation",
+				"x-ep-event-version-id": "sx76v9onork",
+				"payload": {
+					"$ref": "#/components/schemas/Course_Enrollment_Updated_0_1_0"
+				},
+				"x-ep-event-version": "0.1.0",
+				"x-ep-event-name": "Course Enrollment Updated",
+				"contentType": "application/json",
+				"x-ep-event-state-id": "2"
+			},
+			"ilt.session.enrollment.updated": {
+				"x-ep-event-id": "8rqhu0yqgf4",
+				"x-ep-event-version-displayname": "",
+				"description": "Fired when a user's instructor-led training course enrollment status is updated.",
+				"x-ep-application-domain-id": "satn8hi2uco",
+				"schemaFormat": "application/vnd.aai.asyncapi+json;version=2.0.0",
+				"x-ep-event-state-name": "RELEASED",
+				"x-ep-shared": "false",
+				"x-ep-application-domain-name": "LMS Automation",
+				"x-ep-event-version-id": "l788k74zzt7",
+				"payload": {
+					"$ref": "#/components/schemas/ILT_Session_Enrollment_Updated_0_1_0"
+				},
+				"x-ep-event-version": "0.1.0",
+				"x-ep-event-name": "ilt.session.enrollment.updated",
+				"contentType": "application/json",
+				"x-ep-event-state-id": "2"
+			},
+			"user.deleted": {
+				"x-ep-event-id": "613gn3zwk14",
+				"x-ep-event-version-displayname": "",
+				"description": "Fired when a user is deleted in the LMS.",
+				"x-ep-application-domain-id": "satn8hi2uco",
+				"schemaFormat": "application/vnd.aai.asyncapi+json;version=2.0.0",
+				"x-ep-event-state-name": "RELEASED",
+				"x-ep-shared": "false",
+				"x-ep-application-domain-name": "LMS Automation",
+				"x-ep-event-version-id": "1597xy6294k",
+				"payload": {
+					"$ref": "#/components/schemas/User_Deleted_0_1_0"
+				},
+				"x-ep-event-version": "0.1.1",
+				"x-ep-event-name": "user.deleted",
+				"contentType": "application/json",
+				"x-ep-event-state-id": "2"
+			},
+			"User_Created": {
+				"x-ep-event-id": "ywz0cah48jp",
+				"x-ep-event-version-displayname": "",
+				"description": "Fired when a new user is created in the LMS.",
+				"x-ep-application-domain-id": "satn8hi2uco",
+				"schemaFormat": "application/vnd.aai.asyncapi+json;version=2.0.0",
+				"x-ep-event-state-name": "RELEASED",
+				"x-ep-shared": "false",
+				"x-ep-application-domain-name": "LMS Automation",
+				"x-ep-event-version-id": "hdgw19ghlxi",
+				"payload": {
+					"$ref": "#/components/schemas/User_Created_0_1_0"
+				},
+				"x-ep-event-version": "0.1.1",
+				"x-ep-event-name": "User Created",
+				"contentType": "application/json",
+				"x-ep-event-state-id": "2"
+			},
+			"User_Deleted": {
+				"x-ep-event-id": "8ewgh3ooyyk",
+				"x-ep-event-version-displayname": "",
+				"description": "Fired when a user is deleted in the LMS.",
+				"x-ep-application-domain-id": "satn8hi2uco",
+				"schemaFormat": "application/vnd.aai.asyncapi+json;version=2.0.0",
+				"x-ep-event-state-name": "RELEASED",
+				"x-ep-shared": "false",
+				"x-ep-application-domain-name": "LMS Automation",
+				"x-ep-event-version-id": "db7369w83x2",
+				"payload": {
+					"$ref": "#/components/schemas/User_Deleted_0_1_0"
+				},
+				"x-ep-event-version": "0.1.1",
+				"x-ep-event-name": "User Deleted",
+				"contentType": "application/json",
+				"x-ep-event-state-id": "2"
+			},
+			"ILT_Session_Enrollment_Updated": {
+				"x-ep-event-id": "t9807wil0m2",
+				"x-ep-event-version-displayname": "",
+				"description": "Fired when a user's instructor-led training course enrollment status is updated, for ex when a user joins a session or is maked completed on a session.",
+				"x-ep-application-domain-id": "satn8hi2uco",
+				"schemaFormat": "application/vnd.aai.asyncapi+json;version=2.0.0",
+				"x-ep-event-state-name": "RELEASED",
+				"x-ep-shared": "false",
+				"x-ep-application-domain-name": "LMS Automation",
+				"x-ep-event-version-id": "kldrbkfncz5",
+				"payload": {
+					"$ref": "#/components/schemas/ILT_Session_Enrollment_Updated_0_1_1"
+				},
+				"x-ep-event-version": "0.2.0",
+				"x-ep-event-name": "ILT Session Enrollment Updated",
+				"contentType": "application/json",
+				"x-ep-event-state-id": "2"
+			},
+			"user.reactivated": {
+				"x-ep-event-id": "wbnsllwqble",
+				"x-ep-event-version-displayname": "",
+				"description": "Fired when a previously deactivated user has been reactivated by an Admin.",
+				"x-ep-application-domain-id": "satn8hi2uco",
+				"schemaFormat": "application/vnd.aai.asyncapi+json;version=2.0.0",
+				"x-ep-event-state-name": "RELEASED",
+				"x-ep-shared": "false",
+				"x-ep-application-domain-name": "LMS Automation",
+				"x-ep-event-version-id": "kgv24fp8m0g",
+				"payload": {
+					"$ref": "#/components/schemas/User_Reactivated_0_1_0"
+				},
+				"x-ep-event-version": "0.1.0",
+				"x-ep-event-name": "user.reactivated",
+				"contentType": "application/json",
+				"x-ep-event-state-id": "2"
+			},
+			"User_Updated": {
+				"x-ep-event-id": "kxabogoi2yx",
+				"x-ep-event-version-displayname": "",
+				"description": "Fired when a user information has been updated.",
+				"x-ep-application-domain-id": "satn8hi2uco",
+				"schemaFormat": "application/vnd.aai.asyncapi+json;version=2.0.0",
+				"x-ep-event-state-name": "RELEASED",
+				"x-ep-shared": "false",
+				"x-ep-application-domain-name": "LMS Automation",
+				"x-ep-event-version-id": "d115f73ou4q",
+				"payload": {
+					"$ref": "#/components/schemas/User_Updated_0_1_0"
+				},
+				"x-ep-event-version": "0.1.1",
+				"x-ep-event-name": "User Updated",
+				"contentType": "application/json",
+				"x-ep-event-state-id": "2"
+			},
+			"course.enrollment.created": {
+				"x-ep-event-id": "tph93j56h3q",
+				"x-ep-event-version-displayname": "",
+				"description": "Fired when a user is enrolled in a course.",
+				"x-ep-application-domain-id": "satn8hi2uco",
+				"schemaFormat": "application/vnd.aai.asyncapi+json;version=2.0.0",
+				"x-ep-event-state-name": "RELEASED",
+				"x-ep-shared": "false",
+				"x-ep-application-domain-name": "LMS Automation",
+				"x-ep-event-version-id": "0ho7rybae6z",
+				"payload": {
+					"$ref": "#/components/schemas/Course_Enrollment_Created_0_1_0"
+				},
+				"x-ep-event-version": "0.1.0",
+				"x-ep-event-name": "course.enrollment.created",
+				"contentType": "application/json",
+				"x-ep-event-state-id": "2"
+			}
+		}
+	},
+	"channels": {
+		"lms/user/deactivated/{user_id}": {
+			"publish": {
+				"message": {
+					"$ref": "#/components/messages/User_Deactivated"
+				}
+			},
+			"parameters": {
+				"user_id": {
+					"schema": {
+						"type": "string"
+					},
+					"x-ep-parameter-name": "user_id"
+				}
+			}
+		},
+		"lms/ilt/session/enrollment/updated/{course_id}/{session_id}/{user_id}": {
+			"publish": {
+				"message": {
+					"$ref": "#/components/messages/ILT_Session_Enrollment_Updated"
+				}
+			},
+			"parameters": {
+				"course_id": {
+					"schema": {
+						"type": "string"
+					},
+					"x-ep-parameter-name": "course_id"
+				},
+				"user_id": {
+					"schema": {
+						"type": "string"
+					},
+					"x-ep-parameter-name": "user_id"
+				},
+				"session_id": {
+					"schema": {
+						"type": "string"
+					},
+					"x-ep-parameter-name": "session_id"
+				}
+			}
+		},
+		"lms/raw/users": {
+			"publish": {
+				"message": {
+					"oneOf": [
+						{
+							"$ref": "#/components/messages/user.created"
+						},
+						{
+							"$ref": "#/components/messages/user.deactivated"
+						},
+						{
+							"$ref": "#/components/messages/user.deleted"
+						},
+						{
+							"$ref": "#/components/messages/user.reactivated"
+						},
+						{
+							"$ref": "#/components/messages/user.updated"
+						}
+					]
+				}
+			}
+		},
+		"lms/user/deleted/{user_id}": {
+			"publish": {
+				"message": {
+					"$ref": "#/components/messages/User_Deleted"
+				}
+			},
+			"parameters": {
+				"user_id": {
+					"schema": {
+						"type": "string"
+					},
+					"x-ep-parameter-name": "user_id"
+				}
+			}
+		},
+		"lms/course/enrollment/completed/{course_id}/{user_id}": {
+			"publish": {
+				"message": {
+					"$ref": "#/components/messages/Course_Enrollment_Completed"
+				}
+			},
+			"parameters": {
+				"course_id": {
+					"schema": {
+						"type": "string"
+					},
+					"x-ep-parameter-name": "course_id"
+				},
+				"user_id": {
+					"schema": {
+						"type": "string"
+					},
+					"x-ep-parameter-name": "user_id"
+				}
+			}
+		},
+		"lms/user/reactivated/{user_id}": {
+			"publish": {
+				"message": {
+					"$ref": "#/components/messages/User_Reactivated"
+				}
+			},
+			"parameters": {
+				"user_id": {
+					"schema": {
+						"type": "string"
+					},
+					"x-ep-parameter-name": "user_id"
+				}
+			}
+		},
+		"lms/user/updated/{user_id}": {
+			"publish": {
+				"message": {
+					"$ref": "#/components/messages/User_Updated"
+				}
+			},
+			"parameters": {
+				"user_id": {
+					"schema": {
+						"type": "string"
+					},
+					"x-ep-parameter-name": "user_id"
+				}
+			}
+		},
+		"lms/raw/enrollments": {
+			"publish": {
+				"bindings": {
+					"solace": {
+						"destinations": [
+							{
+								"destinationType": "topic",
+								"topic": {
+									"name": "direct-omni-consumer",
+									"topicSubscriptions": [
+										"coffeeshop/order/new/v1/*/*/*/*",
+										"coffeeshop/order/status/v1/completed/*/*/*/*",
+										"coffeeshop/order/status/v1/inprogress/*/*/*/*",
+										"coffeeshop/order/status/v1/outofstock/*/*/*/*",
+										"coffeeshop/order/status/v1/ready/*/*/*/*"
+									]
+								}
+							},
+							{
+								"destinationType": "queue",
+								"queue": {
+									"name": "COFFEE.ORDERMGT.STATUS",
+									"topicSubscriptions": [
+										"coffeeshop/order/status/v1/completed/*/*/*/*",
+										"coffeeshop/order/status/v1/outofstock/*/*/*/*",
+										"coffeeshop/order/status/v1/ready/*/*/*/*"
+									]
+								}
+							}
+						],
+						"bindingVersion": "0.3.0"
+					}
+				},
+				"message": {
+					"oneOf": [
+						{
+							"$ref": "#/components/messages/course.enrollment.completed"
+						},
+						{
+							"$ref": "#/components/messages/course.enrollment.created"
+						},
+						{
+							"$ref": "#/components/messages/course.enrollment.deleted"
+						},
+						{
+							"$ref": "#/components/messages/course.enrollment.updated"
+						},
+						{
+							"$ref": "#/components/messages/ilt.session.enrollment.created"
+						},
+						{
+							"$ref": "#/components/messages/ilt.session.enrollment.updated"
+						}
+					]
+				}
+			}
+		},
+		"lms/ilt/session/enrollment/created/{course_id}/{session_id}/{user_id}": {
+			"publish": {
+				"message": {
+					"$ref": "#/components/messages/ILT_Session_Enrollment_Created"
+				}
+			},
+			"parameters": {
+				"course_id": {
+					"schema": {
+						"type": "string"
+					},
+					"x-ep-parameter-name": "course_id"
+				},
+				"user_id": {
+					"schema": {
+						"type": "string"
+					},
+					"x-ep-parameter-name": "user_id"
+				},
+				"session_id": {
+					"schema": {
+						"type": "string"
+					},
+					"x-ep-parameter-name": "session_id"
+				}
+			}
+		},
+		"lms/user/created/{user_id}": {
+			"publish": {
+				"message": {
+					"$ref": "#/components/messages/User_Created"
+				}
+			},
+			"parameters": {
+				"user_id": {
+					"schema": {
+						"type": "string"
+					},
+					"x-ep-parameter-name": "user_id"
+				}
+			}
+		},
+		"lms/course/enrollment/updated/{course_id}/{user_id}": {
+			"publish": {
+				"message": {
+					"$ref": "#/components/messages/Course_Enrollment_Updated"
+				}
+			},
+			"parameters": {
+				"course_id": {
+					"schema": {
+						"type": "string"
+					},
+					"x-ep-parameter-name": "course_id"
+				},
+				"user_id": {
+					"schema": {
+						"type": "string"
+					},
+					"x-ep-parameter-name": "user_id"
+				}
+			}
+		},
+		"lms/course/enrollment/created/{course_id}/{user_id}": {
+			"publish": {
+				"bindings": {
+					"solace": {
+						"destinations": [
+							{
+								"destinationType": "topic",
+								"topic": {
+									"name": "direct-omni-consumer",
+									"topicSubscriptions": [
+										"coffeeshop/order/new/v1/*/*/*/*",
+										"coffeeshop/order/status/v1/completed/*/*/*/*",
+										"coffeeshop/order/status/v1/inprogress/*/*/*/*",
+										"coffeeshop/order/status/v1/outofstock/*/*/*/*",
+										"coffeeshop/order/status/v1/ready/*/*/*/*"
+									]
+								}
+							},
+							{
+								"destinationType": "queue",
+								"queue": {
+									"name": "COFFEE.ORDERMGT.STATUS",
+									"topicSubscriptions": [
+										"coffeeshop/order/status/v1/completed/*/*/*/*",
+										"coffeeshop/order/status/v1/outofstock/*/*/*/*",
+										"coffeeshop/order/status/v1/ready/*/*/*/*"
+									]
+								}
+							}
+						],
+						"bindingVersion": "0.3.0"
+					}
+				},
+				"message": {
+					"$ref": "#/components/messages/Course_Enrollment_Created"
+				}
+			},
+			"parameters": {
+				"course_id": {
+					"schema": {
+						"type": "string"
+					},
+					"x-ep-parameter-name": "course_id"
+				},
+				"user_id": {
+					"schema": {
+						"type": "string"
+					},
+					"x-ep-parameter-name": "user_id"
+				}
+			}
+		},
+		"lms/course/enrollment/deleted/{course_id}/{user_id}": {
+			"publish": {
+				"bindings": {
+					"solace": {
+						"destinations": [
+							{
+								"destinationType": "topic",
+								"topic": {
+									"name": "direct-omni-consumer",
+									"topicSubscriptions": [
+										"coffeeshop/order/new/v1/*/*/*/*",
+										"coffeeshop/order/status/v1/completed/*/*/*/*",
+										"coffeeshop/order/status/v1/inprogress/*/*/*/*",
+										"coffeeshop/order/status/v1/outofstock/*/*/*/*",
+										"coffeeshop/order/status/v1/ready/*/*/*/*"
+									]
+								}
+							},
+							{
+								"destinationType": "queue",
+								"queue": {
+									"name": "COFFEE.ORDERMGT.NEWORDER",
+									"topicSubscriptions": [
+										"coffeeshop/order/new/v1/*/*/*/*"
+									]
+								}
+							}
+						],
+						"bindingVersion": "0.3.0"
+					}
+				},
+				"message": {
+					"$ref": "#/components/messages/Course_Enrollment_Deleted"
+				}
+			},
+			"parameters": {
+				"course_id": {
+					"schema": {
+						"type": "string"
+					},
+					"x-ep-parameter-name": "course_id"
+				},
+				"user_id": {
+					"schema": {
+						"type": "string"
+					},
+					"x-ep-parameter-name": "user_id"
+				}
+			}
+		}
+	},
+	"asyncapi": "2.5.0",
+	"info": {
+		"x-ep-application-version": "0.1.1",
+		"x-ep-application-version-id": "gc8nfm06ziq",
+		"x-ep-application-id": "jupdnx0e8cb",
+		"description": "Consumes messages from the DMQ and send a notification to Slack/Email with the payload contents.",
+		"x-ep-state-name": "RELEASED",
+		"title": "DMQ Notification",
+		"x-ep-application-domain-id": "satn8hi2uco",
+		"version": "0.1.1",
+		"x-ep-state-id": "2",
+		"x-ep-application-domain-name": "LMS Automation"
+	}
+}

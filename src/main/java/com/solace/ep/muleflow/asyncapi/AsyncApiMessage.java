@@ -17,6 +17,8 @@
 
  package com.solace.ep.muleflow.asyncapi;
 
+import java.util.List;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -205,4 +207,23 @@ public class AsyncApiMessage {
             return null;
         }
     }
+
+    public static String getMessageNameFromList( List<AsyncApiMessage> messageList ) {
+        
+        if ( messageList.size() == 0 ) {
+            return "NOT_FOUND";
+        }
+        if ( messageList.size() == 1 ) {
+            return messageList.get( 0 ).getEpEventName();
+        }
+        return "MULTIPLE-MESSAGE-TYPES";
+    }
+
+    public static AsyncApiMessage getMessageAsSingleton( List<AsyncApiMessage> messageList ) {
+        if ( messageList.size() != 1 ) {
+            return null;
+        }
+        return messageList.get(0);
+    }
+
 }

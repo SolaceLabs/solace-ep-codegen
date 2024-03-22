@@ -43,6 +43,10 @@ public class MapSubFlowEgress {
 
     protected String xmlSchemaReference = null;
 
+    protected String contentType = null;
+
+    protected String encoding = null;
+
     protected String publishAddress;
 
     protected boolean publishToQueue = false;

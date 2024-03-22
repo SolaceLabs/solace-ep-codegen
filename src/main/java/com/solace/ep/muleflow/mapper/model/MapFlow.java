@@ -44,10 +44,10 @@ public class MapFlow {
     // Topic Listener Fields
     protected List<String> directListenerTopics = new ArrayList<>();
 
-    protected String directListenerContentType;
+    protected String contentType;
     // ---
 
-    protected String directListenerEncoding;
+    protected String encoding;
     
     protected String jsonSchemaContent = null;
 
