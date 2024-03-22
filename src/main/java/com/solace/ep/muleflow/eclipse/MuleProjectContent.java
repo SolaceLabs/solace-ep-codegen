@@ -36,7 +36,8 @@ public class MuleProjectContent {
                 TOKEN_FLOW_NAME = "___FLOW_NAME___",
                 TOKEN_ARTIFACT_ID = "___ARTIFACT_ID___",
                 TOKEN_GROUP_ID = "___GROUP_ID___",
-                TOKEN_VERSION = "___VERSION___";
+                TOKEN_VERSION = "___VERSION___",
+                TOKEN_CLOUD_HUB_DEPLOYMENT = "___CLOUD_HUB_DEPLOYMENT___";
     //
     public static final String
         CONTENT_CONFIG_PROPERTIES =
@@ -145,6 +146,22 @@ public class MuleProjectContent {
     //
 
     public static final String
+        CONTENT_CLOUDHUB_DEPLOYMENT =
+                "\t\t\t\t\t<cloudHubDeployment>\n" + //
+                        "\t\t\t\t\t\t<uri>https://anypoint.mulesoft.com</uri>\n" + //
+                        "\t\t\t\t\t\t<muleVersion>${app.runtime}</muleVersion>\n" + //
+                        "\t\t\t\t\t\t<username>${anypoint.username}</username>\n" + //
+                        "\t\t\t\t\t\t<password>${anypoint.password}</password>\n" + //
+                        "\t\t\t\t\t\t<applicationName>${app.name}</applicationName>\n" + //
+                        "\t\t\t\t\t\t<environment>${env}</environment>\n" + //
+                        "\t\t\t\t\t\t<workerType>${app.workerType:MICRO}</workerType>\n" + //
+                        "\t\t\t\t\t\t<region>${app.region:us-east-2}</region>\n" + //
+                        "\t\t\t\t\t\t<workers>${app.workers:1}</workers>\n" + //
+                        "\t\t\t\t\t\t<objectStoreV2>${app.objectstorev2:true}</objectStoreV2>\n" + //
+                        "\t\t\t\t\t</cloudHubDeployment>\n";
+
+    //
+    public static final String
         CONTENT_POM__XML =
                 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" + //
                         "<project xmlns=\"http://maven.apache.org/POM/4.0.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd\">\n" + //
@@ -178,6 +195,7 @@ public class MuleProjectContent {
                         "\t\t\t\t<version>${mule.maven.plugin.version}</version>\n" + //
                         "\t\t\t\t<extensions>true</extensions>\n" + //
                         "\t\t\t\t<configuration>\n" + //
+                        "___CLOUD_HUB_DEPLOYMENT___" + //
                         "\t\t\t\t\t<classifier>mule-application</classifier>\n" + //
                         "\t\t\t\t</configuration>\n" + //
                         "\t\t\t</plugin>\n" + //

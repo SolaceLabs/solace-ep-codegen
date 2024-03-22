@@ -87,7 +87,48 @@ public class EclipseProjectGenerator {
     }
 
     /**
-     * 
+     * Generate a new Mule Project Archive (jar) from AsyncApi file
+     * @param groupId
+     * @param flowNameArtifactId
+     * @param version
+     * @param asyncApiAsString
+     * @param projectOutputPathAsString
+     * @param cloudHubProject - Set to True to add Cloud Hub Deployment to the generated pom.xml
+     * @throws Exception
+     */
+    public void generateEclipseArchiveForMuleFlowFromAsyncApi( 
+        String groupId,
+        String flowNameArtifactId,
+        String version,
+        String asyncApiAsString,
+        String projectOutputPathAsString,
+        boolean cloudHubProject
+     ) throws Exception {
+
+        final MapMuleDoc mapMuleDoc = AsyncApiToMuleDocMapper.mapMuleDocFromAsyncApi(asyncApiAsString);
+        final MuleDocMapper muleDocMapper = new MuleDocMapper( mapMuleDoc );
+
+        final MuleDoc muleFlowDoc = muleDocMapper.createMuleDoc();
+        final MuleDoc muleGlobalConfigsDoc = muleDocMapper.createGlobalConfigsDoc();
+
+        final String muleFlowXml = MuleFlowGenerator.writeMuleDocToXmlString(muleFlowDoc);
+        final String muleGlobalConfigsXml = MuleFlowGenerator.writeMuleDocToXmlString(muleGlobalConfigsDoc);
+
+        createMuleProject(groupId, flowNameArtifactId, version, muleFlowXml, muleGlobalConfigsXml, cloudHubProject);
+        createSchemaFiles(mapMuleDoc);
+
+        final String newMuleArchivePath = createMuleArchive(flowNameArtifactId);
+
+        FileUtils.copyFile(newMuleArchivePath, projectOutputPathAsString);
+
+        log.info("Done Creating Mule Project for Group:Artifact/Flow:Version {}:{}:{}",
+                        groupId, flowNameArtifactId, version);
+        log.info("Project structure written to: {}", projectOutputPathAsString);
+    }
+
+        /**
+     * Generate a new Mule Project Archive (jar) from AsyncApi file
+     * Cloud Hub Deployment configuration is automatically added to the project pom.xml
      * @param groupId
      * @param flowNameArtifactId
      * @param version
@@ -102,30 +143,8 @@ public class EclipseProjectGenerator {
         String asyncApiAsString,
         String projectOutputPathAsString
      ) throws Exception {
-
-//        String muleFlowXml = MuleFlowGenerator.getMuleDocXmlFromAsyncApiString( asyncApiAsString );
-
-        final MapMuleDoc mapMuleDoc = AsyncApiToMuleDocMapper.mapMuleDocFromAsyncApi(asyncApiAsString);
-        final MuleDocMapper muleDocMapper = new MuleDocMapper( mapMuleDoc );
-
-        final MuleDoc muleFlowDoc = muleDocMapper.createMuleDoc();
-        final MuleDoc muleGlobalConfigsDoc = muleDocMapper.createGlobalConfigsDoc();
-
-        final String muleFlowXml = MuleFlowGenerator.writeMuleDocToXmlString(muleFlowDoc);
-        final String muleGlobalConfigsXml = MuleFlowGenerator.writeMuleDocToXmlString(muleGlobalConfigsDoc);
-
-//        String newMuleArchivePath = createMuleProject(groupId, flowNameArtifactId, version, muleFlowXml, muleGlobalConfigsXml);
-        createMuleProject(groupId, flowNameArtifactId, version, muleFlowXml, muleGlobalConfigsXml);
-        createSchemaFiles(mapMuleDoc);
-
-        final String newMuleArchivePath = createMuleArchive(flowNameArtifactId);
-
-        FileUtils.copyFile(newMuleArchivePath, projectOutputPathAsString);
-
-        log.info("Done Creating Mule Project for Group:Artifact/Flow:Version {}:{}:{}",
-                        groupId, flowNameArtifactId, version);
-        log.info("Project structure written to: {}", projectOutputPathAsString);
-    }
+        generateEclipseArchiveForMuleFlowFromAsyncApi(groupId, flowNameArtifactId, version, asyncApiAsString, projectOutputPathAsString, true);
+     }
 
     /**
      * Create a new Mule Project for a specified Group:Artifact/Flow:Version
@@ -145,7 +164,8 @@ public class EclipseProjectGenerator {
         String flowNameArtifactId,
         String version,
         String muleFlowXmlData,
-        String muleFlowGlobalConfigsXmlData
+        String muleFlowGlobalConfigsXmlData,
+        boolean cloudHubProject
     ) throws Exception {
         log.info("Creating Mule Project for Group:Artifact/Flow:Version {}:{}:{}",
                         groupId, flowNameArtifactId, version);
@@ -153,7 +173,7 @@ public class EclipseProjectGenerator {
         createCreateStaticFiles();
         createConfigPropertiesFile( DEFAULT_ENV_STRING );
         createLog4jFile(flowNameArtifactId);
-        createPomFile(groupId, flowNameArtifactId, version);
+        createPomFile(groupId, flowNameArtifactId, version, cloudHubProject);
         createMuleFlow(muleFlowXmlData, flowNameArtifactId);
         if ( muleFlowGlobalConfigsXmlData != null && ! muleFlowGlobalConfigsXmlData.isEmpty() ) {
             String globalConfigsBaseFilename = MuleProjectContent.FILE_GLOBAL_CONFIGS;
@@ -284,7 +304,12 @@ public class EclipseProjectGenerator {
      * @param version
      * @throws Exception
      */
-    protected void createPomFile( String groupId, String artifactId, String version ) throws Exception {
+    protected void createPomFile(
+        String groupId, 
+        String artifactId, 
+        String version,
+        boolean cloudHubDeployment
+    ) throws Exception {
 
         log.debug("Start creating pom.xml for Mule Project");
         File projectRoot = projectPaths.get( PATH_PROJECT_ROOT );
@@ -292,6 +317,12 @@ public class EclipseProjectGenerator {
                             .replaceAll(MuleProjectContent.TOKEN_GROUP_ID, groupId)
                             .replaceAll(MuleProjectContent.TOKEN_ARTIFACT_ID, artifactId)
                             .replaceAll(MuleProjectContent.TOKEN_VERSION, version );
+
+        if ( cloudHubDeployment ) {
+            pomXml = pomXml.replace(MuleProjectContent.TOKEN_CLOUD_HUB_DEPLOYMENT, MuleProjectContent.CONTENT_CLOUDHUB_DEPLOYMENT);
+        } else {
+            pomXml = pomXml.replace(MuleProjectContent.TOKEN_CLOUD_HUB_DEPLOYMENT, "");
+        }
         
         FileUtils.writeStringToFile(
             pomXml,

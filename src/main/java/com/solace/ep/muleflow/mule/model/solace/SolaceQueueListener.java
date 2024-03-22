@@ -65,4 +65,16 @@ public class SolaceQueueListener extends BaseElement {
     )
     protected String configRef;
 
+    @JacksonXmlProperty(
+        isAttribute = true,
+        localName = "contentType"
+    )
+    protected String contentType;
+
+    @JacksonXmlProperty(
+        isAttribute = true,
+        localName = "encoding"
+    )
+    protected String encoding;
+
 }

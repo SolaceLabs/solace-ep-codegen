@@ -162,11 +162,11 @@ public class TestAsyncApiParsing {
                 AsyncApiChannel channel = new AsyncApiChannel( accessor.getChannels().get(channelId).getAsJsonObject(), accessor );
 
                 if ( channel.hasPublishOperation() ) {
-                    System.out.println( channel.getPublishOpMessage().getPayloadAsString() );
+                    System.out.println( AsyncApiMessage.getMessageAsSingleton( channel.getPublishOpMessages() ).getPayloadAsString() );
 
                     assertTrue( 
-                        channel.getPublishOpMessage().getPayloadAsString().contains("namespace") ||
-                        channel.getPublishOpMessage().getPayloadAsString().contains("properties"));
+                        AsyncApiMessage.getMessageAsSingleton(channel.getPublishOpMessages()).getPayloadAsString().contains("namespace") ||
+                        AsyncApiMessage.getMessageAsSingleton(channel.getPublishOpMessages()).getPayloadAsString().contains("properties"));
 
                     for (String p : channel.getParameters() ) {
                         System.out.println( "Parameter: " + p );
@@ -206,11 +206,11 @@ public class TestAsyncApiParsing {
                 AsyncApiChannel channel = new AsyncApiChannel( accessor.getChannels().get(channelId).getAsJsonObject(), accessor );
 
                 if ( channel.hasSubscribeOperation() ) {
-                    System.out.println( channel.getSubscribeOpMessage().getPayloadAsString() );
+                    System.out.println( AsyncApiMessage.getMessageAsSingleton( channel.getSubscribeOpMessages() ).getPayloadAsString() );
 
                     assertTrue( 
-                        channel.getSubscribeOpMessage().getPayloadAsString().contains("namespace") ||
-                        channel.getSubscribeOpMessage().getPayloadAsString().contains( "properties" ));
+                        AsyncApiMessage.getMessageAsSingleton( channel.getSubscribeOpMessages() ).getPayloadAsString().contains("namespace") ||
+                        AsyncApiMessage.getMessageAsSingleton( channel.getSubscribeOpMessages() ).getPayloadAsString().contains( "properties" ));
 
                     for (String p : channel.getParameters() ) {
                         System.out.println( "Parameter: " + p );
@@ -295,11 +295,11 @@ public class TestAsyncApiParsing {
                 AsyncApiChannel channel = new AsyncApiChannel( accessor.getChannels().get(channelId).getAsJsonObject(), accessor );
 
                 if ( channel.hasSubscribeOperation() ) {
-                    System.out.println( channel.getSubscribeOpMessage().getPayloadAsString() );
+                    System.out.println( AsyncApiMessage.getMessageAsSingleton( channel.getSubscribeOpMessages() ).getPayloadAsString() );
 
                     assertTrue( 
-                        channel.getSubscribeOpMessage().getPayloadAsString().contains("namespace") ||
-                        channel.getSubscribeOpMessage().getPayloadAsString().contains( "properties" ));
+                        AsyncApiMessage.getMessageAsSingleton( channel.getSubscribeOpMessages() ).getPayloadAsString().contains("namespace") ||
+                        AsyncApiMessage.getMessageAsSingleton( channel.getSubscribeOpMessages() ).getPayloadAsString().contains( "properties" ));
 
                     for (String p : channel.getParameters() ) {
                         System.out.println( "Parameter: " + p );

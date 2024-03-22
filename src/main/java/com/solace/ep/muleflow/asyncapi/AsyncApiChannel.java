@@ -18,6 +18,7 @@
 package com.solace.ep.muleflow.asyncapi;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -91,7 +92,7 @@ public class AsyncApiChannel {
         }
     }
 
-    public AsyncApiMessage getOpMessage( String operationType ) throws Exception {
+    public List<AsyncApiMessage> getOpMessages( String operationType ) throws Exception {
         if ( operationType != AsyncApiFieldConstants.OP_PUBLISH && operationType != AsyncApiFieldConstants.OP_SUBSCRIBE ) {
             return null;
         }
@@ -106,19 +107,33 @@ public class AsyncApiChannel {
         if ( message.has(AsyncApiFieldConstants.API_$REF) ) {
             JsonElement refElement = message.get( AsyncApiFieldConstants.API_$REF );
             if ( refElement.isJsonPrimitive() ) {
-                return this.asyncApi.getMessageAsReference( refElement.getAsString() );
+                return Collections.singletonList( this.asyncApi.getMessageAsReference( refElement.getAsString() ) );
             }
             throw new Exception( "$ref element for message is not property formatted" );
         }
-        return new AsyncApiMessage(message, asyncApi);
+        if ( message.has( "oneOf" ) ) {
+            List<AsyncApiMessage> msgList = new ArrayList<>();
+            JsonArray oneOf = message.get("oneOf").getAsJsonArray();
+            for ( JsonElement e : oneOf ) {
+                JsonObject m = e.getAsJsonObject();
+                if ( m.has(AsyncApiFieldConstants.API_$REF) ) {
+                    JsonElement refElement = m.get( AsyncApiFieldConstants.API_$REF );
+                    if ( refElement.isJsonPrimitive() ) {
+                        msgList.add( this.asyncApi.getMessageAsReference( refElement.getAsString() ) );
+                    }
+//                    throw new Exception( "$ref element for message is not property formatted" );
+                }
+            }
+        }
+        return Collections.singletonList( new AsyncApiMessage(message, asyncApi) );
     }
 
-    public AsyncApiMessage getSubscribeOpMessage() throws Exception {
-        return getOpMessage( AsyncApiFieldConstants.OP_SUBSCRIBE );
+    public List<AsyncApiMessage> getSubscribeOpMessages() throws Exception {
+        return getOpMessages( AsyncApiFieldConstants.OP_SUBSCRIBE );
     }
 
-    public AsyncApiMessage getPublishOpMessage() throws Exception {
-        return getOpMessage( AsyncApiFieldConstants.OP_PUBLISH );
+    public List<AsyncApiMessage> getPublishOpMessages() throws Exception {
+        return getOpMessages( AsyncApiFieldConstants.OP_PUBLISH );
     }
 
     public JsonArray getPublishOpSolaceDestinations() {

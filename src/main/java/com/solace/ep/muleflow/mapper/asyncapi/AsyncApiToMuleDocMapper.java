@@ -19,12 +19,16 @@ package com.solace.ep.muleflow.mapper.asyncapi;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.solace.ep.muleflow.asyncapi.*;
 import com.solace.ep.muleflow.mapper.MapUtils;
+import com.solace.ep.muleflow.mapper.asyncapi.solace.AsyncApiSolaceBindingMapper;
 import com.solace.ep.muleflow.mapper.model.*;
 
 import lombok.extern.slf4j.Slf4j;
@@ -57,121 +61,249 @@ public class AsyncApiToMuleDocMapper {
         // Get all unique schema entries and store in a map payload hash --> schema entry
         collectSchemas(mapMuleDoc, asyncApiAccessor);
 
-        {
-            log.debug("Check input [publish] channels for duplicate queue names");
 
-            int inputQueueCount = 0, inputQueueDuplicateCount = 0, inputDirectTopicSubscriptionCount = 0;
-            // Identify unique queues --> which ones have duplicates
+
+
+
+        final Map<String, AsyncApiSolaceBindingMapper> consumers = new HashMap<>();
+
+        {
+            int inputQueueCount = 0, inputDirectConsumerCount = 0;
+
             for ( Map.Entry<String, JsonElement> channelElement : asyncApiAccessor.getChannels().entrySet() ) {
+
                 AsyncApiChannel channel = new AsyncApiChannel(channelElement.getValue().getAsJsonObject(), asyncApiAccessor);
                 
                 if ( ! channel.hasPublishOperation() ) {
                     continue;
                 }
-                if ( channel.getPublishQueueName() == null ) {
-                    inputDirectTopicSubscriptionCount++;
+                if ( channel.getPublishOpSolaceDestinations() == null || channel.getPublishOpSolaceDestinations().size() == 0 ) {
                     continue;
                 }
-                inputQueueCount++;
 
-                if ( inputQueueMap.containsKey(channel.getPublishQueueName() ) ) {
-                    inputQueueMap.put( channel.getPublishQueueName(), true );
-                    inputQueueDuplicateCount++;
-                    log.info("Found DUPLICATE Ingress Queue in Channels: {}", channel.getPublishQueueName());
-                } else {
-                    inputQueueMap.put( channel.getPublishQueueName(), false );
-                    log.info("Found Ingress Queue in Channels: {}", channel.getPublishQueueName());
-                }
-            }
+                for ( JsonElement destElement : channel.getPublishOpSolaceDestinations() ) {
+                    if ( ! destElement.isJsonObject() ) {
+                        // TODO - Error handling
+                    }
 
-            log.info( 
-                "Found Ingress Queues in AsyncApi 'channels' - TOTAL: {}; UNIQUE: {}; DUPLICATE: {}", 
-                inputQueueCount, 
-                ( inputQueueCount - inputQueueDuplicateCount ),
-                inputQueueDuplicateCount
-            );
-            log.info( 
-                "Found {} Direct Topic Subscriptions in AsyncApi 'channels'", 
-                inputDirectTopicSubscriptionCount );
-        }
+                    Gson gson = new Gson();
+                    String destAsString = gson.toJson( destElement.getAsJsonObject() );
 
-        // Create one flow + one business logic sub-flow for each UNIQUE input channel
-        // Input channel has publish operation
-        log.info("Create Ingress flow for each unique 'publish' operation in 'channels'");
-        for ( Map.Entry<String, JsonElement> channelElement : asyncApiAccessor.getChannels().entrySet() ) {
-            AsyncApiChannel channel = new AsyncApiChannel(channelElement.getValue().getAsJsonObject(), asyncApiAccessor);
-            String channelName = channelElement.getKey();
-            log.debug( "Handling Channel '{}'", channelElement.getKey() );
-            if ( ! channel.hasPublishOperation() ) {
-                log.debug("Channel '{}' does not contain 'publish' operation, skipping for Ingress", channelName);
-                continue;
-            }
+                    AsyncApiSolaceBindingMapper solaceConsumer = gson.fromJson( destAsString, AsyncApiSolaceBindingMapper.class );
+                    String consumerName;
 
-            log.info("Found Channel '{}' with publish operation; mapping Ingress flow to MapFlow", channelName);
-            MapFlow mapToFlow = new MapFlow();
+                    if ( solaceConsumer.getTopic() != null ) {
+                        solaceConsumer.setDirectConsumer(true);
+                        consumerName = solaceConsumer.getTopic().getName();
+                    } else {
+                        solaceConsumer.setDirectConsumer(false);
+                        consumerName = solaceConsumer.getQueue().getName();
+                    }
 
-            if ( channel.getPublishQueueName() == null ) {
-                // Handle as DIRECT
-                log.debug("No queueName found, handle as DIRECT Ingress flow");
+                    if ( consumers.containsKey( consumerName ) ) {
+                        solaceConsumer = consumers.get( consumerName );
+                    } else {
+                        consumers.put( consumerName, solaceConsumer );
+                    }
 
-                mapToFlow.setDirectConsumer(true);
-                mapToFlow.setFlowDesignation("DirectSubscriber");
-
-                if ( channel.getPublishTopicSubscriptions() != null && ! channel.getPublishTopicSubscriptions().isEmpty() )  {
-                    mapToFlow.setDirectListenerTopics(channel.getPublishTopicSubscriptions());
-                } else {
-                    String singleTopic = channelName.replaceAll("\\{" + AsyncApiUtils.REGEX_SOLACE_TOPIC_CHAR_CLASS + "*\\}","*");
-                    mapToFlow.setDirectListenerTopics(
-                        Arrays.asList( singleTopic )
-                    );
-                }
-                mapToFlow.setDirectListenerContentType(channel.getPublishOpMessage().getContentType());
-
-                if ( channel.getPublishOpMessage().getContentType().toLowerCase().contains( "json" ) ) {
-                    mapToFlow.setJsonSchemaContent(channel.getPublishOpMessage().getPayloadAsString());
-                    mapToFlow.setJsonSchemaReference( encodeHexString( MapUtils.getMd5Digest(mapToFlow.getJsonSchemaContent()) ) );
-                }
-
-            } else {
-                // Handle as QUEUE
-                log.debug("queueName found, handle as Queue Consumer");
-
-                // Check if this is a duplicate queue
-                // If yes, check to see has already been handled; if yes, skip to the next channel
-                boolean duplicateQueue = false;
-                if ( inputQueueMap.get( channel.getPublishQueueName() ).booleanValue() == true ) {
-                    // This is a duplicate queue in the spec, check to see if it has already been handled
-                    for ( MapFlow checkDup : mapMuleDoc.getMapFlows() ) {
-                        if ( checkDup.getQueueListenerAddress().contentEquals(channel.getPublishQueueName()) ) {
-                            duplicateQueue = true;
-                            break;
-                        }
+                    for ( AsyncApiMessage message : channel.getPublishOpMessages() ) {
+                        solaceConsumer.getMessages().add(message);
                     }
                 }
-                if ( duplicateQueue ) {
-                    continue;
+            }
+        }
+
+
+        for ( Map.Entry<String, AsyncApiSolaceBindingMapper> consumerEntry : consumers.entrySet() ) {
+
+            String                      consumerName    = consumerEntry.getKey();            
+            AsyncApiSolaceBindingMapper solaceConsumer  = consumerEntry.getValue();
+
+            log.info(
+                "Mapping Solace Consumer of type {}='{}'",
+                solaceConsumer.isDirectConsumer() ? "DIRECT" : "QUEUE",
+                consumerName
+            );
+
+            MapFlow mapToFlow = new MapFlow();
+            mapToFlow.setDirectConsumer( solaceConsumer.isDirectConsumer() );
+            mapToFlow.setFlowDesignation( consumerName.replaceAll(" ", "_") );
+
+            if ( solaceConsumer.isDirectConsumer() ) {
+//                mapToFlow.setDirectListenerContentType("");
+                mapToFlow.setDirectListenerTopics( solaceConsumer.getTopic().getTopicSubscriptions() );
+            } else {
+                mapToFlow.setFlowDesignation( solaceConsumer.getQueue().getName() );
+
+                mapToFlow.setQueueListenerAddress( solaceConsumer.getQueue().getName() );
+                mapToFlow.setQueueListenerAckMode( MapUtils.DEFAULT_ACKMODE );
+            }
+
+            boolean jsonContentType = false, sameSchema = false, hasSchema = false;
+            String jsonPayload = null, jsonPayloadHash = null;
+            if ( solaceConsumer.getMessages() != null && ! solaceConsumer.getMessages().isEmpty() ) {
+
+                Iterator<AsyncApiMessage> iMsg = solaceConsumer.getMessages().iterator();
+                AsyncApiMessage firstMessage = iMsg.next();
+
+                if ( ( firstMessage.getContentType() == null ? "" : firstMessage.getContentType() ).contains("json") ) {
+                    jsonContentType = true;
+                    jsonPayload = firstMessage.getPayloadAsString();
+                    if ( jsonPayload != null && jsonPayload.length() > 0 ) {
+                        jsonPayloadHash = encodeHexString( MapUtils.getMd5Digest( jsonPayload ) );
+                        hasSchema = true;
+                        sameSchema = true;
+                    }
                 }
 
-                final String queueName = channel.getPublishQueueName();
-                mapToFlow.setFlowDesignation(queueName);
-                mapToFlow.setDirectConsumer(false);
+                while ( jsonContentType == true && iMsg.hasNext() ) {
+                    AsyncApiMessage m = iMsg.next();
+                    if ( m.getContentType() == null || ! m.getContentType().contains("json")) {
+                        jsonContentType = false;
+                        continue;
+                    }
+                    String mPayload = m.getPayloadAsString() == null ? "NOT A SCHEMA" : m.getPayloadAsString();
+                    String mHash = encodeHexString( MapUtils.getMd5Digest(mPayload));
+                    if ( ! mHash.contentEquals(jsonPayloadHash)) {
+                        sameSchema = false;
+                        continue;
+                    }
+                }
 
-                mapToFlow.setQueueListenerAddress(queueName);
-                mapToFlow.setQueueListenerAckMode( MapUtils.DEFAULT_ACKMODE );
-
-                if ( 
-                    inputQueueMap.get( channel.getPublishQueueName() ).booleanValue() == false &&
-                    channel.getPublishOpMessage().getContentType().toLowerCase().contains( "json" ) )
-                {
-                    mapToFlow.setJsonSchemaContent(channel.getPublishOpMessage().getPayloadAsString());
-                    mapToFlow.setJsonSchemaReference( encodeHexString( MapUtils.getMd5Digest(mapToFlow.getJsonSchemaContent()) ) );
-                } else {
-                    mapToFlow.setXmlSchemaContent("");
+                if ( hasSchema && sameSchema && jsonContentType ) {
+                    mapToFlow.setJsonSchemaContent( jsonPayload );
+                    mapToFlow.setJsonSchemaReference( jsonPayloadHash );
+                    mapToFlow.setContentType( firstMessage.getContentType() );
+                    mapToFlow.setEncoding( "utf-8" );
                 }
             }
+
             mapMuleDoc.getMapFlows().add(mapToFlow);
-            log.info("Added Ingress flow to intermediate MapMuleDoc object");
+            log.info("Added Ingress flow '{}' to intermediate MapMuleDoc object", mapToFlow.getFlowDesignation() );
         }
+
+
+
+
+
+        // {
+        //     log.debug("Check input [publish] channels for duplicate queue names");
+
+        //     int inputQueueCount = 0, inputQueueDuplicateCount = 0, inputDirectTopicSubscriptionCount = 0;
+        //     // Identify unique queues --> which ones have duplicates
+        //     for ( Map.Entry<String, JsonElement> channelElement : asyncApiAccessor.getChannels().entrySet() ) {
+        //         AsyncApiChannel channel = new AsyncApiChannel(channelElement.getValue().getAsJsonObject(), asyncApiAccessor);
+                
+        //         if ( ! channel.hasPublishOperation() ) {
+        //             continue;
+        //         }
+        //         if ( channel.getPublishQueueName() == null ) {
+        //             inputDirectTopicSubscriptionCount++;
+        //             continue;
+        //         }
+        //         inputQueueCount++;
+
+        //         if ( inputQueueMap.containsKey(channel.getPublishQueueName() ) ) {
+        //             inputQueueMap.put( channel.getPublishQueueName(), true );
+        //             inputQueueDuplicateCount++;
+        //             log.info("Found DUPLICATE Ingress Queue in Channels: {}", channel.getPublishQueueName());
+        //         } else {
+        //             inputQueueMap.put( channel.getPublishQueueName(), false );
+        //             log.info("Found Ingress Queue in Channels: {}", channel.getPublishQueueName());
+        //         }
+        //     }
+
+        //     log.info( 
+        //         "Found Ingress Queues in AsyncApi 'channels' - TOTAL: {}; UNIQUE: {}; DUPLICATE: {}", 
+        //         inputQueueCount, 
+        //         ( inputQueueCount - inputQueueDuplicateCount ),
+        //         inputQueueDuplicateCount
+        //     );
+        //     log.info( 
+        //         "Found {} Direct Topic Subscriptions in AsyncApi 'channels'", 
+        //         inputDirectTopicSubscriptionCount );
+        // }
+
+
+
+
+        // // Create one flow + one business logic sub-flow for each UNIQUE input channel
+        // // Input channel has publish operation
+        // log.info("Create Ingress flow for each unique 'publish' operation in 'channels'");
+        // for ( Map.Entry<String, JsonElement> channelElement : asyncApiAccessor.getChannels().entrySet() ) {
+        //     AsyncApiChannel channel = new AsyncApiChannel(channelElement.getValue().getAsJsonObject(), asyncApiAccessor);
+        //     String channelName = channelElement.getKey();
+        //     log.debug( "Handling Channel '{}'", channelElement.getKey() );
+        //     if ( ! channel.hasPublishOperation() ) {
+        //         log.debug("Channel '{}' does not contain 'publish' operation, skipping for Ingress", channelName);
+        //         continue;
+        //     }
+
+        //     log.info("Found Channel '{}' with publish operation; mapping Ingress flow to MapFlow", channelName);
+        //     MapFlow mapToFlow = new MapFlow();
+
+        //     if ( channel.getPublishQueueName() == null ) {
+        //         // Handle as DIRECT
+        //         log.debug("No queueName found, handle as DIRECT Ingress flow");
+
+        //         mapToFlow.setDirectConsumer(true);
+        //         mapToFlow.setFlowDesignation("DirectSubscriber");
+
+        //         if ( channel.getPublishTopicSubscriptions() != null && ! channel.getPublishTopicSubscriptions().isEmpty() )  {
+        //             mapToFlow.setDirectListenerTopics(channel.getPublishTopicSubscriptions());
+        //         } else {
+        //             String singleTopic = channelName.replaceAll("\\{" + AsyncApiUtils.REGEX_SOLACE_TOPIC_CHAR_CLASS + "*\\}","*");
+        //             mapToFlow.setDirectListenerTopics(
+        //                 Arrays.asList( singleTopic )
+        //             );
+        //         }
+        //         mapToFlow.setDirectListenerContentType(channel.getPublishOpMessage().getContentType());
+
+        //         if ( channel.getPublishOpMessage().getContentType().toLowerCase().contains( "json" ) ) {
+        //             mapToFlow.setJsonSchemaContent(channel.getPublishOpMessage().getPayloadAsString());
+        //             mapToFlow.setJsonSchemaReference( encodeHexString( MapUtils.getMd5Digest(mapToFlow.getJsonSchemaContent()) ) );
+        //         }
+
+        //     } else {
+        //         // Handle as QUEUE
+        //         log.debug("queueName found, handle as Queue Consumer");
+
+        //         // Check if this is a duplicate queue
+        //         // If yes, check to see has already been handled; if yes, skip to the next channel
+        //         boolean duplicateQueue = false;
+        //         if ( inputQueueMap.get( channel.getPublishQueueName() ).booleanValue() == true ) {
+        //             // This is a duplicate queue in the spec, check to see if it has already been handled
+        //             for ( MapFlow checkDup : mapMuleDoc.getMapFlows() ) {
+        //                 if ( checkDup.getQueueListenerAddress().contentEquals(channel.getPublishQueueName()) ) {
+        //                     duplicateQueue = true;
+        //                     break;
+        //                 }
+        //             }
+        //         }
+        //         if ( duplicateQueue ) {
+        //             continue;
+        //         }
+
+        //         final String queueName = channel.getPublishQueueName();
+        //         mapToFlow.setFlowDesignation(queueName);
+        //         mapToFlow.setDirectConsumer(false);
+
+        //         mapToFlow.setQueueListenerAddress(queueName);
+        //         mapToFlow.setQueueListenerAckMode( MapUtils.DEFAULT_ACKMODE );
+
+        //         if ( 
+        //             inputQueueMap.get( channel.getPublishQueueName() ).booleanValue() == false &&
+        //             channel.getPublishOpMessage().getContentType().toLowerCase().contains( "json" ) )
+        //         {
+        //             mapToFlow.setJsonSchemaContent(channel.getPublishOpMessage().getPayloadAsString());
+        //             mapToFlow.setJsonSchemaReference( encodeHexString( MapUtils.getMd5Digest(mapToFlow.getJsonSchemaContent()) ) );
+        //         } else {
+        //             mapToFlow.setXmlSchemaContent("");
+        //         }
+        //     }
+        //     mapMuleDoc.getMapFlows().add(mapToFlow);
+        //     log.info("Added Ingress flow to intermediate MapMuleDoc object");
+        // }
 
         // Create one egress sub-flow for each output channel
         // Output channel has subscribe operation
@@ -185,8 +317,8 @@ public class AsyncApiToMuleDocMapper {
             }
 
             // Get Message Name
-            AsyncApiMessage asyncApiMessage = channel.getSubscribeOpMessage();
-            String messageName = asyncApiMessage.getEpEventName();
+            List<AsyncApiMessage> asyncApiMessages = channel.getSubscribeOpMessages();
+            String messageName = AsyncApiMessage.getMessageNameFromList(asyncApiMessages);
 
             MapSubFlowEgress mapToSubFlowEgress = new MapSubFlowEgress();
             mapToSubFlowEgress.setMessageName( messageName );
@@ -195,10 +327,16 @@ public class AsyncApiToMuleDocMapper {
                 mapToSubFlowEgress.getSetVariables().put( parameter, "" );
             }
 
-            String jsonPayload = channel.getSubscribeOpMessage().getPayloadAsString();
-            if ( jsonPayload != null ) {
-                mapToSubFlowEgress.setJsonSchemaContent(jsonPayload);
-                mapToSubFlowEgress.setJsonSchemaReference( encodeHexString( MapUtils.getMd5Digest(jsonPayload) ) );
+            if ( asyncApiMessages != null && asyncApiMessages.size() == 1 ) {
+                AsyncApiMessage subscribeOpMessage = AsyncApiMessage.getMessageAsSingleton( asyncApiMessages );
+                String jsonPayload = subscribeOpMessage != null ? subscribeOpMessage.getPayloadAsString() : null;
+
+                if ( jsonPayload != null ) {
+                    mapToSubFlowEgress.setJsonSchemaContent( jsonPayload );
+                    mapToSubFlowEgress.setJsonSchemaReference( encodeHexString( MapUtils.getMd5Digest(jsonPayload) ) );
+                    mapToSubFlowEgress.setContentType( subscribeOpMessage.getContentType() );
+                    mapToSubFlowEgress.setEncoding( "utf-8" );
+                }
             }
 
             // Embedded parameters handled in Mule mapper

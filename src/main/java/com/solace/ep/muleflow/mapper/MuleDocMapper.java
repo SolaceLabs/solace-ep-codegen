@@ -146,6 +146,10 @@ public class MuleDocMapper {
                 )
             );
             solaceQueueListener.setAckMode( mapFromFlow.getQueueListenerAckMode() );
+            if ( mapFromFlow.getJsonSchemaContent() != null ) {
+                solaceQueueListener.setContentType( mapFromFlow.getContentType() );
+                solaceQueueListener.setEncoding( mapFromFlow.getEncoding() );
+            }
             solaceQueueListener.setDocName(
                 MapUtils.getFlowDocNameFromDesignation( mapFromFlow.getFlowDesignation() )
             );
@@ -174,8 +178,8 @@ public class MuleDocMapper {
             }
             solaceTopicListener.setTopics(topicString.toString());
             if ( mapFromFlow.getJsonSchemaContent() != null ) {
-                solaceTopicListener.setContentType( mapFromFlow.getDirectListenerContentType() );
-                solaceTopicListener.setEncoding(mapFromFlow.getDirectListenerEncoding());
+                solaceTopicListener.setContentType( mapFromFlow.getContentType() );
+                solaceTopicListener.setEncoding( mapFromFlow.getEncoding() );
             }
             solaceTopicListener.setDocName( "Direct Topic Subscriber" );
             solaceTopicListener.setConfigRef( MapUtils.DEFAULT_CONFIG_REF );
@@ -296,6 +300,8 @@ public class MuleDocMapper {
         solacePublish.setAddress( publishTopicAddress );
         solacePublish.setDocName( MapUtils.getEgressSubFlowDocNameFromMessageName( mapFromSubFlow.getMessageName() ) );
         solacePublish.setConfigRef(MapUtils.DEFAULT_CONFIG_REF);
+        solacePublish.setContentType( mapFromSubFlow.getContentType() );
+        solacePublish.setEncoding( mapFromSubFlow.getEncoding() );
 
         String messageType;
         if ( mapFromSubFlow.getJsonSchemaContent() == null ) {
