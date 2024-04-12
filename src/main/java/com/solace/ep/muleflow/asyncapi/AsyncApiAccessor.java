@@ -20,15 +20,22 @@ package com.solace.ep.muleflow.asyncapi;
 import java.util.Map;
 import java.util.StringTokenizer;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.google.gson.JsonSyntaxException;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Class to read content of asyncapi document parsed using Gson
  * to a JsonObject
  */
+@Slf4j
 public class AsyncApiAccessor {
     
     protected JsonObject root;
@@ -48,12 +55,48 @@ public class AsyncApiAccessor {
         this.root = asyncApiRoot;
     }
 
-    public static JsonObject parseAsyncApi( String asyncApi ) {
-        JsonElement jsonElement = JsonParser.parseString(asyncApi);
-        if (jsonElement == null) {
-            return null;
+    public static JsonObject parseAsyncApi( String asyncApi ) throws Exception {
+
+        try {
+            JsonElement jsonElement = JsonParser.parseString(asyncApi);
+            if ( jsonElement != null && jsonElement.isJsonObject() ) {
+                return jsonElement.getAsJsonObject();
+            }
+        } catch ( JsonSyntaxException jsexc ) {
+            log.debug( "Failed to parse AsyncApi as JSON; re-trying as YAML" );
+        } catch ( Exception exc ) {
+            log.warn( "Caught exception parsing AsyncApi: {}", exc.getMessage() );
         }
-        return jsonElement.getAsJsonObject();
+
+        try {
+            ObjectMapper yamlReader = new ObjectMapper( new YAMLFactory() );
+            Object parsedYamlObj = yamlReader.readValue(asyncApi, Object.class);
+
+            ObjectMapper jsonWriter = new ObjectMapper();
+            String jsonAsyncApi = jsonWriter.writeValueAsString(parsedYamlObj);
+
+            JsonElement jsonElement = JsonParser.parseString(jsonAsyncApi);
+            if ( jsonElement != null && jsonElement.isJsonObject() ) {
+                return jsonElement.getAsJsonObject();
+            }
+        } catch ( JsonProcessingException jpexc ) {
+            log.error( "Failed to parse AsyncApi as YAML: {}", jpexc.getMessage() );
+            throw jpexc;
+        } catch ( JsonSyntaxException jsexc ) {
+            log.error( "Caught exception parsing AsyncApi: {}", jsexc.getMessage() );
+            throw jsexc;
+        } catch ( Exception exc ) {
+            log.error( "Caught Exception parsing AsyncApi: {}", exc.getMessage() );
+            throw exc;
+        }
+
+        return null;
+
+        // JsonElement jsonElement = JsonParser.parseString(asyncApi);
+        // if (jsonElement == null) {
+        //     return null;
+        // }
+        // return jsonElement.getAsJsonObject();
     }
 
     public AsyncApiInfo getInfo() throws Exception {

@@ -22,7 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 public class TestAsyncApiParsing {
 
     @Test
-    public void testParseTopLevel() {
+    public void testParseTopLevel() throws Exception {
 
         final String asyncApi = getAsyncApiSample1();
 
@@ -36,7 +36,35 @@ public class TestAsyncApiParsing {
     }
 
     @Test
-    public void testGetTopLevel() {
+    public void testParseTopLevelYaml_1() throws Exception {
+
+        final String asyncApi = getAsyncApi("src/test/resources/asyncapi/OrderManagement-0.1.2.yaml");
+
+        JsonObject parsedAsyncApi = AsyncApiAccessor.parseAsyncApi(asyncApi);
+
+        assertTrue( parsedAsyncApi.has( "components" ) );
+        assertTrue( parsedAsyncApi.has( "asyncapi" ) );
+        assertTrue( parsedAsyncApi.has( "info" ) );
+        assertTrue( parsedAsyncApi.has( "channels" ) );
+
+    }
+
+    @Test
+    public void testParseTopLevelYaml_2() throws Exception {
+
+        final String asyncApi = getAsyncApi("src/test/resources/asyncapi/Order Management-0.1.0.yaml");
+
+        JsonObject parsedAsyncApi = AsyncApiAccessor.parseAsyncApi(asyncApi);
+
+        assertTrue( parsedAsyncApi.has( "components" ) );
+        assertTrue( parsedAsyncApi.has( "asyncapi" ) );
+        assertTrue( parsedAsyncApi.has( "info" ) );
+        assertTrue( parsedAsyncApi.has( "channels" ) );
+
+    }
+
+    @Test
+    public void testGetTopLevel() throws Exception {
         final String asyncApi = getAsyncApiSample1();
 
         AsyncApiAccessor accessor = new AsyncApiAccessor( AsyncApiAccessor.parseAsyncApi(asyncApi) );
@@ -55,7 +83,7 @@ public class TestAsyncApiParsing {
     }
 
     @Test
-    public void testValidateInfo() {
+    public void testValidateInfo() throws Exception {
 
         final String asyncApi = getAsyncApiSample1();
 
@@ -81,7 +109,7 @@ public class TestAsyncApiParsing {
     }
 
     @Test
-    public void testValidateMessage() {
+    public void testValidateMessage() throws Exception {
 
         final String asyncApi = getAsyncApiSample1();
 
@@ -113,7 +141,7 @@ public class TestAsyncApiParsing {
     }
 
     @Test
-    public void testValidateSchemasAccessors() {
+    public void testValidateSchemasAccessors() throws Exception {
         final String asyncApi = getAsyncApiSample1();
 
         AsyncApiAccessor accessor = new AsyncApiAccessor(AsyncApiAccessor.parseAsyncApi(asyncApi));
@@ -133,7 +161,7 @@ public class TestAsyncApiParsing {
         }
     }
     
-    @Test void testValidateSchemaAccessFromMessage() {
+    @Test void testValidateSchemaAccessFromMessage() throws Exception {
         final String asyncApi = getAsyncApiSample1();
 
         AsyncApiAccessor accessor = new AsyncApiAccessor(AsyncApiAccessor.parseAsyncApi(asyncApi));
@@ -150,7 +178,7 @@ public class TestAsyncApiParsing {
         }
     }
 
-    @Test void testValidateAsyncApiPublishChannels() {
+    @Test void testValidateAsyncApiPublishChannels() throws Exception {
         final String asyncApi = getAsyncApiSample1();
 
         AsyncApiAccessor accessor = new AsyncApiAccessor(AsyncApiAccessor.parseAsyncApi(asyncApi));
@@ -194,7 +222,7 @@ public class TestAsyncApiParsing {
     }
 
     @Test 
-    void testValidateAsyncApiSubscribeChannels() {
+    void testValidateAsyncApiSubscribeChannels() throws Exception {
         final String asyncApi = getAsyncApiSample1();
 
         AsyncApiAccessor accessor = new AsyncApiAccessor(AsyncApiAccessor.parseAsyncApi(asyncApi));
@@ -283,7 +311,7 @@ public class TestAsyncApiParsing {
     }
 
     @Test 
-    void testValidateAsyncApiSubscribeChannels_() {
+    void testValidateAsyncApiSubscribeChannels_() throws Exception {
         final String asyncApi = getSampleAsyncApi();
 
         AsyncApiAccessor accessor = new AsyncApiAccessor(AsyncApiAccessor.parseAsyncApi(asyncApi));
