@@ -1,0 +1,113 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "Catalog",
+    "description": "Converted from json schema"
+  },
+  "host": "petstore.swagger.io",
+  "basePath": "/api",
+  "schemes": [
+    "http"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/": {
+      "get": {
+        "description": "Converted from json schema",
+        "operationId": "findPets",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Catalog",
+            "schema": {
+              "title": "Catalog Item",
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Unique identifier for the item"
+                },
+                "name": {
+                  "type": "string",
+                  "description": "Name of the item"
+                },
+                "description": {
+                  "type": "string",
+                  "description": "Description of the item"
+                },
+                "price": {
+                  "type": "number",
+                  "minimum": 0,
+                  "description": "Price of the item"
+                },
+                "category": {
+                  "type": "string",
+                  "description": "Category of the item"
+                },
+                "in_stock": {
+                  "type": "boolean",
+                  "description": "Whether the item is in stock or not"
+                }
+              },
+              "required": [
+                "id",
+                "name",
+                "price",
+                "category",
+                "in_stock"
+              ]
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Catalog": {
+      "title": "Catalog Item",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the item"
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the item"
+        },
+        "description": {
+          "type": "string",
+          "description": "Description of the item"
+        },
+        "price": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Price of the item"
+        },
+        "category": {
+          "type": "string",
+          "description": "Category of the item"
+        },
+        "in_stock": {
+          "type": "boolean",
+          "description": "Whether the item is in stock or not"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "price",
+        "category",
+        "in_stock"
+      ]
+    }
+  }
+}
