@@ -39,7 +39,7 @@
                 <value/>
             </ifl:property>
             <ifl:property>
-                <key>ServerTrace</key>
+                <key>allowedHeaderList</key>
                 <value>false</value>
             </ifl:property>
             <ifl:property>

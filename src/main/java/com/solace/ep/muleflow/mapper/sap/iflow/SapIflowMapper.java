@@ -9,6 +9,7 @@ import javax.xml.namespace.QName;
 import org.omg.spec.bpmn._20100524.di.BPMNEdge;
 import org.omg.spec.bpmn._20100524.di.BPMNShape;
 import org.omg.spec.bpmn._20100524.model.ObjectFactory;
+import org.omg.spec.bpmn._20100524.model.TBaseElement;
 import org.omg.spec.bpmn._20100524.model.TCallActivity;
 import org.omg.spec.bpmn._20100524.model.TCollaboration;
 import org.omg.spec.bpmn._20100524.model.TDefinitions;
@@ -26,6 +27,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.solace.ep.muleflow.mapper.model.MapFlow;
 import com.solace.ep.muleflow.mapper.model.MapMuleDoc;
 import com.solace.ep.muleflow.mapper.model.MapSubFlowEgress;
+import com.solace.ep.muleflow.mapper.sap.iflow.model.TSapIflowProperty;
 import com.solace.ep.muleflow.mule.model.core.MuleFlow;
 
 import jakarta.xml.bind.JAXBElement;
@@ -35,6 +37,8 @@ public class SapIflowMapper {
     private long objectIncrementer = 1;
 
     private ObjectFactory bpmnFactory = new ObjectFactory();
+
+    private com.solace.ep.muleflow.mapper.sap.iflow.model.ObjectFactory propFactory = new com.solace.ep.muleflow.mapper.sap.iflow.model.ObjectFactory();
 
     private List<TParticipant> participants = new ArrayList<>();
 
@@ -50,6 +54,12 @@ public class SapIflowMapper {
 
     private TDefinitions out = null;
 
+    private SapIflowExtensionConfig extConfigs;
+
+
+    public SapIflowMapper() throws Exception {
+        extConfigs = SapIflowUtils.parseExtensionConfig( "src/main/resources/sap/iflow/extension-elements.yaml" );
+    }
     
     // TODO - this is for testing
     public TDefinitions getOut() {
@@ -279,6 +289,7 @@ public class SapIflowMapper {
             eventName, 
             sender.getFlowElement().get(0).getValue().getId(),
             endParticipantId );
+        addExtensionProperties(messageFlow, extConfigs.getMessageFlow().getPublication() );
 
         generateSequences( sender );
         generateSequences( eventGenerator );
@@ -343,6 +354,7 @@ public class SapIflowMapper {
             eventName, 
             startParticipantId, 
         receiver.getFlowElement().get(0).getValue().getId() );
+        addExtensionProperties(messageFlow, extConfigs.getMessageFlow().getSubscription() );
         
         processes.add( receiver );
         processes.add( businessLogic );
@@ -350,6 +362,32 @@ public class SapIflowMapper {
         participants.add( businessLogicParticipant );
         messageFlows.add( messageFlow );
         
+    }
+
+    private void addExtensionProperties( TBaseElement target, List<SapIflowExtensionConfig.ExtProperty> properties ) {
+        if ( target.getExtensionElements() == null ) {
+            target.setExtensionElements( bpmnFactory.createTExtensionElements() );
+        }
+        for ( SapIflowExtensionConfig.ExtProperty prop : properties ) {
+            target.getExtensionElements().getAny().add( createPropertyInstance( prop.getKey(), ( prop.getValue() == null ? "" : prop.getValue() ) ) );
+        }
+    }
+
+    private void addExtensionProperty( TBaseElement target, String key, String value ) {
+        if ( target.getExtensionElements() == null ) {
+            target.setExtensionElements( bpmnFactory.createTExtensionElements() );
+        }
+        target.getExtensionElements().getAny().add( createPropertyInstance( key, value) );
+    }
+
+    private JAXBElement<TSapIflowProperty> createPropertyInstance( String key, String value ) {
+
+        TSapIflowProperty property = propFactory.createTSapIflowProperty();
+        property.setKey(key);
+        property.setValue(value);
+
+        return propFactory.createProperty(property);
+
     }
 
     private void addCallActivityBeforeEndEvent( TProcess process, TCallActivity activity ) {
@@ -396,6 +434,7 @@ public class SapIflowMapper {
         messageFlow.setName( name );
         messageFlow.setSourceRef( new QName( sourceRef ) );
         messageFlow.setTargetRef( new QName( targetRef ) );
+        addExtensionProperties(messageFlow, extConfigs.getMessageFlow().allMessageFlows );
 
         return messageFlow;
     }
@@ -429,8 +468,9 @@ public class SapIflowMapper {
         // TODO - IFL:TYPE
         participant.setName( name );
         if ( processRef != null ) {
-            participant.setProcessRef( new QName(processRef) );
+            participant.setProcessRef( new QName( processRef) );
         }
+        participant.getOtherAttributes().put( propFactory.getSapIflowType_QName() , type );
 
         return participant;
     }

@@ -21,7 +21,10 @@ import com.solace.ep.asyncapi.tests.TestAsyncApiParsing;
 import com.solace.ep.muleflow.mapper.MuleDocMapper;
 import com.solace.ep.muleflow.mapper.asyncapi.AsyncApiToMuleDocMapper;
 import com.solace.ep.muleflow.mapper.model.MapMuleDoc;
+import com.solace.ep.muleflow.mapper.sap.iflow.SapIflowExtensionConfig;
 import com.solace.ep.muleflow.mapper.sap.iflow.SapIflowMapper;
+import com.solace.ep.muleflow.mapper.sap.iflow.SapIflowUtils;
+import com.solace.ep.muleflow.mapper.sap.iflow.model.TSapIflowProperty;
 import com.solace.ep.muleflow.mapper.sap.iflow.utils.Bpmn2NamespaceMapper;
 import com.solace.ep.muleflow.mule.model.core.MuleDoc;
 import com.solace.ep.muleflow.mule.util.XmlMapperUtils;
@@ -36,7 +39,29 @@ import lombok.extern.slf4j.Slf4j;
 public class TestCreateIflowFromEpAsyncApi {
     
     @Test
-    public void testCreateIflow_01() {
+    public void testExtConfigs() {
+
+        try {
+            SapIflowExtensionConfig configs = SapIflowUtils.parseExtensionConfig("src/main/resources/sap/iflow/extension-elements.yaml");
+
+            for ( SapIflowExtensionConfig.ExtProperty prop : configs.getCollaboration() ) {
+                System.out.println( "key: " + prop.getKey() );
+                System.out.println( "val: " + ( prop.getValue() == null ? "NULL" : prop.getValue() ) );
+            }
+
+            for ( SapIflowExtensionConfig.ExtProperty prop : configs.getMessageFlow().getAllMessageFlows() ) {
+                System.out.println( "key: " + prop.getKey() );
+                System.out.println( "val: " + ( prop.getValue() == null ? "NULL" : prop.getValue() ) );
+            }
+
+        } catch ( Exception exc ) {
+            System.out.println(exc.getMessage());
+            fail( exc.getMessage() );
+        }
+    }
+
+    @Test
+    public void testCreateIflow_01() throws Exception {
 
         String inputFile = "src/test/resources/asyncapi/Order Management-0.1.2.json";
         String outputFile = "src/test/resources/test-output/iflow/OrderMgt-0.1.2.xml";
@@ -61,13 +86,14 @@ public class TestCreateIflowFromEpAsyncApi {
             //     TProcess.class,
             //     TParticipant.class );
             JAXBContext context = JAXBContext.newInstance( 
-                    TDefinitions.class
+                    TDefinitions.class,
+                    TSapIflowProperty.class,
+                    com.solace.ep.muleflow.mapper.sap.iflow.model.ObjectFactory.class
                  );
-                Marshaller marshaller = context.createMarshaller();
+            
+            Marshaller marshaller = context.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
             marshaller.setProperty("org.glassfish.jaxb.namespacePrefixMapper", new Bpmn2NamespaceMapper() );
-//                                         com.sun.xml.internal.bind.namespacePrefixMapper
-//            marshaller.setProperty(, marshaller);
 
             marshaller.marshal( iflowMapper.getJaxbOut(), new FileOutputStream( outputFile ) );
         } catch ( JAXBException jaxbExc ) {

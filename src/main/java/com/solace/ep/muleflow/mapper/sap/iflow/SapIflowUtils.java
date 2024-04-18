@@ -1,5 +1,17 @@
 package com.solace.ep.muleflow.mapper.sap.iflow;
 
+import java.io.IOException;
+import java.io.File;
+
+import com.fasterxml.jackson.core.exc.StreamReadException;
+import com.fasterxml.jackson.databind.DatabindException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import com.fasterxml.jackson.dataformat.yaml.YAMLGenerator;
+
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class SapIflowUtils {
     
 
@@ -52,5 +64,27 @@ public class SapIflowUtils {
                 SEQ_FLOW_PREFIX                 = "SequenceFlow_";
 
     //
+
+    public static SapIflowExtensionConfig parseExtensionConfig( String configFile ) throws Exception {
+
+        SapIflowExtensionConfig configs = null;
+    	ObjectMapper mapper = new ObjectMapper( new YAMLFactory().enable(YAMLGenerator.Feature.MINIMIZE_QUOTES) );
+        try {
+        	configs = mapper.readValue(new File(configFile), SapIflowExtensionConfig.class);
+        } catch (DatabindException dbexc) {
+        	log.error("Failed to parse the config file: {}", dbexc.getMessage());
+            throw dbexc;
+		} catch (StreamReadException srexc ) {
+        	log.error("Failed to parse the config file: {}", srexc.getMessage());
+        	throw srexc;
+		} catch (IOException ioexc) {
+			log.error("There was an error reading the configuration file: {}", configFile );
+			log.error(ioexc.getMessage());
+        	throw ioexc;
+		}
+
+        return configs;
+    }
+
 
 }
