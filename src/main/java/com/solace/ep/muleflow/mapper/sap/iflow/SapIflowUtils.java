@@ -30,7 +30,7 @@ public class SapIflowUtils {
                 PARTICIPANT_IFL_RECV            = "EndpointReceiver",
                 PARTICIPANT_IFL_INT             = "IntegrationProcess",
                 MSGFLOW_ID_PREFIX               = "MessageFlow_";
-
+                
     public static final String
                 PROCESS_ID_PREFIX               = "Process_",
                 PROCESS_INB_NAME_TEMPLATE       = "Process inbound event from %s",

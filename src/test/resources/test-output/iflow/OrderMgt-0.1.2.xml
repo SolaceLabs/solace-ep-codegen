@@ -1,22 +1,144 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <bpmn2:definitions xmlns:ifl="http:///com.sap.ifl.model/Ifl.xsd" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" id="Defintions_1">
     <bpmn2:collaboration name="" id="Collaboration_1">
-        <bpmn2:participant name="EventMeshSender" id="Participant_1" ifl:type="EndpointSender"/>
-        <bpmn2:participant name="SourceSystem" id="Participant_2" ifl:type="EndpointSender"/>
-        <bpmn2:participant name="EventMeshReceiver" id="Participant_3" ifl:type="EndpointReceiver"/>
-        <bpmn2:participant name="DestinationSystemReceiver" id="Participant_4" ifl:type="EndpointReceiver"/>
-        <bpmn2:participant xmlns="" name="Process inbound event from COFFEE.ORDERMGT.STATUS" processRef="Process_5" id="Participant_Process_5" ifl:type="IntegrationProcess"/>
-        <bpmn2:participant xmlns="" name="Business Logic for COFFEE.ORDERMGT.STATUS event" processRef="Process_7" id="Participant_Process_7" ifl:type="IntegrationProcess"/>
-        <bpmn2:participant xmlns="" name="Process inbound event from COFFEE.ORDERMGT.NEWORDER" processRef="Process_18" id="Participant_Process_18" ifl:type="IntegrationProcess"/>
-        <bpmn2:participant xmlns="" name="Business Logic for COFFEE.ORDERMGT.NEWORDER event" processRef="Process_20" id="Participant_Process_20" ifl:type="IntegrationProcess"/>
-        <bpmn2:participant xmlns="" name="Process inbound event from Prep_Started_Direct_Consumer" processRef="Process_31" id="Participant_Process_31" ifl:type="IntegrationProcess"/>
-        <bpmn2:participant xmlns="" name="Business Logic for Prep_Started_Direct_Consumer event" processRef="Process_33" id="Participant_Process_33" ifl:type="IntegrationProcess"/>
-        <bpmn2:participant xmlns="" name="Process inbound event from direct-omni-consumer" processRef="Process_44" id="Participant_Process_44" ifl:type="IntegrationProcess"/>
-        <bpmn2:participant xmlns="" name="Business Logic for direct-omni-consumer event" processRef="Process_46" id="Participant_Process_46" ifl:type="IntegrationProcess"/>
-        <bpmn2:participant xmlns="" name="Process source data for OM-Order Update event, send to Event Mesh" processRef="Process_57" id="Participant_Process_57" ifl:type="IntegrationProcess"/>
-        <bpmn2:participant xmlns="" name="Generate OM-Order Update event" processRef="Process_59" id="Participant_Process_59" ifl:type="IntegrationProcess"/>
-        <bpmn2:participant xmlns="" name="Process source data for OM-Order Details event, send to Event Mesh" processRef="Process_66" id="Participant_Process_66" ifl:type="IntegrationProcess"/>
-        <bpmn2:participant xmlns="" name="Generate OM-Order Details event" processRef="Process_68" id="Participant_Process_68" ifl:type="IntegrationProcess"/>
+        <bpmn2:extensionElements>
+            <ifl:property>
+                <ifl:key>namespaceMapping</ifl:key>
+                <ifl:value></ifl:value>
+            </ifl:property>
+            <ifl:property>
+                <ifl:key>httpSessionHandling</ifl:key>
+                <ifl:value>None</ifl:value>
+            </ifl:property>
+            <ifl:property>
+                <ifl:key>accessControlMaxAge</ifl:key>
+                <ifl:value></ifl:value>
+            </ifl:property>
+            <ifl:property>
+                <ifl:key>returnExceptionToSender</ifl:key>
+                <ifl:value>false</ifl:value>
+            </ifl:property>
+            <ifl:property>
+                <ifl:key>log</ifl:key>
+                <ifl:value>All events</ifl:value>
+            </ifl:property>
+            <ifl:property>
+                <ifl:key>corsEnabled</ifl:key>
+                <ifl:value>false</ifl:value>
+            </ifl:property>
+            <ifl:property>
+                <ifl:key>exposedHeaders</ifl:key>
+                <ifl:value></ifl:value>
+            </ifl:property>
+            <ifl:property>
+                <ifl:key>componentVersion</ifl:key>
+                <ifl:value>1.2</ifl:value>
+            </ifl:property>
+            <ifl:property>
+                <ifl:key>allowedHeaderList</ifl:key>
+                <ifl:value></ifl:value>
+            </ifl:property>
+            <ifl:property>
+                <ifl:key>allowedHeaderList</ifl:key>
+                <ifl:value>false</ifl:value>
+            </ifl:property>
+            <ifl:property>
+                <ifl:key>allowedOrigins</ifl:key>
+                <ifl:value></ifl:value>
+            </ifl:property>
+            <ifl:property>
+                <ifl:key>accessControlAllowCredentials</ifl:key>
+                <ifl:value>false</ifl:value>
+            </ifl:property>
+            <ifl:property>
+                <ifl:key>allowedHeaders</ifl:key>
+                <ifl:value></ifl:value>
+            </ifl:property>
+            <ifl:property>
+                <ifl:key>allowedMethods</ifl:key>
+                <ifl:value></ifl:value>
+            </ifl:property>
+            <ifl:property>
+                <ifl:key>cmdVariantUri</ifl:key>
+                <ifl:value>ctype::IFlowVariant/cname::IFlowConfiguration/version::1.2.4</ifl:value>
+            </ifl:property>
+        </bpmn2:extensionElements>
+        <bpmn2:participant name="EventMeshSender" id="Participant_1" ifl:type="EndpointSender">
+            <bpmn2:extensionElements>
+                <ifl:property>
+                    <ifl:key>enableBasicAuthentication</ifl:key>
+                    <ifl:value>false</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>ifl:type</ifl:key>
+                    <ifl:value>EndpointSender</ifl:value>
+                </ifl:property>
+            </bpmn2:extensionElements>
+        </bpmn2:participant>
+        <bpmn2:participant name="SourceSystem" id="Participant_2" ifl:type="EndpointSender">
+            <bpmn2:extensionElements>
+                <ifl:property>
+                    <ifl:key>enableBasicAuthentication</ifl:key>
+                    <ifl:value>false</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>ifl:type</ifl:key>
+                    <ifl:value>EndpointSender</ifl:value>
+                </ifl:property>
+            </bpmn2:extensionElements>
+        </bpmn2:participant>
+        <bpmn2:participant name="EventMeshReceiver" id="Participant_3" ifl:type="EndpointReceiver">
+            <bpmn2:extensionElements>
+                <ifl:property>
+                    <ifl:key>ifl:type</ifl:key>
+                    <ifl:value>EndpointReceiver</ifl:value>
+                </ifl:property>
+            </bpmn2:extensionElements>
+        </bpmn2:participant>
+        <bpmn2:participant name="DestinationSystemReceiver" id="Participant_4" ifl:type="EndpointReceiver">
+            <bpmn2:extensionElements>
+                <ifl:property>
+                    <ifl:key>ifl:type</ifl:key>
+                    <ifl:value>EndpointReceiver</ifl:value>
+                </ifl:property>
+            </bpmn2:extensionElements>
+        </bpmn2:participant>
+        <bpmn2:participant xmlns="" name="Process inbound event from COFFEE.ORDERMGT.STATUS" processRef="Process_5" id="Participant_Process_5" ifl:type="IntegrationProcess">
+            <bpmn2:extensionElements/>
+        </bpmn2:participant>
+        <bpmn2:participant xmlns="" name="Business Logic for COFFEE.ORDERMGT.STATUS event" processRef="Process_7" id="Participant_Process_7" ifl:type="IntegrationProcess">
+            <bpmn2:extensionElements/>
+        </bpmn2:participant>
+        <bpmn2:participant xmlns="" name="Process inbound event from COFFEE.ORDERMGT.NEWORDER" processRef="Process_18" id="Participant_Process_18" ifl:type="IntegrationProcess">
+            <bpmn2:extensionElements/>
+        </bpmn2:participant>
+        <bpmn2:participant xmlns="" name="Business Logic for COFFEE.ORDERMGT.NEWORDER event" processRef="Process_20" id="Participant_Process_20" ifl:type="IntegrationProcess">
+            <bpmn2:extensionElements/>
+        </bpmn2:participant>
+        <bpmn2:participant xmlns="" name="Process inbound event from Prep_Started_Direct_Consumer" processRef="Process_31" id="Participant_Process_31" ifl:type="IntegrationProcess">
+            <bpmn2:extensionElements/>
+        </bpmn2:participant>
+        <bpmn2:participant xmlns="" name="Business Logic for Prep_Started_Direct_Consumer event" processRef="Process_33" id="Participant_Process_33" ifl:type="IntegrationProcess">
+            <bpmn2:extensionElements/>
+        </bpmn2:participant>
+        <bpmn2:participant xmlns="" name="Process inbound event from direct-omni-consumer" processRef="Process_44" id="Participant_Process_44" ifl:type="IntegrationProcess">
+            <bpmn2:extensionElements/>
+        </bpmn2:participant>
+        <bpmn2:participant xmlns="" name="Business Logic for direct-omni-consumer event" processRef="Process_46" id="Participant_Process_46" ifl:type="IntegrationProcess">
+            <bpmn2:extensionElements/>
+        </bpmn2:participant>
+        <bpmn2:participant xmlns="" name="Process source data for OM-Order Update event, send to Event Mesh" processRef="Process_57" id="Participant_Process_57" ifl:type="IntegrationProcess">
+            <bpmn2:extensionElements/>
+        </bpmn2:participant>
+        <bpmn2:participant xmlns="" name="Generate OM-Order Update event" processRef="Process_59" id="Participant_Process_59" ifl:type="IntegrationProcess">
+            <bpmn2:extensionElements/>
+        </bpmn2:participant>
+        <bpmn2:participant xmlns="" name="Process source data for OM-Order Details event, send to Event Mesh" processRef="Process_66" id="Participant_Process_66" ifl:type="IntegrationProcess">
+            <bpmn2:extensionElements/>
+        </bpmn2:participant>
+        <bpmn2:participant xmlns="" name="Generate OM-Order Details event" processRef="Process_68" id="Participant_Process_68" ifl:type="IntegrationProcess">
+            <bpmn2:extensionElements/>
+        </bpmn2:participant>
         <bpmn2:messageFlow xmlns="" name="COFFEE.ORDERMGT.STATUS" sourceRef="Participant_1" targetRef="StartEvent_6" id="MessageFlow_17">
             <bpmn2:extensionElements>
                 <ifl:property>
@@ -217,6 +339,38 @@
                 </ifl:property>
                 <ifl:property>
                     <ifl:key>userProperties</ifl:key>
+                    <ifl:value></ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>ackMode</ifl:key>
+                    <ifl:value>AUTOMATIC_ON_FLOW_COMPLETION</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>consumerMode</ifl:key>
+                    <ifl:value>GUARANTEED</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>Description</ifl:key>
+                    <ifl:value></ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>direction</ifl:key>
+                    <ifl:value>Sender</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>Name</ifl:key>
+                    <ifl:value>COFFEE.ORDERMGT.STATUS</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>queueName</ifl:key>
+                    <ifl:value>COFFEE.ORDERMGT.STATUS</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>system</ifl:key>
+                    <ifl:value>EventMeshSender</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>topicSubscriptions</ifl:key>
                     <ifl:value></ifl:value>
                 </ifl:property>
             </bpmn2:extensionElements>
@@ -423,6 +577,38 @@
                     <ifl:key>userProperties</ifl:key>
                     <ifl:value></ifl:value>
                 </ifl:property>
+                <ifl:property>
+                    <ifl:key>ackMode</ifl:key>
+                    <ifl:value>AUTOMATIC_ON_FLOW_COMPLETION</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>consumerMode</ifl:key>
+                    <ifl:value>GUARANTEED</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>Description</ifl:key>
+                    <ifl:value></ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>direction</ifl:key>
+                    <ifl:value>Sender</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>Name</ifl:key>
+                    <ifl:value>COFFEE.ORDERMGT.NEWORDER</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>queueName</ifl:key>
+                    <ifl:value>COFFEE.ORDERMGT.NEWORDER</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>system</ifl:key>
+                    <ifl:value>EventMeshSender</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>topicSubscriptions</ifl:key>
+                    <ifl:value></ifl:value>
+                </ifl:property>
             </bpmn2:extensionElements>
         </bpmn2:messageFlow>
         <bpmn2:messageFlow xmlns="" name="Prep_Started_Direct_Consumer" sourceRef="Participant_1" targetRef="StartEvent_32" id="MessageFlow_43">
@@ -626,6 +812,38 @@
                 <ifl:property>
                     <ifl:key>userProperties</ifl:key>
                     <ifl:value></ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>ackMode</ifl:key>
+                    <ifl:value>AUTOMATIC_IMMEDIATE</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>consumerMode</ifl:key>
+                    <ifl:value>DIRECT</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>Description</ifl:key>
+                    <ifl:value></ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>direction</ifl:key>
+                    <ifl:value>Sender</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>Name</ifl:key>
+                    <ifl:value>Prep_Started_Direct_Consumer</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>queueName</ifl:key>
+                    <ifl:value></ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>system</ifl:key>
+                    <ifl:value>EventMeshSender</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>topicSubscriptions</ifl:key>
+                    <ifl:value>&lt;row&gt;&lt;cell id='listObjectValue'&gt;coffeeshop/order/status/v1/inprogress/*/*/*/*&lt;/cell&gt;&lt;/row&gt;</ifl:value>
                 </ifl:property>
             </bpmn2:extensionElements>
         </bpmn2:messageFlow>
@@ -831,6 +1049,38 @@
                     <ifl:key>userProperties</ifl:key>
                     <ifl:value></ifl:value>
                 </ifl:property>
+                <ifl:property>
+                    <ifl:key>ackMode</ifl:key>
+                    <ifl:value>AUTOMATIC_IMMEDIATE</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>consumerMode</ifl:key>
+                    <ifl:value>DIRECT</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>Description</ifl:key>
+                    <ifl:value></ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>direction</ifl:key>
+                    <ifl:value>Sender</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>Name</ifl:key>
+                    <ifl:value>direct-omni-consumer</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>queueName</ifl:key>
+                    <ifl:value></ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>system</ifl:key>
+                    <ifl:value>EventMeshSender</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>topicSubscriptions</ifl:key>
+                    <ifl:value>&lt;row&gt;&lt;cell id='listObjectValue'&gt;coffeeshop/order/new/v1/*/*/*/*&lt;/cell&gt;&lt;cell id='listObjectValue'&gt;coffeeshop/order/status/v1/completed/*/*/*/*&lt;/cell&gt;&lt;cell id='listObjectValue'&gt;coffeeshop/order/status/v1/inprogress/*/*/*/*&lt;/cell&gt;&lt;cell id='listObjectValue'&gt;coffeeshop/order/status/v1/outofstock/*/*/*/*&lt;/cell&gt;&lt;cell id='listObjectValue'&gt;coffeeshop/order/status/v1/ready/*/*/*/*&lt;/cell&gt;&lt;/row&gt;</ifl:value>
+                </ifl:property>
             </bpmn2:extensionElements>
         </bpmn2:messageFlow>
         <bpmn2:messageFlow xmlns="" name="OM-Order Update" sourceRef="StartEvent_58" targetRef="Participant_3" id="MessageFlow_62">
@@ -979,6 +1229,22 @@
                     <ifl:key>system</ifl:key>
                     <ifl:value>EventMeshSender</ifl:value>
                 </ifl:property>
+                <ifl:property>
+                    <ifl:key>deliveryMode</ifl:key>
+                    <ifl:value>DIRECT</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>Description</ifl:key>
+                    <ifl:value></ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>Name</ifl:key>
+                    <ifl:value>OM-Order Update</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>system</ifl:key>
+                    <ifl:value>EventMeshReceiver</ifl:value>
+                </ifl:property>
             </bpmn2:extensionElements>
         </bpmn2:messageFlow>
         <bpmn2:messageFlow xmlns="" name="OM-Order Details" sourceRef="StartEvent_67" targetRef="Participant_3" id="MessageFlow_71">
@@ -1126,6 +1392,22 @@
                 <ifl:property>
                     <ifl:key>system</ifl:key>
                     <ifl:value>EventMeshSender</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>deliveryMode</ifl:key>
+                    <ifl:value>DIRECT</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>Description</ifl:key>
+                    <ifl:value></ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>Name</ifl:key>
+                    <ifl:value>OM-Order Details</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>system</ifl:key>
+                    <ifl:value>EventMeshReceiver</ifl:value>
                 </ifl:property>
             </bpmn2:extensionElements>
         </bpmn2:messageFlow>

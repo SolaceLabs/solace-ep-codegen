@@ -22,6 +22,18 @@ public class SapIflowExtensionConfig {
     @JsonProperty
     MessageFlowExt messageFlow;
 
+    @JsonProperty
+    ProcessExt inboundProcess;
+
+    @JsonProperty
+    ProcessExt outboundProcess;
+
+    @JsonProperty
+    ProcessExt calledProcess;
+
+    @JsonProperty
+    CallActivityExt callActivity;
+
     @Data
     @NoArgsConstructor
     public static class MessageFlowExt {
@@ -54,21 +66,33 @@ public class SapIflowExtensionConfig {
         List<ExtProperty> destinationSystemReceiver;
     }
 
-//     @Data
-//     @NoArgsConstructor
-//     public static class ExtPropertyGroup {
+    @Data
+    @NoArgsConstructor
+    public static class ProcessExt {
 
-//         @JsonProperty
-//         protected ExtProperty property;
-// //        protected List<ExtProperty> property;
+        @JsonProperty
+        List<ExtProperty> processExtensions;
 
-//         // public List<ExtProperty> getProperty() {
-//         //     if ( this.property == null ) {
-//         //         property = new ArrayList<>();
-//         //     }
-//         //     return this.property;
-//         // }
-//     }
+        @JsonProperty
+        List<ExtProperty> startEvent;
+
+        @JsonProperty
+        List<ExtProperty> endEvent;
+    }
+
+    @Data
+    @NoArgsConstructor
+    public static class CallActivityExt {
+
+        @JsonProperty
+        List<ExtProperty> mapping;
+
+        @JsonProperty
+        List<ExtProperty> callProcess;
+
+        @JsonProperty
+        List<ExtProperty> topicAssembly;
+    }
 
     @Data
     @NoArgsConstructor
