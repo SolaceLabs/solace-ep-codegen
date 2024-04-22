@@ -77,14 +77,6 @@ public class TestCreateIflowFromEpAsyncApi {
         TDefinitions td = iflowMapper.getOut();
 
         try {
-            // JAXBContext context = JAXBContext.newInstance( 
-            //     TDefinitions.class,
-            //     TStartEvent.class,
-            //     TEndEvent.class,
-            //     TCallActivity.class,
-            //     TSequenceFlow.class,
-            //     TProcess.class,
-            //     TParticipant.class );
             JAXBContext context = JAXBContext.newInstance( 
                     TDefinitions.class,
                     TSapIflowProperty.class,

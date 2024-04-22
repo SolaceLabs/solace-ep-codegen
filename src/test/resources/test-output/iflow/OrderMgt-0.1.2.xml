@@ -106,37 +106,37 @@
         <bpmn2:participant xmlns="" name="Process inbound event from COFFEE.ORDERMGT.STATUS" processRef="Process_5" id="Participant_Process_5" ifl:type="IntegrationProcess">
             <bpmn2:extensionElements/>
         </bpmn2:participant>
-        <bpmn2:participant xmlns="" name="Business Logic for COFFEE.ORDERMGT.STATUS event" processRef="Process_7" id="Participant_Process_7" ifl:type="IntegrationProcess">
+        <bpmn2:participant xmlns="" name="Business Logic for COFFEE.ORDERMGT.STATUS event" processRef="Process_8" id="Participant_Process_8" ifl:type="IntegrationProcess">
             <bpmn2:extensionElements/>
         </bpmn2:participant>
         <bpmn2:participant xmlns="" name="Process inbound event from COFFEE.ORDERMGT.NEWORDER" processRef="Process_18" id="Participant_Process_18" ifl:type="IntegrationProcess">
             <bpmn2:extensionElements/>
         </bpmn2:participant>
-        <bpmn2:participant xmlns="" name="Business Logic for COFFEE.ORDERMGT.NEWORDER event" processRef="Process_20" id="Participant_Process_20" ifl:type="IntegrationProcess">
+        <bpmn2:participant xmlns="" name="Business Logic for COFFEE.ORDERMGT.NEWORDER event" processRef="Process_21" id="Participant_Process_21" ifl:type="IntegrationProcess">
             <bpmn2:extensionElements/>
         </bpmn2:participant>
         <bpmn2:participant xmlns="" name="Process inbound event from Prep_Started_Direct_Consumer" processRef="Process_31" id="Participant_Process_31" ifl:type="IntegrationProcess">
             <bpmn2:extensionElements/>
         </bpmn2:participant>
-        <bpmn2:participant xmlns="" name="Business Logic for Prep_Started_Direct_Consumer event" processRef="Process_33" id="Participant_Process_33" ifl:type="IntegrationProcess">
+        <bpmn2:participant xmlns="" name="Business Logic for Prep_Started_Direct_Consumer event" processRef="Process_34" id="Participant_Process_34" ifl:type="IntegrationProcess">
             <bpmn2:extensionElements/>
         </bpmn2:participant>
         <bpmn2:participant xmlns="" name="Process inbound event from direct-omni-consumer" processRef="Process_44" id="Participant_Process_44" ifl:type="IntegrationProcess">
             <bpmn2:extensionElements/>
         </bpmn2:participant>
-        <bpmn2:participant xmlns="" name="Business Logic for direct-omni-consumer event" processRef="Process_46" id="Participant_Process_46" ifl:type="IntegrationProcess">
+        <bpmn2:participant xmlns="" name="Business Logic for direct-omni-consumer event" processRef="Process_47" id="Participant_Process_47" ifl:type="IntegrationProcess">
             <bpmn2:extensionElements/>
         </bpmn2:participant>
         <bpmn2:participant xmlns="" name="Process source data for OM-Order Update event, send to Event Mesh" processRef="Process_57" id="Participant_Process_57" ifl:type="IntegrationProcess">
             <bpmn2:extensionElements/>
         </bpmn2:participant>
-        <bpmn2:participant xmlns="" name="Generate OM-Order Update event" processRef="Process_59" id="Participant_Process_59" ifl:type="IntegrationProcess">
+        <bpmn2:participant xmlns="" name="Generate OM-Order Update event" processRef="Process_60" id="Participant_Process_60" ifl:type="IntegrationProcess">
             <bpmn2:extensionElements/>
         </bpmn2:participant>
-        <bpmn2:participant xmlns="" name="Process source data for OM-Order Details event, send to Event Mesh" processRef="Process_66" id="Participant_Process_66" ifl:type="IntegrationProcess">
+        <bpmn2:participant xmlns="" name="Process source data for OM-Order Details event, send to Event Mesh" processRef="Process_74" id="Participant_Process_74" ifl:type="IntegrationProcess">
             <bpmn2:extensionElements/>
         </bpmn2:participant>
-        <bpmn2:participant xmlns="" name="Generate OM-Order Details event" processRef="Process_68" id="Participant_Process_68" ifl:type="IntegrationProcess">
+        <bpmn2:participant xmlns="" name="Generate OM-Order Details event" processRef="Process_77" id="Participant_Process_77" ifl:type="IntegrationProcess">
             <bpmn2:extensionElements/>
         </bpmn2:participant>
         <bpmn2:messageFlow xmlns="" name="COFFEE.ORDERMGT.STATUS" sourceRef="Participant_1" targetRef="StartEvent_6" id="MessageFlow_17">
@@ -1083,7 +1083,7 @@
                 </ifl:property>
             </bpmn2:extensionElements>
         </bpmn2:messageFlow>
-        <bpmn2:messageFlow xmlns="" name="OM-Order Update" sourceRef="StartEvent_58" targetRef="Participant_3" id="MessageFlow_62">
+        <bpmn2:messageFlow xmlns="" name="OM-Order Update" sourceRef="StartEvent_58" targetRef="Participant_3" id="MessageFlow_66">
             <bpmn2:extensionElements>
                 <ifl:property>
                     <ifl:key>accessTokenFetchIntervalInSecs</ifl:key>
@@ -1247,7 +1247,7 @@
                 </ifl:property>
             </bpmn2:extensionElements>
         </bpmn2:messageFlow>
-        <bpmn2:messageFlow xmlns="" name="OM-Order Details" sourceRef="StartEvent_67" targetRef="Participant_3" id="MessageFlow_71">
+        <bpmn2:messageFlow xmlns="" name="OM-Order Details" sourceRef="StartEvent_75" targetRef="Participant_3" id="MessageFlow_83">
             <bpmn2:extensionElements>
                 <ifl:property>
                     <ifl:key>accessTokenFetchIntervalInSecs</ifl:key>
@@ -1413,181 +1413,1305 @@
         </bpmn2:messageFlow>
     </bpmn2:collaboration>
     <bpmn2:process name="Process inbound event from COFFEE.ORDERMGT.STATUS" id="Process_5">
+        <bpmn2:extensionElements>
+            <ifl:property>
+                <ifl:key>transactionTimeout</ifl:key>
+                <ifl:value>30</ifl:value>
+            </ifl:property>
+            <ifl:property>
+                <ifl:key>componentVersion</ifl:key>
+                <ifl:value>1.2</ifl:value>
+            </ifl:property>
+            <ifl:property>
+                <ifl:key>cmdVariantUri</ifl:key>
+                <ifl:value>ctype::FlowElementVariant/cname::IntegrationProcess/version::1.2.1</ifl:value>
+            </ifl:property>
+            <ifl:property>
+                <ifl:key>transactionalHandling</ifl:key>
+                <ifl:value>Not Required</ifl:value>
+            </ifl:property>
+        </bpmn2:extensionElements>
         <bpmn2:startEvent name="COFFEE.ORDERMGT.STATUS" id="StartEvent_6">
+            <bpmn2:extensionElements>
+                <ifl:property>
+                    <ifl:key>componentVersion</ifl:key>
+                    <ifl:value>1.0</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>cmdVariantUri</ifl:key>
+                    <ifl:value>ctype::FlowstepVariant/cname::MessageStartEvent/version::1.0</ifl:value>
+                </ifl:property>
+            </bpmn2:extensionElements>
             <bpmn2:outgoing xmlns="">SequenceFlow_12</bpmn2:outgoing>
         </bpmn2:startEvent>
-        <bpmn2:callActivity name="Validate COFFEE.ORDERMGT.STATUS schema" id="CallActivity_9">
+        <bpmn2:callActivity name="Validate COFFEE.ORDERMGT.STATUS schema" id="CallActivity_7">
+            <bpmn2:extensionElements>
+                <ifl:property>
+                    <ifl:key>mappingSourceValue</ifl:key>
+                    <ifl:value></ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>mappingType</ifl:key>
+                    <ifl:value>MessageMapping</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>mappingReference</ifl:key>
+                    <ifl:value>static</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>componentVersion</ifl:key>
+                    <ifl:value>1.3</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>activityType</ifl:key>
+                    <ifl:value>Mapping</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>cmdVariantUri</ifl:key>
+                    <ifl:value>ctype::FlowstepVariant/cname::MessageMapping/version::1.3.1</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>messageMappingBundleId</ifl:key>
+                    <ifl:value></ifl:value>
+                </ifl:property>
+            </bpmn2:extensionElements>
             <bpmn2:incoming xmlns="">SequenceFlow_12</bpmn2:incoming>
             <bpmn2:outgoing xmlns="">SequenceFlow_13</bpmn2:outgoing>
         </bpmn2:callActivity>
-        <bpmn2:callActivity name="Business Logic for COFFEE.ORDERMGT.STATUS event" id="CallActivity_10">
+        <bpmn2:callActivity name="Business Logic for COFFEE.ORDERMGT.STATUS event" id="CallActivity_11">
+            <bpmn2:extensionElements>
+                <ifl:property>
+                    <ifl:key>processId</ifl:key>
+                    <ifl:value>Process_8</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>componentVersion</ifl:key>
+                    <ifl:value>1.0</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>activityType</ifl:key>
+                    <ifl:value>ProcessCallElement</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>cmdVariantUri</ifl:key>
+                    <ifl:value>ctype::FlowstepVariant/cname::NonLoopingProcess/version::1.0.3</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>subActivityType</ifl:key>
+                    <ifl:value>NonLoopingProcess</ifl:value>
+                </ifl:property>
+            </bpmn2:extensionElements>
             <bpmn2:incoming xmlns="">SequenceFlow_13</bpmn2:incoming>
             <bpmn2:outgoing xmlns="">SequenceFlow_14</bpmn2:outgoing>
         </bpmn2:callActivity>
         <bpmn2:endEvent name="Send to Destination Receiver" id="EndEvent_6">
+            <bpmn2:extensionElements>
+                <ifl:property>
+                    <ifl:key>componentVersion</ifl:key>
+                    <ifl:value>1.1</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>cmdVariantUri</ifl:key>
+                    <ifl:value>ctype::FlowstepVariant/cname::MessageEndEvent/version::1.1.0</ifl:value>
+                </ifl:property>
+            </bpmn2:extensionElements>
             <bpmn2:incoming xmlns="">SequenceFlow_14</bpmn2:incoming>
         </bpmn2:endEvent>
-        <bpmn2:sequenceFlow sourceRef="StartEvent_6" targetRef="CallActivity_9" id="SequenceFlow_12"/>
-        <bpmn2:sequenceFlow sourceRef="CallActivity_9" targetRef="CallActivity_10" id="SequenceFlow_13"/>
-        <bpmn2:sequenceFlow sourceRef="CallActivity_10" targetRef="EndEvent_6" id="SequenceFlow_14"/>
+        <bpmn2:sequenceFlow sourceRef="StartEvent_6" targetRef="CallActivity_7" id="SequenceFlow_12"/>
+        <bpmn2:sequenceFlow sourceRef="CallActivity_7" targetRef="CallActivity_11" id="SequenceFlow_13"/>
+        <bpmn2:sequenceFlow sourceRef="CallActivity_11" targetRef="EndEvent_6" id="SequenceFlow_14"/>
     </bpmn2:process>
-    <bpmn2:process name="Business Logic for COFFEE.ORDERMGT.STATUS event" id="Process_7">
-        <bpmn2:startEvent name="From inbound COFFEE.ORDERMGT.STATUS process" id="StartEvent_8">
+    <bpmn2:process name="Business Logic for COFFEE.ORDERMGT.STATUS event" id="Process_8">
+        <bpmn2:extensionElements>
+            <ifl:property>
+                <ifl:key>transactionTimeout</ifl:key>
+                <ifl:value>30</ifl:value>
+            </ifl:property>
+            <ifl:property>
+                <ifl:key>processType</ifl:key>
+                <ifl:value>directCall</ifl:value>
+            </ifl:property>
+            <ifl:property>
+                <ifl:key>componentVersion</ifl:key>
+                <ifl:value>1.1</ifl:value>
+            </ifl:property>
+            <ifl:property>
+                <ifl:key>cmdVariantUri</ifl:key>
+                <ifl:value>ctype::FlowElementVariant/cname::LocalIntegrationProcess/version::1.1.3</ifl:value>
+            </ifl:property>
+            <ifl:property>
+                <ifl:key>transactionalHandling</ifl:key>
+                <ifl:value>From Calling Process</ifl:value>
+            </ifl:property>
+        </bpmn2:extensionElements>
+        <bpmn2:startEvent name="From inbound COFFEE.ORDERMGT.STATUS process" id="StartEvent_9">
+            <bpmn2:extensionElements>
+                <ifl:property>
+                    <ifl:key>cmdVariantUri</ifl:key>
+                    <ifl:value>ctype::FlowstepVariant/cname::StartEvent</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>activityType</ifl:key>
+                    <ifl:value>StartEvent</ifl:value>
+                </ifl:property>
+            </bpmn2:extensionElements>
             <bpmn2:outgoing xmlns="">SequenceFlow_15</bpmn2:outgoing>
         </bpmn2:startEvent>
-        <bpmn2:callActivity name="Stub map for transforming source data to COFFEE.ORDERMGT.STATUS JSON" id="CallActivity_11">
+        <bpmn2:callActivity name="Stub map for transforming source data to COFFEE.ORDERMGT.STATUS JSON" id="CallActivity_10">
+            <bpmn2:extensionElements>
+                <ifl:property>
+                    <ifl:key>mappingSourceValue</ifl:key>
+                    <ifl:value></ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>mappingType</ifl:key>
+                    <ifl:value>MessageMapping</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>mappingReference</ifl:key>
+                    <ifl:value>static</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>componentVersion</ifl:key>
+                    <ifl:value>1.3</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>activityType</ifl:key>
+                    <ifl:value>Mapping</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>cmdVariantUri</ifl:key>
+                    <ifl:value>ctype::FlowstepVariant/cname::MessageMapping/version::1.3.1</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>messageMappingBundleId</ifl:key>
+                    <ifl:value></ifl:value>
+                </ifl:property>
+            </bpmn2:extensionElements>
             <bpmn2:incoming xmlns="">SequenceFlow_15</bpmn2:incoming>
             <bpmn2:outgoing xmlns="">SequenceFlow_16</bpmn2:outgoing>
         </bpmn2:callActivity>
-        <bpmn2:endEvent name="Return to COFFEE.ORDERMGT.STATUS process" id="EndEvent_8">
+        <bpmn2:endEvent name="Return to COFFEE.ORDERMGT.STATUS process" id="EndEvent_9">
+            <bpmn2:extensionElements>
+                <ifl:property>
+                    <ifl:key>cmdVariantUri</ifl:key>
+                    <ifl:value>ctype::FlowstepVariant/cname::EndEvent</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>activityType</ifl:key>
+                    <ifl:value>EndEvent</ifl:value>
+                </ifl:property>
+            </bpmn2:extensionElements>
             <bpmn2:incoming xmlns="">SequenceFlow_16</bpmn2:incoming>
         </bpmn2:endEvent>
-        <bpmn2:sequenceFlow sourceRef="StartEvent_8" targetRef="CallActivity_11" id="SequenceFlow_15"/>
-        <bpmn2:sequenceFlow sourceRef="CallActivity_11" targetRef="EndEvent_8" id="SequenceFlow_16"/>
+        <bpmn2:sequenceFlow sourceRef="StartEvent_9" targetRef="CallActivity_10" id="SequenceFlow_15"/>
+        <bpmn2:sequenceFlow sourceRef="CallActivity_10" targetRef="EndEvent_9" id="SequenceFlow_16"/>
     </bpmn2:process>
     <bpmn2:process name="Process inbound event from COFFEE.ORDERMGT.NEWORDER" id="Process_18">
+        <bpmn2:extensionElements>
+            <ifl:property>
+                <ifl:key>transactionTimeout</ifl:key>
+                <ifl:value>30</ifl:value>
+            </ifl:property>
+            <ifl:property>
+                <ifl:key>componentVersion</ifl:key>
+                <ifl:value>1.2</ifl:value>
+            </ifl:property>
+            <ifl:property>
+                <ifl:key>cmdVariantUri</ifl:key>
+                <ifl:value>ctype::FlowElementVariant/cname::IntegrationProcess/version::1.2.1</ifl:value>
+            </ifl:property>
+            <ifl:property>
+                <ifl:key>transactionalHandling</ifl:key>
+                <ifl:value>Not Required</ifl:value>
+            </ifl:property>
+        </bpmn2:extensionElements>
         <bpmn2:startEvent name="COFFEE.ORDERMGT.NEWORDER" id="StartEvent_19">
+            <bpmn2:extensionElements>
+                <ifl:property>
+                    <ifl:key>componentVersion</ifl:key>
+                    <ifl:value>1.0</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>cmdVariantUri</ifl:key>
+                    <ifl:value>ctype::FlowstepVariant/cname::MessageStartEvent/version::1.0</ifl:value>
+                </ifl:property>
+            </bpmn2:extensionElements>
             <bpmn2:outgoing xmlns="">SequenceFlow_25</bpmn2:outgoing>
         </bpmn2:startEvent>
-        <bpmn2:callActivity name="Validate COFFEE.ORDERMGT.NEWORDER schema" id="CallActivity_22">
+        <bpmn2:callActivity name="Validate COFFEE.ORDERMGT.NEWORDER schema" id="CallActivity_20">
+            <bpmn2:extensionElements>
+                <ifl:property>
+                    <ifl:key>mappingSourceValue</ifl:key>
+                    <ifl:value></ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>mappingType</ifl:key>
+                    <ifl:value>MessageMapping</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>mappingReference</ifl:key>
+                    <ifl:value>static</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>componentVersion</ifl:key>
+                    <ifl:value>1.3</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>activityType</ifl:key>
+                    <ifl:value>Mapping</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>cmdVariantUri</ifl:key>
+                    <ifl:value>ctype::FlowstepVariant/cname::MessageMapping/version::1.3.1</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>messageMappingBundleId</ifl:key>
+                    <ifl:value></ifl:value>
+                </ifl:property>
+            </bpmn2:extensionElements>
             <bpmn2:incoming xmlns="">SequenceFlow_25</bpmn2:incoming>
             <bpmn2:outgoing xmlns="">SequenceFlow_26</bpmn2:outgoing>
         </bpmn2:callActivity>
-        <bpmn2:callActivity name="Business Logic for COFFEE.ORDERMGT.NEWORDER event" id="CallActivity_23">
+        <bpmn2:callActivity name="Business Logic for COFFEE.ORDERMGT.NEWORDER event" id="CallActivity_24">
+            <bpmn2:extensionElements>
+                <ifl:property>
+                    <ifl:key>processId</ifl:key>
+                    <ifl:value>Process_21</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>componentVersion</ifl:key>
+                    <ifl:value>1.0</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>activityType</ifl:key>
+                    <ifl:value>ProcessCallElement</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>cmdVariantUri</ifl:key>
+                    <ifl:value>ctype::FlowstepVariant/cname::NonLoopingProcess/version::1.0.3</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>subActivityType</ifl:key>
+                    <ifl:value>NonLoopingProcess</ifl:value>
+                </ifl:property>
+            </bpmn2:extensionElements>
             <bpmn2:incoming xmlns="">SequenceFlow_26</bpmn2:incoming>
             <bpmn2:outgoing xmlns="">SequenceFlow_27</bpmn2:outgoing>
         </bpmn2:callActivity>
         <bpmn2:endEvent name="Send to Destination Receiver" id="EndEvent_19">
+            <bpmn2:extensionElements>
+                <ifl:property>
+                    <ifl:key>componentVersion</ifl:key>
+                    <ifl:value>1.1</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>cmdVariantUri</ifl:key>
+                    <ifl:value>ctype::FlowstepVariant/cname::MessageEndEvent/version::1.1.0</ifl:value>
+                </ifl:property>
+            </bpmn2:extensionElements>
             <bpmn2:incoming xmlns="">SequenceFlow_27</bpmn2:incoming>
         </bpmn2:endEvent>
-        <bpmn2:sequenceFlow sourceRef="StartEvent_19" targetRef="CallActivity_22" id="SequenceFlow_25"/>
-        <bpmn2:sequenceFlow sourceRef="CallActivity_22" targetRef="CallActivity_23" id="SequenceFlow_26"/>
-        <bpmn2:sequenceFlow sourceRef="CallActivity_23" targetRef="EndEvent_19" id="SequenceFlow_27"/>
+        <bpmn2:sequenceFlow sourceRef="StartEvent_19" targetRef="CallActivity_20" id="SequenceFlow_25"/>
+        <bpmn2:sequenceFlow sourceRef="CallActivity_20" targetRef="CallActivity_24" id="SequenceFlow_26"/>
+        <bpmn2:sequenceFlow sourceRef="CallActivity_24" targetRef="EndEvent_19" id="SequenceFlow_27"/>
     </bpmn2:process>
-    <bpmn2:process name="Business Logic for COFFEE.ORDERMGT.NEWORDER event" id="Process_20">
-        <bpmn2:startEvent name="From inbound COFFEE.ORDERMGT.NEWORDER process" id="StartEvent_21">
+    <bpmn2:process name="Business Logic for COFFEE.ORDERMGT.NEWORDER event" id="Process_21">
+        <bpmn2:extensionElements>
+            <ifl:property>
+                <ifl:key>transactionTimeout</ifl:key>
+                <ifl:value>30</ifl:value>
+            </ifl:property>
+            <ifl:property>
+                <ifl:key>processType</ifl:key>
+                <ifl:value>directCall</ifl:value>
+            </ifl:property>
+            <ifl:property>
+                <ifl:key>componentVersion</ifl:key>
+                <ifl:value>1.1</ifl:value>
+            </ifl:property>
+            <ifl:property>
+                <ifl:key>cmdVariantUri</ifl:key>
+                <ifl:value>ctype::FlowElementVariant/cname::LocalIntegrationProcess/version::1.1.3</ifl:value>
+            </ifl:property>
+            <ifl:property>
+                <ifl:key>transactionalHandling</ifl:key>
+                <ifl:value>From Calling Process</ifl:value>
+            </ifl:property>
+        </bpmn2:extensionElements>
+        <bpmn2:startEvent name="From inbound COFFEE.ORDERMGT.NEWORDER process" id="StartEvent_22">
+            <bpmn2:extensionElements>
+                <ifl:property>
+                    <ifl:key>cmdVariantUri</ifl:key>
+                    <ifl:value>ctype::FlowstepVariant/cname::StartEvent</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>activityType</ifl:key>
+                    <ifl:value>StartEvent</ifl:value>
+                </ifl:property>
+            </bpmn2:extensionElements>
             <bpmn2:outgoing xmlns="">SequenceFlow_28</bpmn2:outgoing>
         </bpmn2:startEvent>
-        <bpmn2:callActivity name="Stub map for transforming source data to COFFEE.ORDERMGT.NEWORDER JSON" id="CallActivity_24">
+        <bpmn2:callActivity name="Stub map for transforming source data to COFFEE.ORDERMGT.NEWORDER JSON" id="CallActivity_23">
+            <bpmn2:extensionElements>
+                <ifl:property>
+                    <ifl:key>mappingSourceValue</ifl:key>
+                    <ifl:value></ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>mappingType</ifl:key>
+                    <ifl:value>MessageMapping</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>mappingReference</ifl:key>
+                    <ifl:value>static</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>componentVersion</ifl:key>
+                    <ifl:value>1.3</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>activityType</ifl:key>
+                    <ifl:value>Mapping</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>cmdVariantUri</ifl:key>
+                    <ifl:value>ctype::FlowstepVariant/cname::MessageMapping/version::1.3.1</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>messageMappingBundleId</ifl:key>
+                    <ifl:value></ifl:value>
+                </ifl:property>
+            </bpmn2:extensionElements>
             <bpmn2:incoming xmlns="">SequenceFlow_28</bpmn2:incoming>
             <bpmn2:outgoing xmlns="">SequenceFlow_29</bpmn2:outgoing>
         </bpmn2:callActivity>
-        <bpmn2:endEvent name="Return to COFFEE.ORDERMGT.NEWORDER process" id="EndEvent_21">
+        <bpmn2:endEvent name="Return to COFFEE.ORDERMGT.NEWORDER process" id="EndEvent_22">
+            <bpmn2:extensionElements>
+                <ifl:property>
+                    <ifl:key>cmdVariantUri</ifl:key>
+                    <ifl:value>ctype::FlowstepVariant/cname::EndEvent</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>activityType</ifl:key>
+                    <ifl:value>EndEvent</ifl:value>
+                </ifl:property>
+            </bpmn2:extensionElements>
             <bpmn2:incoming xmlns="">SequenceFlow_29</bpmn2:incoming>
         </bpmn2:endEvent>
-        <bpmn2:sequenceFlow sourceRef="StartEvent_21" targetRef="CallActivity_24" id="SequenceFlow_28"/>
-        <bpmn2:sequenceFlow sourceRef="CallActivity_24" targetRef="EndEvent_21" id="SequenceFlow_29"/>
+        <bpmn2:sequenceFlow sourceRef="StartEvent_22" targetRef="CallActivity_23" id="SequenceFlow_28"/>
+        <bpmn2:sequenceFlow sourceRef="CallActivity_23" targetRef="EndEvent_22" id="SequenceFlow_29"/>
     </bpmn2:process>
     <bpmn2:process name="Process inbound event from Prep_Started_Direct_Consumer" id="Process_31">
+        <bpmn2:extensionElements>
+            <ifl:property>
+                <ifl:key>transactionTimeout</ifl:key>
+                <ifl:value>30</ifl:value>
+            </ifl:property>
+            <ifl:property>
+                <ifl:key>componentVersion</ifl:key>
+                <ifl:value>1.2</ifl:value>
+            </ifl:property>
+            <ifl:property>
+                <ifl:key>cmdVariantUri</ifl:key>
+                <ifl:value>ctype::FlowElementVariant/cname::IntegrationProcess/version::1.2.1</ifl:value>
+            </ifl:property>
+            <ifl:property>
+                <ifl:key>transactionalHandling</ifl:key>
+                <ifl:value>Not Required</ifl:value>
+            </ifl:property>
+        </bpmn2:extensionElements>
         <bpmn2:startEvent name="Prep_Started_Direct_Consumer" id="StartEvent_32">
+            <bpmn2:extensionElements>
+                <ifl:property>
+                    <ifl:key>componentVersion</ifl:key>
+                    <ifl:value>1.0</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>cmdVariantUri</ifl:key>
+                    <ifl:value>ctype::FlowstepVariant/cname::MessageStartEvent/version::1.0</ifl:value>
+                </ifl:property>
+            </bpmn2:extensionElements>
             <bpmn2:outgoing xmlns="">SequenceFlow_38</bpmn2:outgoing>
         </bpmn2:startEvent>
-        <bpmn2:callActivity name="Validate Prep_Started_Direct_Consumer schema" id="CallActivity_35">
+        <bpmn2:callActivity name="Validate Prep_Started_Direct_Consumer schema" id="CallActivity_33">
+            <bpmn2:extensionElements>
+                <ifl:property>
+                    <ifl:key>mappingSourceValue</ifl:key>
+                    <ifl:value></ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>mappingType</ifl:key>
+                    <ifl:value>MessageMapping</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>mappingReference</ifl:key>
+                    <ifl:value>static</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>componentVersion</ifl:key>
+                    <ifl:value>1.3</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>activityType</ifl:key>
+                    <ifl:value>Mapping</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>cmdVariantUri</ifl:key>
+                    <ifl:value>ctype::FlowstepVariant/cname::MessageMapping/version::1.3.1</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>messageMappingBundleId</ifl:key>
+                    <ifl:value></ifl:value>
+                </ifl:property>
+            </bpmn2:extensionElements>
             <bpmn2:incoming xmlns="">SequenceFlow_38</bpmn2:incoming>
             <bpmn2:outgoing xmlns="">SequenceFlow_39</bpmn2:outgoing>
         </bpmn2:callActivity>
-        <bpmn2:callActivity name="Business Logic for Prep_Started_Direct_Consumer event" id="CallActivity_36">
+        <bpmn2:callActivity name="Business Logic for Prep_Started_Direct_Consumer event" id="CallActivity_37">
+            <bpmn2:extensionElements>
+                <ifl:property>
+                    <ifl:key>processId</ifl:key>
+                    <ifl:value>Process_34</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>componentVersion</ifl:key>
+                    <ifl:value>1.0</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>activityType</ifl:key>
+                    <ifl:value>ProcessCallElement</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>cmdVariantUri</ifl:key>
+                    <ifl:value>ctype::FlowstepVariant/cname::NonLoopingProcess/version::1.0.3</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>subActivityType</ifl:key>
+                    <ifl:value>NonLoopingProcess</ifl:value>
+                </ifl:property>
+            </bpmn2:extensionElements>
             <bpmn2:incoming xmlns="">SequenceFlow_39</bpmn2:incoming>
             <bpmn2:outgoing xmlns="">SequenceFlow_40</bpmn2:outgoing>
         </bpmn2:callActivity>
         <bpmn2:endEvent name="Send to Destination Receiver" id="EndEvent_32">
+            <bpmn2:extensionElements>
+                <ifl:property>
+                    <ifl:key>componentVersion</ifl:key>
+                    <ifl:value>1.1</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>cmdVariantUri</ifl:key>
+                    <ifl:value>ctype::FlowstepVariant/cname::MessageEndEvent/version::1.1.0</ifl:value>
+                </ifl:property>
+            </bpmn2:extensionElements>
             <bpmn2:incoming xmlns="">SequenceFlow_40</bpmn2:incoming>
         </bpmn2:endEvent>
-        <bpmn2:sequenceFlow sourceRef="StartEvent_32" targetRef="CallActivity_35" id="SequenceFlow_38"/>
-        <bpmn2:sequenceFlow sourceRef="CallActivity_35" targetRef="CallActivity_36" id="SequenceFlow_39"/>
-        <bpmn2:sequenceFlow sourceRef="CallActivity_36" targetRef="EndEvent_32" id="SequenceFlow_40"/>
+        <bpmn2:sequenceFlow sourceRef="StartEvent_32" targetRef="CallActivity_33" id="SequenceFlow_38"/>
+        <bpmn2:sequenceFlow sourceRef="CallActivity_33" targetRef="CallActivity_37" id="SequenceFlow_39"/>
+        <bpmn2:sequenceFlow sourceRef="CallActivity_37" targetRef="EndEvent_32" id="SequenceFlow_40"/>
     </bpmn2:process>
-    <bpmn2:process name="Business Logic for Prep_Started_Direct_Consumer event" id="Process_33">
-        <bpmn2:startEvent name="From inbound Prep_Started_Direct_Consumer process" id="StartEvent_34">
+    <bpmn2:process name="Business Logic for Prep_Started_Direct_Consumer event" id="Process_34">
+        <bpmn2:extensionElements>
+            <ifl:property>
+                <ifl:key>transactionTimeout</ifl:key>
+                <ifl:value>30</ifl:value>
+            </ifl:property>
+            <ifl:property>
+                <ifl:key>processType</ifl:key>
+                <ifl:value>directCall</ifl:value>
+            </ifl:property>
+            <ifl:property>
+                <ifl:key>componentVersion</ifl:key>
+                <ifl:value>1.1</ifl:value>
+            </ifl:property>
+            <ifl:property>
+                <ifl:key>cmdVariantUri</ifl:key>
+                <ifl:value>ctype::FlowElementVariant/cname::LocalIntegrationProcess/version::1.1.3</ifl:value>
+            </ifl:property>
+            <ifl:property>
+                <ifl:key>transactionalHandling</ifl:key>
+                <ifl:value>From Calling Process</ifl:value>
+            </ifl:property>
+        </bpmn2:extensionElements>
+        <bpmn2:startEvent name="From inbound Prep_Started_Direct_Consumer process" id="StartEvent_35">
+            <bpmn2:extensionElements>
+                <ifl:property>
+                    <ifl:key>cmdVariantUri</ifl:key>
+                    <ifl:value>ctype::FlowstepVariant/cname::StartEvent</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>activityType</ifl:key>
+                    <ifl:value>StartEvent</ifl:value>
+                </ifl:property>
+            </bpmn2:extensionElements>
             <bpmn2:outgoing xmlns="">SequenceFlow_41</bpmn2:outgoing>
         </bpmn2:startEvent>
-        <bpmn2:callActivity name="Stub map for transforming source data to Prep_Started_Direct_Consumer JSON" id="CallActivity_37">
+        <bpmn2:callActivity name="Stub map for transforming source data to Prep_Started_Direct_Consumer JSON" id="CallActivity_36">
+            <bpmn2:extensionElements>
+                <ifl:property>
+                    <ifl:key>mappingSourceValue</ifl:key>
+                    <ifl:value></ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>mappingType</ifl:key>
+                    <ifl:value>MessageMapping</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>mappingReference</ifl:key>
+                    <ifl:value>static</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>componentVersion</ifl:key>
+                    <ifl:value>1.3</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>activityType</ifl:key>
+                    <ifl:value>Mapping</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>cmdVariantUri</ifl:key>
+                    <ifl:value>ctype::FlowstepVariant/cname::MessageMapping/version::1.3.1</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>messageMappingBundleId</ifl:key>
+                    <ifl:value></ifl:value>
+                </ifl:property>
+            </bpmn2:extensionElements>
             <bpmn2:incoming xmlns="">SequenceFlow_41</bpmn2:incoming>
             <bpmn2:outgoing xmlns="">SequenceFlow_42</bpmn2:outgoing>
         </bpmn2:callActivity>
-        <bpmn2:endEvent name="Return to Prep_Started_Direct_Consumer process" id="EndEvent_34">
+        <bpmn2:endEvent name="Return to Prep_Started_Direct_Consumer process" id="EndEvent_35">
+            <bpmn2:extensionElements>
+                <ifl:property>
+                    <ifl:key>cmdVariantUri</ifl:key>
+                    <ifl:value>ctype::FlowstepVariant/cname::EndEvent</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>activityType</ifl:key>
+                    <ifl:value>EndEvent</ifl:value>
+                </ifl:property>
+            </bpmn2:extensionElements>
             <bpmn2:incoming xmlns="">SequenceFlow_42</bpmn2:incoming>
         </bpmn2:endEvent>
-        <bpmn2:sequenceFlow sourceRef="StartEvent_34" targetRef="CallActivity_37" id="SequenceFlow_41"/>
-        <bpmn2:sequenceFlow sourceRef="CallActivity_37" targetRef="EndEvent_34" id="SequenceFlow_42"/>
+        <bpmn2:sequenceFlow sourceRef="StartEvent_35" targetRef="CallActivity_36" id="SequenceFlow_41"/>
+        <bpmn2:sequenceFlow sourceRef="CallActivity_36" targetRef="EndEvent_35" id="SequenceFlow_42"/>
     </bpmn2:process>
     <bpmn2:process name="Process inbound event from direct-omni-consumer" id="Process_44">
+        <bpmn2:extensionElements>
+            <ifl:property>
+                <ifl:key>transactionTimeout</ifl:key>
+                <ifl:value>30</ifl:value>
+            </ifl:property>
+            <ifl:property>
+                <ifl:key>componentVersion</ifl:key>
+                <ifl:value>1.2</ifl:value>
+            </ifl:property>
+            <ifl:property>
+                <ifl:key>cmdVariantUri</ifl:key>
+                <ifl:value>ctype::FlowElementVariant/cname::IntegrationProcess/version::1.2.1</ifl:value>
+            </ifl:property>
+            <ifl:property>
+                <ifl:key>transactionalHandling</ifl:key>
+                <ifl:value>Not Required</ifl:value>
+            </ifl:property>
+        </bpmn2:extensionElements>
         <bpmn2:startEvent name="direct-omni-consumer" id="StartEvent_45">
+            <bpmn2:extensionElements>
+                <ifl:property>
+                    <ifl:key>componentVersion</ifl:key>
+                    <ifl:value>1.0</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>cmdVariantUri</ifl:key>
+                    <ifl:value>ctype::FlowstepVariant/cname::MessageStartEvent/version::1.0</ifl:value>
+                </ifl:property>
+            </bpmn2:extensionElements>
             <bpmn2:outgoing xmlns="">SequenceFlow_51</bpmn2:outgoing>
         </bpmn2:startEvent>
-        <bpmn2:callActivity name="Validate direct-omni-consumer schema" id="CallActivity_48">
+        <bpmn2:callActivity name="Validate direct-omni-consumer schema" id="CallActivity_46">
+            <bpmn2:extensionElements>
+                <ifl:property>
+                    <ifl:key>mappingSourceValue</ifl:key>
+                    <ifl:value></ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>mappingType</ifl:key>
+                    <ifl:value>MessageMapping</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>mappingReference</ifl:key>
+                    <ifl:value>static</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>componentVersion</ifl:key>
+                    <ifl:value>1.3</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>activityType</ifl:key>
+                    <ifl:value>Mapping</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>cmdVariantUri</ifl:key>
+                    <ifl:value>ctype::FlowstepVariant/cname::MessageMapping/version::1.3.1</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>messageMappingBundleId</ifl:key>
+                    <ifl:value></ifl:value>
+                </ifl:property>
+            </bpmn2:extensionElements>
             <bpmn2:incoming xmlns="">SequenceFlow_51</bpmn2:incoming>
             <bpmn2:outgoing xmlns="">SequenceFlow_52</bpmn2:outgoing>
         </bpmn2:callActivity>
-        <bpmn2:callActivity name="Business Logic for direct-omni-consumer event" id="CallActivity_49">
+        <bpmn2:callActivity name="Business Logic for direct-omni-consumer event" id="CallActivity_50">
+            <bpmn2:extensionElements>
+                <ifl:property>
+                    <ifl:key>processId</ifl:key>
+                    <ifl:value>Process_47</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>componentVersion</ifl:key>
+                    <ifl:value>1.0</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>activityType</ifl:key>
+                    <ifl:value>ProcessCallElement</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>cmdVariantUri</ifl:key>
+                    <ifl:value>ctype::FlowstepVariant/cname::NonLoopingProcess/version::1.0.3</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>subActivityType</ifl:key>
+                    <ifl:value>NonLoopingProcess</ifl:value>
+                </ifl:property>
+            </bpmn2:extensionElements>
             <bpmn2:incoming xmlns="">SequenceFlow_52</bpmn2:incoming>
             <bpmn2:outgoing xmlns="">SequenceFlow_53</bpmn2:outgoing>
         </bpmn2:callActivity>
         <bpmn2:endEvent name="Send to Destination Receiver" id="EndEvent_45">
+            <bpmn2:extensionElements>
+                <ifl:property>
+                    <ifl:key>componentVersion</ifl:key>
+                    <ifl:value>1.1</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>cmdVariantUri</ifl:key>
+                    <ifl:value>ctype::FlowstepVariant/cname::MessageEndEvent/version::1.1.0</ifl:value>
+                </ifl:property>
+            </bpmn2:extensionElements>
             <bpmn2:incoming xmlns="">SequenceFlow_53</bpmn2:incoming>
         </bpmn2:endEvent>
-        <bpmn2:sequenceFlow sourceRef="StartEvent_45" targetRef="CallActivity_48" id="SequenceFlow_51"/>
-        <bpmn2:sequenceFlow sourceRef="CallActivity_48" targetRef="CallActivity_49" id="SequenceFlow_52"/>
-        <bpmn2:sequenceFlow sourceRef="CallActivity_49" targetRef="EndEvent_45" id="SequenceFlow_53"/>
+        <bpmn2:sequenceFlow sourceRef="StartEvent_45" targetRef="CallActivity_46" id="SequenceFlow_51"/>
+        <bpmn2:sequenceFlow sourceRef="CallActivity_46" targetRef="CallActivity_50" id="SequenceFlow_52"/>
+        <bpmn2:sequenceFlow sourceRef="CallActivity_50" targetRef="EndEvent_45" id="SequenceFlow_53"/>
     </bpmn2:process>
-    <bpmn2:process name="Business Logic for direct-omni-consumer event" id="Process_46">
-        <bpmn2:startEvent name="From inbound direct-omni-consumer process" id="StartEvent_47">
+    <bpmn2:process name="Business Logic for direct-omni-consumer event" id="Process_47">
+        <bpmn2:extensionElements>
+            <ifl:property>
+                <ifl:key>transactionTimeout</ifl:key>
+                <ifl:value>30</ifl:value>
+            </ifl:property>
+            <ifl:property>
+                <ifl:key>processType</ifl:key>
+                <ifl:value>directCall</ifl:value>
+            </ifl:property>
+            <ifl:property>
+                <ifl:key>componentVersion</ifl:key>
+                <ifl:value>1.1</ifl:value>
+            </ifl:property>
+            <ifl:property>
+                <ifl:key>cmdVariantUri</ifl:key>
+                <ifl:value>ctype::FlowElementVariant/cname::LocalIntegrationProcess/version::1.1.3</ifl:value>
+            </ifl:property>
+            <ifl:property>
+                <ifl:key>transactionalHandling</ifl:key>
+                <ifl:value>From Calling Process</ifl:value>
+            </ifl:property>
+        </bpmn2:extensionElements>
+        <bpmn2:startEvent name="From inbound direct-omni-consumer process" id="StartEvent_48">
+            <bpmn2:extensionElements>
+                <ifl:property>
+                    <ifl:key>cmdVariantUri</ifl:key>
+                    <ifl:value>ctype::FlowstepVariant/cname::StartEvent</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>activityType</ifl:key>
+                    <ifl:value>StartEvent</ifl:value>
+                </ifl:property>
+            </bpmn2:extensionElements>
             <bpmn2:outgoing xmlns="">SequenceFlow_54</bpmn2:outgoing>
         </bpmn2:startEvent>
-        <bpmn2:callActivity name="Stub map for transforming source data to direct-omni-consumer JSON" id="CallActivity_50">
+        <bpmn2:callActivity name="Stub map for transforming source data to direct-omni-consumer JSON" id="CallActivity_49">
+            <bpmn2:extensionElements>
+                <ifl:property>
+                    <ifl:key>mappingSourceValue</ifl:key>
+                    <ifl:value></ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>mappingType</ifl:key>
+                    <ifl:value>MessageMapping</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>mappingReference</ifl:key>
+                    <ifl:value>static</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>componentVersion</ifl:key>
+                    <ifl:value>1.3</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>activityType</ifl:key>
+                    <ifl:value>Mapping</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>cmdVariantUri</ifl:key>
+                    <ifl:value>ctype::FlowstepVariant/cname::MessageMapping/version::1.3.1</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>messageMappingBundleId</ifl:key>
+                    <ifl:value></ifl:value>
+                </ifl:property>
+            </bpmn2:extensionElements>
             <bpmn2:incoming xmlns="">SequenceFlow_54</bpmn2:incoming>
             <bpmn2:outgoing xmlns="">SequenceFlow_55</bpmn2:outgoing>
         </bpmn2:callActivity>
-        <bpmn2:endEvent name="Return to direct-omni-consumer process" id="EndEvent_47">
+        <bpmn2:endEvent name="Return to direct-omni-consumer process" id="EndEvent_48">
+            <bpmn2:extensionElements>
+                <ifl:property>
+                    <ifl:key>cmdVariantUri</ifl:key>
+                    <ifl:value>ctype::FlowstepVariant/cname::EndEvent</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>activityType</ifl:key>
+                    <ifl:value>EndEvent</ifl:value>
+                </ifl:property>
+            </bpmn2:extensionElements>
             <bpmn2:incoming xmlns="">SequenceFlow_55</bpmn2:incoming>
         </bpmn2:endEvent>
-        <bpmn2:sequenceFlow sourceRef="StartEvent_47" targetRef="CallActivity_50" id="SequenceFlow_54"/>
-        <bpmn2:sequenceFlow sourceRef="CallActivity_50" targetRef="EndEvent_47" id="SequenceFlow_55"/>
+        <bpmn2:sequenceFlow sourceRef="StartEvent_48" targetRef="CallActivity_49" id="SequenceFlow_54"/>
+        <bpmn2:sequenceFlow sourceRef="CallActivity_49" targetRef="EndEvent_48" id="SequenceFlow_55"/>
     </bpmn2:process>
     <bpmn2:process name="Process source data for OM-Order Update event, send to Event Mesh" id="Process_57">
+        <bpmn2:extensionElements>
+            <ifl:property>
+                <ifl:key>transactionTimeout</ifl:key>
+                <ifl:value>30</ifl:value>
+            </ifl:property>
+            <ifl:property>
+                <ifl:key>componentVersion</ifl:key>
+                <ifl:value>1.2</ifl:value>
+            </ifl:property>
+            <ifl:property>
+                <ifl:key>cmdVariantUri</ifl:key>
+                <ifl:value>ctype::FlowElementVariant/cname::IntegrationProcess/version::1.2.1</ifl:value>
+            </ifl:property>
+            <ifl:property>
+                <ifl:key>transactionalHandling</ifl:key>
+                <ifl:value>Not Required</ifl:value>
+            </ifl:property>
+        </bpmn2:extensionElements>
         <bpmn2:startEvent name="This is where source connectivity and any enrichment would occur" id="StartEvent_58">
-            <bpmn2:outgoing xmlns="">SequenceFlow_63</bpmn2:outgoing>
+            <bpmn2:extensionElements>
+                <ifl:property>
+                    <ifl:key>cmdVariantUri</ifl:key>
+                    <ifl:value>ctype::FlowstepVariant/cname::MessageStartEvent/version::1.0</ifl:value>
+                </ifl:property>
+            </bpmn2:extensionElements>
+            <bpmn2:outgoing xmlns="">SequenceFlow_67</bpmn2:outgoing>
         </bpmn2:startEvent>
-        <bpmn2:callActivity name="Generate OM-Order Update event" id="CallActivity_61">
-            <bpmn2:incoming xmlns="">SequenceFlow_63</bpmn2:incoming>
-            <bpmn2:outgoing xmlns="">SequenceFlow_64</bpmn2:outgoing>
+        <bpmn2:callActivity name="Stub map for transforming source data to OM-Order Update JSON" id="CallActivity_59">
+            <bpmn2:extensionElements>
+                <ifl:property>
+                    <ifl:key>mappingSourceValue</ifl:key>
+                    <ifl:value></ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>mappingType</ifl:key>
+                    <ifl:value>MessageMapping</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>mappingReference</ifl:key>
+                    <ifl:value>static</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>componentVersion</ifl:key>
+                    <ifl:value>1.3</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>activityType</ifl:key>
+                    <ifl:value>Mapping</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>cmdVariantUri</ifl:key>
+                    <ifl:value>ctype::FlowstepVariant/cname::MessageMapping/version::1.3.1</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>messageMappingBundleId</ifl:key>
+                    <ifl:value></ifl:value>
+                </ifl:property>
+            </bpmn2:extensionElements>
+            <bpmn2:incoming xmlns="">SequenceFlow_67</bpmn2:incoming>
+            <bpmn2:outgoing xmlns="">SequenceFlow_68</bpmn2:outgoing>
         </bpmn2:callActivity>
-        <bpmn2:endEvent name="Send OM-Order Update to Event Mesh" id="EndEvent_58">
-            <bpmn2:incoming xmlns="">SequenceFlow_64</bpmn2:incoming>
+        <bpmn2:callActivity name="Generate OM-Order Update event" id="CallActivity_65">
+            <bpmn2:extensionElements>
+                <ifl:property>
+                    <ifl:key>processId</ifl:key>
+                    <ifl:value>Process_60</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>componentVersion</ifl:key>
+                    <ifl:value>1.0</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>activityType</ifl:key>
+                    <ifl:value>ProcessCallElement</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>cmdVariantUri</ifl:key>
+                    <ifl:value>ctype::FlowstepVariant/cname::NonLoopingProcess/version::1.0.3</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>subActivityType</ifl:key>
+                    <ifl:value>NonLoopingProcess</ifl:value>
+                </ifl:property>
+            </bpmn2:extensionElements>
+            <bpmn2:incoming xmlns="">SequenceFlow_68</bpmn2:incoming>
+            <bpmn2:outgoing xmlns="">SequenceFlow_69</bpmn2:outgoing>
+        </bpmn2:callActivity>
+        <bpmn2:endEvent name="Send %s to Event Mesh" id="EndEvent_58">
+            <bpmn2:extensionElements>
+                <ifl:property>
+                    <ifl:key>componentVersion</ifl:key>
+                    <ifl:value>1.1</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>cmdVariantUri</ifl:key>
+                    <ifl:value>ctype::FlowstepVariant/cname::MessageEndEvent/version::1.1.0</ifl:value>
+                </ifl:property>
+            </bpmn2:extensionElements>
+            <bpmn2:incoming xmlns="">SequenceFlow_69</bpmn2:incoming>
         </bpmn2:endEvent>
-        <bpmn2:sequenceFlow sourceRef="StartEvent_58" targetRef="CallActivity_61" id="SequenceFlow_63"/>
-        <bpmn2:sequenceFlow sourceRef="CallActivity_61" targetRef="EndEvent_58" id="SequenceFlow_64"/>
+        <bpmn2:sequenceFlow sourceRef="StartEvent_58" targetRef="CallActivity_59" id="SequenceFlow_67"/>
+        <bpmn2:sequenceFlow sourceRef="CallActivity_59" targetRef="CallActivity_65" id="SequenceFlow_68"/>
+        <bpmn2:sequenceFlow sourceRef="CallActivity_65" targetRef="EndEvent_58" id="SequenceFlow_69"/>
     </bpmn2:process>
-    <bpmn2:process name="Generate OM-Order Update event" id="Process_59">
-        <bpmn2:startEvent name="From OM-Order Update process" id="StartEvent_60">
-            <bpmn2:outgoing xmlns="">SequenceFlow_65</bpmn2:outgoing>
+    <bpmn2:process name="Generate OM-Order Update event" id="Process_60">
+        <bpmn2:extensionElements>
+            <ifl:property>
+                <ifl:key>transactionTimeout</ifl:key>
+                <ifl:value>30</ifl:value>
+            </ifl:property>
+            <ifl:property>
+                <ifl:key>processType</ifl:key>
+                <ifl:value>directCall</ifl:value>
+            </ifl:property>
+            <ifl:property>
+                <ifl:key>componentVersion</ifl:key>
+                <ifl:value>1.1</ifl:value>
+            </ifl:property>
+            <ifl:property>
+                <ifl:key>cmdVariantUri</ifl:key>
+                <ifl:value>ctype::FlowElementVariant/cname::LocalIntegrationProcess/version::1.1.3</ifl:value>
+            </ifl:property>
+            <ifl:property>
+                <ifl:key>transactionalHandling</ifl:key>
+                <ifl:value>From Calling Process</ifl:value>
+            </ifl:property>
+        </bpmn2:extensionElements>
+        <bpmn2:startEvent name="From OM-Order Update process" id="StartEvent_61">
+            <bpmn2:extensionElements>
+                <ifl:property>
+                    <ifl:key>cmdVariantUri</ifl:key>
+                    <ifl:value>ctype::FlowstepVariant/cname::StartEvent</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>activityType</ifl:key>
+                    <ifl:value>StartEvent</ifl:value>
+                </ifl:property>
+            </bpmn2:extensionElements>
+            <bpmn2:outgoing xmlns="">SequenceFlow_70</bpmn2:outgoing>
         </bpmn2:startEvent>
-        <bpmn2:endEvent name="Return to OM-Order Update process" id="EndEvent_60">
-            <bpmn2:incoming xmlns="">SequenceFlow_65</bpmn2:incoming>
-        </bpmn2:endEvent>
-        <bpmn2:sequenceFlow sourceRef="StartEvent_60" targetRef="EndEvent_60" id="SequenceFlow_65"/>
-    </bpmn2:process>
-    <bpmn2:process name="Process source data for OM-Order Details event, send to Event Mesh" id="Process_66">
-        <bpmn2:startEvent name="This is where source connectivity and any enrichment would occur" id="StartEvent_67">
+        <bpmn2:callActivity name="Extract topicVariable" id="CallActivity_62">
+            <bpmn2:extensionElements>
+                <ifl:property>
+                    <ifl:key>visibility</ifl:key>
+                    <ifl:value>local</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>encrypt</ifl:key>
+                    <ifl:value>true</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>expire</ifl:key>
+                    <ifl:value>90</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>componentVersion</ifl:key>
+                    <ifl:value>1.2</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>activityType</ifl:key>
+                    <ifl:value>Variables</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>cmdVariantUri</ifl:key>
+                    <ifl:value>ctype::FlowstepVariant/cname::Variables/version::1.2.0</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>variable</ifl:key>
+                    <ifl:value>topicVariable</ifl:value>
+                </ifl:property>
+            </bpmn2:extensionElements>
+            <bpmn2:incoming xmlns="">SequenceFlow_70</bpmn2:incoming>
+            <bpmn2:outgoing xmlns="">SequenceFlow_71</bpmn2:outgoing>
+        </bpmn2:callActivity>
+        <bpmn2:callActivity name="Generate composedTopic using runtime variables" id="CallActivity_63">
+            <bpmn2:extensionElements>
+                <ifl:property>
+                    <ifl:key>visibility</ifl:key>
+                    <ifl:value>local</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>encrypt</ifl:key>
+                    <ifl:value>true</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>expire</ifl:key>
+                    <ifl:value>90</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>componentVersion</ifl:key>
+                    <ifl:value>1.2</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>activityType</ifl:key>
+                    <ifl:value>Variables</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>cmdVariantUri</ifl:key>
+                    <ifl:value>ctype::FlowstepVariant/cname::Variables/version::1.2.0</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>variable</ifl:key>
+                    <ifl:value>value</ifl:value>
+                </ifl:property>
+            </bpmn2:extensionElements>
+            <bpmn2:incoming xmlns="">SequenceFlow_71</bpmn2:incoming>
             <bpmn2:outgoing xmlns="">SequenceFlow_72</bpmn2:outgoing>
-        </bpmn2:startEvent>
-        <bpmn2:callActivity name="Generate OM-Order Details event" id="CallActivity_70">
+        </bpmn2:callActivity>
+        <bpmn2:callActivity name="Validate OM-Order Update schema" id="CallActivity_64">
+            <bpmn2:extensionElements>
+                <ifl:property>
+                    <ifl:key>mappingSourceValue</ifl:key>
+                    <ifl:value></ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>mappingType</ifl:key>
+                    <ifl:value>MessageMapping</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>mappingReference</ifl:key>
+                    <ifl:value>static</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>componentVersion</ifl:key>
+                    <ifl:value>1.3</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>activityType</ifl:key>
+                    <ifl:value>Mapping</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>cmdVariantUri</ifl:key>
+                    <ifl:value>ctype::FlowstepVariant/cname::MessageMapping/version::1.3.1</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>messageMappingBundleId</ifl:key>
+                    <ifl:value></ifl:value>
+                </ifl:property>
+            </bpmn2:extensionElements>
             <bpmn2:incoming xmlns="">SequenceFlow_72</bpmn2:incoming>
             <bpmn2:outgoing xmlns="">SequenceFlow_73</bpmn2:outgoing>
         </bpmn2:callActivity>
-        <bpmn2:endEvent name="Send OM-Order Details to Event Mesh" id="EndEvent_67">
+        <bpmn2:endEvent name="Return to OM-Order Update process" id="EndEvent_61">
+            <bpmn2:extensionElements>
+                <ifl:property>
+                    <ifl:key>cmdVariantUri</ifl:key>
+                    <ifl:value>ctype::FlowstepVariant/cname::EndEvent</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>activityType</ifl:key>
+                    <ifl:value>EndEvent</ifl:value>
+                </ifl:property>
+            </bpmn2:extensionElements>
             <bpmn2:incoming xmlns="">SequenceFlow_73</bpmn2:incoming>
         </bpmn2:endEvent>
-        <bpmn2:sequenceFlow sourceRef="StartEvent_67" targetRef="CallActivity_70" id="SequenceFlow_72"/>
-        <bpmn2:sequenceFlow sourceRef="CallActivity_70" targetRef="EndEvent_67" id="SequenceFlow_73"/>
+        <bpmn2:sequenceFlow sourceRef="StartEvent_61" targetRef="CallActivity_62" id="SequenceFlow_70"/>
+        <bpmn2:sequenceFlow sourceRef="CallActivity_62" targetRef="CallActivity_63" id="SequenceFlow_71"/>
+        <bpmn2:sequenceFlow sourceRef="CallActivity_63" targetRef="CallActivity_64" id="SequenceFlow_72"/>
+        <bpmn2:sequenceFlow sourceRef="CallActivity_64" targetRef="EndEvent_61" id="SequenceFlow_73"/>
     </bpmn2:process>
-    <bpmn2:process name="Generate OM-Order Details event" id="Process_68">
-        <bpmn2:startEvent name="From OM-Order Details process" id="StartEvent_69">
-            <bpmn2:outgoing xmlns="">SequenceFlow_74</bpmn2:outgoing>
+    <bpmn2:process name="Process source data for OM-Order Details event, send to Event Mesh" id="Process_74">
+        <bpmn2:extensionElements>
+            <ifl:property>
+                <ifl:key>transactionTimeout</ifl:key>
+                <ifl:value>30</ifl:value>
+            </ifl:property>
+            <ifl:property>
+                <ifl:key>componentVersion</ifl:key>
+                <ifl:value>1.2</ifl:value>
+            </ifl:property>
+            <ifl:property>
+                <ifl:key>cmdVariantUri</ifl:key>
+                <ifl:value>ctype::FlowElementVariant/cname::IntegrationProcess/version::1.2.1</ifl:value>
+            </ifl:property>
+            <ifl:property>
+                <ifl:key>transactionalHandling</ifl:key>
+                <ifl:value>Not Required</ifl:value>
+            </ifl:property>
+        </bpmn2:extensionElements>
+        <bpmn2:startEvent name="This is where source connectivity and any enrichment would occur" id="StartEvent_75">
+            <bpmn2:extensionElements>
+                <ifl:property>
+                    <ifl:key>cmdVariantUri</ifl:key>
+                    <ifl:value>ctype::FlowstepVariant/cname::MessageStartEvent/version::1.0</ifl:value>
+                </ifl:property>
+            </bpmn2:extensionElements>
+            <bpmn2:outgoing xmlns="">SequenceFlow_84</bpmn2:outgoing>
         </bpmn2:startEvent>
-        <bpmn2:endEvent name="Return to OM-Order Details process" id="EndEvent_69">
-            <bpmn2:incoming xmlns="">SequenceFlow_74</bpmn2:incoming>
+        <bpmn2:callActivity name="Stub map for transforming source data to OM-Order Details JSON" id="CallActivity_76">
+            <bpmn2:extensionElements>
+                <ifl:property>
+                    <ifl:key>mappingSourceValue</ifl:key>
+                    <ifl:value></ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>mappingType</ifl:key>
+                    <ifl:value>MessageMapping</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>mappingReference</ifl:key>
+                    <ifl:value>static</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>componentVersion</ifl:key>
+                    <ifl:value>1.3</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>activityType</ifl:key>
+                    <ifl:value>Mapping</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>cmdVariantUri</ifl:key>
+                    <ifl:value>ctype::FlowstepVariant/cname::MessageMapping/version::1.3.1</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>messageMappingBundleId</ifl:key>
+                    <ifl:value></ifl:value>
+                </ifl:property>
+            </bpmn2:extensionElements>
+            <bpmn2:incoming xmlns="">SequenceFlow_84</bpmn2:incoming>
+            <bpmn2:outgoing xmlns="">SequenceFlow_85</bpmn2:outgoing>
+        </bpmn2:callActivity>
+        <bpmn2:callActivity name="Generate OM-Order Details event" id="CallActivity_82">
+            <bpmn2:extensionElements>
+                <ifl:property>
+                    <ifl:key>processId</ifl:key>
+                    <ifl:value>Process_77</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>componentVersion</ifl:key>
+                    <ifl:value>1.0</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>activityType</ifl:key>
+                    <ifl:value>ProcessCallElement</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>cmdVariantUri</ifl:key>
+                    <ifl:value>ctype::FlowstepVariant/cname::NonLoopingProcess/version::1.0.3</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>subActivityType</ifl:key>
+                    <ifl:value>NonLoopingProcess</ifl:value>
+                </ifl:property>
+            </bpmn2:extensionElements>
+            <bpmn2:incoming xmlns="">SequenceFlow_85</bpmn2:incoming>
+            <bpmn2:outgoing xmlns="">SequenceFlow_86</bpmn2:outgoing>
+        </bpmn2:callActivity>
+        <bpmn2:endEvent name="Send %s to Event Mesh" id="EndEvent_75">
+            <bpmn2:extensionElements>
+                <ifl:property>
+                    <ifl:key>componentVersion</ifl:key>
+                    <ifl:value>1.1</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>cmdVariantUri</ifl:key>
+                    <ifl:value>ctype::FlowstepVariant/cname::MessageEndEvent/version::1.1.0</ifl:value>
+                </ifl:property>
+            </bpmn2:extensionElements>
+            <bpmn2:incoming xmlns="">SequenceFlow_86</bpmn2:incoming>
         </bpmn2:endEvent>
-        <bpmn2:sequenceFlow sourceRef="StartEvent_69" targetRef="EndEvent_69" id="SequenceFlow_74"/>
+        <bpmn2:sequenceFlow sourceRef="StartEvent_75" targetRef="CallActivity_76" id="SequenceFlow_84"/>
+        <bpmn2:sequenceFlow sourceRef="CallActivity_76" targetRef="CallActivity_82" id="SequenceFlow_85"/>
+        <bpmn2:sequenceFlow sourceRef="CallActivity_82" targetRef="EndEvent_75" id="SequenceFlow_86"/>
+    </bpmn2:process>
+    <bpmn2:process name="Generate OM-Order Details event" id="Process_77">
+        <bpmn2:extensionElements>
+            <ifl:property>
+                <ifl:key>transactionTimeout</ifl:key>
+                <ifl:value>30</ifl:value>
+            </ifl:property>
+            <ifl:property>
+                <ifl:key>processType</ifl:key>
+                <ifl:value>directCall</ifl:value>
+            </ifl:property>
+            <ifl:property>
+                <ifl:key>componentVersion</ifl:key>
+                <ifl:value>1.1</ifl:value>
+            </ifl:property>
+            <ifl:property>
+                <ifl:key>cmdVariantUri</ifl:key>
+                <ifl:value>ctype::FlowElementVariant/cname::LocalIntegrationProcess/version::1.1.3</ifl:value>
+            </ifl:property>
+            <ifl:property>
+                <ifl:key>transactionalHandling</ifl:key>
+                <ifl:value>From Calling Process</ifl:value>
+            </ifl:property>
+        </bpmn2:extensionElements>
+        <bpmn2:startEvent name="From OM-Order Details process" id="StartEvent_78">
+            <bpmn2:extensionElements>
+                <ifl:property>
+                    <ifl:key>cmdVariantUri</ifl:key>
+                    <ifl:value>ctype::FlowstepVariant/cname::StartEvent</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>activityType</ifl:key>
+                    <ifl:value>StartEvent</ifl:value>
+                </ifl:property>
+            </bpmn2:extensionElements>
+            <bpmn2:outgoing xmlns="">SequenceFlow_87</bpmn2:outgoing>
+        </bpmn2:startEvent>
+        <bpmn2:callActivity name="Extract topicVariable" id="CallActivity_79">
+            <bpmn2:extensionElements>
+                <ifl:property>
+                    <ifl:key>visibility</ifl:key>
+                    <ifl:value>local</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>encrypt</ifl:key>
+                    <ifl:value>true</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>expire</ifl:key>
+                    <ifl:value>90</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>componentVersion</ifl:key>
+                    <ifl:value>1.2</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>activityType</ifl:key>
+                    <ifl:value>Variables</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>cmdVariantUri</ifl:key>
+                    <ifl:value>ctype::FlowstepVariant/cname::Variables/version::1.2.0</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>variable</ifl:key>
+                    <ifl:value>topicVariable</ifl:value>
+                </ifl:property>
+            </bpmn2:extensionElements>
+            <bpmn2:incoming xmlns="">SequenceFlow_87</bpmn2:incoming>
+            <bpmn2:outgoing xmlns="">SequenceFlow_88</bpmn2:outgoing>
+        </bpmn2:callActivity>
+        <bpmn2:callActivity name="Generate composedTopic using runtime variables" id="CallActivity_80">
+            <bpmn2:extensionElements>
+                <ifl:property>
+                    <ifl:key>visibility</ifl:key>
+                    <ifl:value>local</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>encrypt</ifl:key>
+                    <ifl:value>true</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>expire</ifl:key>
+                    <ifl:value>90</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>componentVersion</ifl:key>
+                    <ifl:value>1.2</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>activityType</ifl:key>
+                    <ifl:value>Variables</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>cmdVariantUri</ifl:key>
+                    <ifl:value>ctype::FlowstepVariant/cname::Variables/version::1.2.0</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>variable</ifl:key>
+                    <ifl:value>value</ifl:value>
+                </ifl:property>
+            </bpmn2:extensionElements>
+            <bpmn2:incoming xmlns="">SequenceFlow_88</bpmn2:incoming>
+            <bpmn2:outgoing xmlns="">SequenceFlow_89</bpmn2:outgoing>
+        </bpmn2:callActivity>
+        <bpmn2:callActivity name="Validate OM-Order Details schema" id="CallActivity_81">
+            <bpmn2:extensionElements>
+                <ifl:property>
+                    <ifl:key>mappingSourceValue</ifl:key>
+                    <ifl:value></ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>mappingType</ifl:key>
+                    <ifl:value>MessageMapping</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>mappingReference</ifl:key>
+                    <ifl:value>static</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>componentVersion</ifl:key>
+                    <ifl:value>1.3</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>activityType</ifl:key>
+                    <ifl:value>Mapping</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>cmdVariantUri</ifl:key>
+                    <ifl:value>ctype::FlowstepVariant/cname::MessageMapping/version::1.3.1</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>messageMappingBundleId</ifl:key>
+                    <ifl:value></ifl:value>
+                </ifl:property>
+            </bpmn2:extensionElements>
+            <bpmn2:incoming xmlns="">SequenceFlow_89</bpmn2:incoming>
+            <bpmn2:outgoing xmlns="">SequenceFlow_90</bpmn2:outgoing>
+        </bpmn2:callActivity>
+        <bpmn2:endEvent name="Return to OM-Order Details process" id="EndEvent_78">
+            <bpmn2:extensionElements>
+                <ifl:property>
+                    <ifl:key>cmdVariantUri</ifl:key>
+                    <ifl:value>ctype::FlowstepVariant/cname::EndEvent</ifl:value>
+                </ifl:property>
+                <ifl:property>
+                    <ifl:key>activityType</ifl:key>
+                    <ifl:value>EndEvent</ifl:value>
+                </ifl:property>
+            </bpmn2:extensionElements>
+            <bpmn2:incoming xmlns="">SequenceFlow_90</bpmn2:incoming>
+        </bpmn2:endEvent>
+        <bpmn2:sequenceFlow sourceRef="StartEvent_78" targetRef="CallActivity_79" id="SequenceFlow_87"/>
+        <bpmn2:sequenceFlow sourceRef="CallActivity_79" targetRef="CallActivity_80" id="SequenceFlow_88"/>
+        <bpmn2:sequenceFlow sourceRef="CallActivity_80" targetRef="CallActivity_81" id="SequenceFlow_89"/>
+        <bpmn2:sequenceFlow sourceRef="CallActivity_81" targetRef="EndEvent_78" id="SequenceFlow_90"/>
     </bpmn2:process>
 </bpmn2:definitions>
