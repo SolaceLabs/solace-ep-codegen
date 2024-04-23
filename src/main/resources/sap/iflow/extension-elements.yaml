@@ -1,0 +1,276 @@
+---
+collaboration:
+  - key:   namespaceMapping
+    value: 
+  - key:   httpSessionHandling
+    value: None
+  - key:   accessControlMaxAge
+    value: 
+  - key:   returnExceptionToSender
+    value: "false"
+  - key:   log
+    value: All events
+  - key:   corsEnabled
+    value: "false"
+  - key:   exposedHeaders
+    value: 
+  - key:   componentVersion
+    value: "1.2"
+  - key:   allowedHeaderList
+    value: 
+  - key:   allowedHeaderList
+    value: "false"
+  - key:   allowedOrigins
+    value: 
+  - key:   accessControlAllowCredentials
+    value: "false"
+  - key:   allowedHeaders
+    value: 
+  - key:   allowedMethods
+    value: 
+  - key:   cmdVariantUri
+    value: "ctype::IFlowVariant/cname::IFlowConfiguration/version::1.2.4"
+participant:
+  eventMeshSender:
+    - key:   enableBasicAuthentication
+      value: "false"
+    - key:   ifl:type
+      value: EndpointSender
+  sourceSystem:
+    - key:   enableBasicAuthentication
+      value: "false"
+    - key:   ifl:type
+      value: EndpointSender
+  eventMeshReceiver:
+    - key:   ifl:type
+      value: EndpointReceiver
+  destinationSystemReceiver:
+    - key:   ifl:type
+      value: EndpointReceiver
+messageFlow:
+  allMessageFlows:
+    - key:   accessTokenFetchIntervalInSecs
+      value: "300"
+    - key:   authenticationType
+      value: "{{solace_authentication_type}}"
+    - key:   cmdVariantUri
+      value: ctype::AdapterVariant/cname::SolacePubSubPlus/vendor::Solace/tp::TCP/mp::SMF/direction::Sender
+    - key:   ComponentNS
+      value: sap
+    - key:   ComponentSWCVId
+      value: "1.0.0"
+    - key:   ComponentSWCVName
+      value: external
+    - key:   ComponentType
+      value: SolacePubSubPlus
+    - key:   host
+      value: "{{solace_host}}"
+    - key:   jcsmpProperties
+      value: 
+    - key:   keyStoreAlias
+      value: 
+    - key:   MessageProtocol
+      value: SMF
+    - key:   MessageProtocolVersion
+      value: "1.0.0"
+    - key:   messageVpn
+      value: "{{solace_vpn}}"
+    - key:   oauth2AuthorizationCodeCredentialName
+      value: 
+    - key:   oauth2ClientCredentialsCredentialName
+      value: 
+    - key:   oauthAccessToken
+      value: 
+    - key:   oauthClientId
+      value: 
+    - key:   oauthCredentialType
+      value: OAUTH2_CLIENT_CREDENTIALS
+    - key:   oauthRefreshToken
+      value: 
+    - key:   oauthRefreshTokenUrl
+      value: 
+    - key:   password
+      value: "{{solace_password_alias}}"
+    - key:   TransportProtocol
+      value: TCP
+    - key:   TransportProtocolVersion
+      value: "1.0.0"
+    - key:   trustStoreAlias
+      value: 
+    - key:   username
+      value: "{{solace_username}}"
+    - key:   Vendor
+      value: Solace
+  publication:
+    - key:   Description
+      value: 
+    - key:   direction
+      value: Sender
+    - key:   failedMessageSettlementOutcome
+      value: FAILED
+    - key:   maxMessageProcessingAttempts
+      value: "5"
+    - key:   messageRetryDelayIntervalMultiplier
+      value: "3.0"
+    - key:   messageRetryInitialDelayInterval
+      value: "1000"
+    - key:   messageRetryMaxDelayInterval
+      value: "30000"
+    - key:   parallelConsumers
+      value: "1"
+    - key:   selector
+      value: 
+    - key:   system
+      value: EventMeshSender
+  subscription:
+    - key:   applicationMessageId
+      value: 
+    - key:   applicationMessageType
+      value: 
+    - key:   correlationId
+      value: 
+    - key:   cosValue
+      value: 
+    - key:   deliveryMode
+      value: DIRECT
+    - key:   Description
+      value: 
+    - key:   destinationName
+      value: "{{composedTopic}}"
+    - key:   direction
+      value: Receiver
+    - key:   dmqEligible
+      value: "true"
+    - key:   elidingEligible
+      value: 
+    - key:   endpointType
+      value: TOPIC
+    - key:   messageType
+      value: AUTOMATIC
+    - key:   priority
+      value: 
+    - key:   reply
+      value: 
+    - key:   replyTimeout
+      value: "1000"
+    - key:   replyToDestination
+      value: 
+    - key:   replyToEndpointType
+      value: 
+    - key:   requestReply
+      value: "false"
+    - key:   senderId
+      value: 
+    - key:   senderTimestamp
+      value: 
+    - key:   sequenceNumber
+      value: 
+    - key:   system
+      value: EventMeshReceiver
+    - key:   ttl
+      value: 
+    - key:   userProperties
+      value: 
+# process:
+inboundProcess:
+  processExtensions:
+    - key:   transactionTimeout
+      value: "30"
+    - key:   componentVersion
+      value: "1.2"
+    - key:   cmdVariantUri
+      value: ctype::FlowElementVariant/cname::IntegrationProcess/version::1.2.1
+    - key:   transactionalHandling
+      value: Not Required
+  startEvent:
+    - key:   componentVersion
+      value: "1.0"
+    - key:   cmdVariantUri
+      value: ctype::FlowstepVariant/cname::MessageStartEvent/version::1.0
+  endEvent:
+    - key:   componentVersion
+      value: "1.1"
+    - key:   cmdVariantUri
+      value: ctype::FlowstepVariant/cname::MessageEndEvent/version::1.1.0
+outboundProcess:
+  processExtensions:
+    - key:   transactionTimeout
+      value: "30"
+    - key:   componentVersion
+      value: "1.2"
+    - key:   cmdVariantUri
+      value: ctype::FlowElementVariant/cname::IntegrationProcess/version::1.2.1
+    - key:   transactionalHandling
+      value: Not Required
+  startEvent:
+#    - key:   componentVersion
+#      value: "1.0"
+    - key:   cmdVariantUri
+      value: ctype::FlowstepVariant/cname::MessageStartEvent/version::1.0
+  endEvent:
+    - key:   componentVersion
+      value: "1.1"
+    - key:   cmdVariantUri
+      value: ctype::FlowstepVariant/cname::MessageEndEvent/version::1.1.0
+## Valid for business logic and generate topic processes
+calledProcess:
+  processExtensions:
+    - key:   transactionTimeout
+      value: "30"
+    - key:   processType
+      value: directCall
+    - key:   componentVersion
+      value: "1.1"
+    - key:   cmdVariantUri
+      value: ctype::FlowElementVariant/cname::LocalIntegrationProcess/version::1.1.3
+    - key:   transactionalHandling
+      value: From Calling Process
+  startEvent:
+    - key:   cmdVariantUri
+      value: ctype::FlowstepVariant/cname::StartEvent
+    - key:   activityType
+      value: StartEvent
+  endEvent:
+    - key:   cmdVariantUri
+      value: ctype::FlowstepVariant/cname::EndEvent
+    - key:   activityType
+      value: EndEvent
+callActivity:
+  mapping:
+    - key:   mappingSourceValue
+      value: 
+    - key:   mappingType
+      value: MessageMapping
+    - key:   mappingReference
+      value: static
+    - key:   componentVersion
+      value: "1.3"
+    - key:   activityType
+      value: Mapping
+    - key:   cmdVariantUri
+      value: ctype::FlowstepVariant/cname::MessageMapping/version::1.3.1
+    - key:   messageMappingBundleId
+      value: 
+  callProcess:
+    - key:   componentVersion
+      value: "1.0"
+    - key:   activityType
+      value: ProcessCallElement
+    - key:   cmdVariantUri
+      value: ctype::FlowstepVariant/cname::NonLoopingProcess/version::1.0.3
+    - key:   subActivityType
+      value: NonLoopingProcess
+  topicAssembly:
+    - key:   visibility
+      value: local
+    - key:   encrypt
+      value: "true"
+    - key:   expire
+      value: "90"
+    - key:   componentVersion
+      value: "1.2"
+    - key:   activityType
+      value: Variables
+    - key:   cmdVariantUri
+      value: ctype::FlowstepVariant/cname::Variables/version::1.2.0
+
