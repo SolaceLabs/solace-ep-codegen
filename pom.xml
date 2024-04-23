@@ -6,7 +6,7 @@
 
     <groupId>com.solace.ep.muleflow</groupId>
     <artifactId>solace-ep-muleflow</artifactId>
-    <version>1.0.3</version>
+    <version>1.0.5</version>
 
     <name>Solace-EventPortal-to-MuleFlow-Generator</name>
     <description>
@@ -75,7 +75,6 @@
             <artifactId>jakarta.xml.bind-api</artifactId>
             <version>4.0.2</version>
         </dependency>
-
 
         <dependency>
             <groupId>com.sun.xml.bind</groupId>
@@ -167,9 +166,6 @@
                 </execution>
             </executions>
             <configuration>
-                <!-- <xjbSources>
-                    <xjbSource>src/main/resources/global.xjb</xjbSource>
-                </xjbSources> -->
                 <sources>
                     <source>src/main/resources/bpmn2/xsd/BPMN20.xsd</source>
                 </sources>

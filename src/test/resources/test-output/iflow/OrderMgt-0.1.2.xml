@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<bpmn2:definitions xmlns:ifl="http:///com.sap.ifl.model/Ifl.xsd" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" id="Defintions_1">
+<bpmn2:definitions xmlns:ifl="http://com.sap.ifl.model/Ifl.xsd" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" id="Defintions_1">
     <bpmn2:collaboration name="" id="Collaboration_1">
         <bpmn2:extensionElements>
             <ifl:property>

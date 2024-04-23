@@ -1,24 +1,31 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.solace.ep.iflow;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 
 import org.junit.jupiter.api.Test;
-import org.omg.spec.bpmn._20100524.model.TCallActivity;
 import org.omg.spec.bpmn._20100524.model.TDefinitions;
-import org.omg.spec.bpmn._20100524.model.TEndEvent;
-import org.omg.spec.bpmn._20100524.model.TParticipant;
-import org.omg.spec.bpmn._20100524.model.TProcess;
-import org.omg.spec.bpmn._20100524.model.TSequenceFlow;
-import org.omg.spec.bpmn._20100524.model.TStartEvent;
 
-import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.solace.ep.asyncapi.tests.TestAsyncApiParsing;
-import com.solace.ep.muleflow.mapper.MuleDocMapper;
 import com.solace.ep.muleflow.mapper.asyncapi.AsyncApiToMuleDocMapper;
 import com.solace.ep.muleflow.mapper.model.MapMuleDoc;
 import com.solace.ep.muleflow.mapper.sap.iflow.SapIflowExtensionConfig;
@@ -26,11 +33,8 @@ import com.solace.ep.muleflow.mapper.sap.iflow.SapIflowMapper;
 import com.solace.ep.muleflow.mapper.sap.iflow.SapIflowUtils;
 import com.solace.ep.muleflow.mapper.sap.iflow.model.TSapIflowProperty;
 import com.solace.ep.muleflow.mapper.sap.iflow.utils.Bpmn2NamespaceMapper;
-import com.solace.ep.muleflow.mule.model.core.MuleDoc;
-import com.solace.ep.muleflow.mule.util.XmlMapperUtils;
 
 import jakarta.xml.bind.JAXBContext;
-import jakarta.xml.bind.JAXBElement;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Marshaller;
 import lombok.extern.slf4j.Slf4j;
@@ -73,8 +77,7 @@ public class TestCreateIflowFromEpAsyncApi {
 
         iflowMapper.createSapIflow(mapMuleDoc);
 
-
-        TDefinitions td = iflowMapper.getOut();
+        // TDefinitions td = iflowMapper.getOut();
 
         try {
             JAXBContext context = JAXBContext.newInstance( 
@@ -123,30 +126,5 @@ public class TestCreateIflowFromEpAsyncApi {
         }
 
         return mapMuleDoc;
-
-        // MuleDocMapper muleDocMapper = new MuleDocMapper( mapMuleDoc );
-
-        // MuleDoc muleDoc = null;
-        // MuleDoc globalConfigsDoc = null;
-        // try {
-        //     muleDoc = muleDocMapper.createMuleDoc();
-        //     globalConfigsDoc = muleDocMapper.createGlobalConfigsDoc();
-        // } catch ( Exception exc ) {
-        //     log.error(exc.getMessage());
-        //     fail( exc.getMessage() );
-        // }
-
-        // XmlMapper xmlMapper = XmlMapperUtils.createXmlMapperForMuleDoc();
-
-        // try {
-        //     xmlMapper.writeValue(new File(outputFile), muleDoc);
-        //     xmlMapper.writeValue(new File("src/test/resources/test-output/Global.xml"), globalConfigsDoc );
-        // } catch ( Exception exc ) {
-        //     log.error( exc.getLocalizedMessage() );
-        //     exc.printStackTrace();
-        //     return;
-        // }
-        // log.info("End 'createOutput1'");
-
     }
 }

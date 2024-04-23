@@ -1,3 +1,19 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.solace.ep.muleflow.mapper.sap.iflow;
 
 import java.util.ArrayList;
@@ -6,8 +22,6 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
-import org.omg.spec.bpmn._20100524.di.BPMNEdge;
-import org.omg.spec.bpmn._20100524.di.BPMNShape;
 import org.omg.spec.bpmn._20100524.model.ObjectFactory;
 import org.omg.spec.bpmn._20100524.model.TBaseElement;
 import org.omg.spec.bpmn._20100524.model.TCallActivity;
@@ -42,12 +56,6 @@ public class SapIflowMapper {
     private List<TProcess> processes = new ArrayList<>();
 
     private List<TMessageFlow> messageFlows = new ArrayList<>();
-
-    private List<BPMNShape> shapes = new ArrayList<>();
-
-    private List<BPMNEdge> sequenceFlows = new ArrayList<>();
-
-    private List<BPMNEdge> flows = new ArrayList<>();
 
     private TDefinitions out = null;
 
@@ -277,20 +285,6 @@ public class SapIflowMapper {
     private void mapEgressToIflow( MapSubFlowEgress egress, String endParticipantId ) {
 
         String eventName = egress.getMessageName();
-
-        // TProcess senderProcess = createGenericProcess(
-        //     String.format( SapIflowUtils.PROCESS_OUT_SEND_NAME_TEMPLATE, eventName ),
-        //     SapIflowUtils.ACT_SEND_START_NAME, 
-        //     String.format( SapIflowUtils.ACT_SEND_END_NAME_TEMPLATE, eventName ) );
-
-        // TProcess eventGeneratorProcess = createGenericProcess(
-        //     String.format(
-        //         SapIflowUtils.PROCESS_OUT_GEN_NAME_TEMPLATE, 
-        //         eventName
-        //     ), 
-        //     String.format( SapIflowUtils.ACT_GEN_START_NAME_TEMPLATE, eventName ),
-        //     String.format( SapIflowUtils.ACT_GEN_END_NAME_TEMPLATE, eventName )
-        // );
 
         TProcess senderProcess = createSenderProcess(egress);
         TProcess eventGeneratorProcess = createEventGeneratorProcess(egress);
