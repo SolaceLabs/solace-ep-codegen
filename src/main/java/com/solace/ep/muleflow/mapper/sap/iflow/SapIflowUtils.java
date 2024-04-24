@@ -61,7 +61,7 @@ public class SapIflowUtils {
                 ACT_VALIDATE_SCHEMA_TEMPLATE    = "Validate %s schema",
                 ACT_BL_START_NAME_TEMPLATE      = "From inbound %s process",
                 ACT_BL_END_NAME_TEMPLATE        = "Return to %s process",
-                ACT_BL_STUBMAP_TEMPLATE         = "Stub map for transforming source data to %s %s",
+                ACT_BL_STUBMAP_TEMPLATE         = "Stub map for transforming source data to %s",
 
                 ACT_SEND_START_NAME             = "This is where source connectivity and any enrichment would occur",
                 ACT_SEND_END_NAME_TEMPLATE      = "Send %s to Event Mesh",
@@ -74,6 +74,9 @@ public class SapIflowUtils {
                 ACT_GEN_COMPOSED_TOPIC_NAME     = "Generate composedTopic using runtime variables",
                 ACT_GEN_VALIDATE_SCHEMA_TEMPLATE   = ACT_VALIDATE_SCHEMA_TEMPLATE;
 
+    public static final String
+                MAPPING_URI_TEMPLATE            = "dir://mmap/src/main/resources/mapping/%s.mmap",
+                MAPPING_PATH_TEMPLATE           = "src/main/resources/mapping/";
 
     //
     public static final String

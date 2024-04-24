@@ -35,6 +35,10 @@ public class MapFlow {
 
     protected boolean isDirectConsumer = false;
 
+    protected String messageName;
+
+    protected boolean multipleMessageTypes = false;
+
     // Queue Listener fields
     protected String queueListenerAddress;
 
