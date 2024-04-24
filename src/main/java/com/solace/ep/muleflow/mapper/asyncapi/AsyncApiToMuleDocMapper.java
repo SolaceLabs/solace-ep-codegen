@@ -29,6 +29,7 @@ import com.solace.ep.muleflow.mapper.model.MapSubFlowEgress;
 import com.solace.ep.muleflow.mapper.model.SchemaInstance;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -155,7 +156,6 @@ public class AsyncApiToMuleDocMapper {
             mapToFlow.setFlowDesignation(consumerName.replaceAll(" ", "_"));
 
             if (solaceConsumer.isDirectConsumer()) {
-//                mapToFlow.setDirectListenerContentType("");
                 mapToFlow.setDirectListenerTopics(solaceConsumer.getTopic().getTopicSubscriptions());
             } else {
                 mapToFlow.setFlowDesignation(solaceConsumer.getQueue().getName());
@@ -167,6 +167,9 @@ public class AsyncApiToMuleDocMapper {
             boolean jsonContentType = false, sameSchema = false, hasSchema = false;
             String jsonPayload = null, jsonPayloadHash = null;
             if (solaceConsumer.getMessages() != null && !solaceConsumer.getMessages().isEmpty()) {
+
+                mapToFlow.setMessageName( AsyncApiMessage.getMessageNameFromList( new ArrayList<>(solaceConsumer.getMessages() ) ) );
+                mapToFlow.setMultipleMessageTypes( solaceConsumer.getMessages().size() == 1 ? false : true );
 
                 Iterator<AsyncApiMessage> iMsg = solaceConsumer.getMessages().iterator();
                 AsyncApiMessage firstMessage = iMsg.next();

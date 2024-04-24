@@ -40,6 +40,7 @@ import com.solace.ep.muleflow.mapper.model.MapMuleDoc;
 import com.solace.ep.muleflow.mapper.model.MapSubFlowEgress;
 import com.solace.ep.muleflow.mapper.sap.iflow.SapIflowExtensionConfig.ProcessExt;
 import com.solace.ep.muleflow.mapper.sap.iflow.model.TSapIflowProperty;
+import com.solace.ep.muleflow.mule.model.core.MuleFlow;
 
 import jakarta.xml.bind.JAXBElement;
 
@@ -117,11 +118,11 @@ public class SapIflowMapper {
 
         // Create 
         for ( MapFlow ingress : input.getMapFlows() ) {
-            mapIngressToIflow(ingress, startParticipantId);
+            mapIngressToIflow(ingress, startParticipantId, input);
         }
 
         for ( MapSubFlowEgress egress : input.getMapEgressSubFlows() ) {
-            mapEgressToIflow(egress, endParticipantId);
+            mapEgressToIflow(egress, endParticipantId, input);
         }
 
         TCollaboration collaboration = bpmnFactory.createTCollaboration();
@@ -144,12 +145,12 @@ public class SapIflowMapper {
 
     }
 
-    private void mapIngressToIflow( MapFlow ingress, String startParticipantId ) {
+    private void mapIngressToIflow( MapFlow ingress, String startParticipantId, MapMuleDoc input ) {
 
         String eventName = ingress.isDirectConsumer() ? ingress.getFlowDesignation() : ingress.getQueueListenerAddress();
 
-        TProcess receiverProcess = createReceiverProcess(ingress);
-        TProcess businessLogicProcess = createBusinessLogicProcess(ingress);
+        TProcess receiverProcess = createReceiverProcess(ingress, input);
+        TProcess businessLogicProcess = createBusinessLogicProcess(ingress, input);
 
         // Add call from receiverProcess to businessLogicProcess
         addCallActivityBeforeEndEvent(
@@ -188,30 +189,64 @@ public class SapIflowMapper {
         
     }
 
-    private TProcess createReceiverProcess( MapFlow ingress ) {
+    private TProcess createReceiverProcess( MapFlow ingress, MapMuleDoc muleDoc ) {
 
-        String eventName = ingress.isDirectConsumer() ? ingress.getFlowDesignation() : ingress.getQueueListenerAddress();
+        final String eventSource = ingress.isDirectConsumer() ? ingress.getFlowDesignation() : ingress.getQueueListenerAddress();
+        final String consumerOrQueue = ingress.isDirectConsumer() ? "Topic Consumer" : "Queue";
+        final String processName = String.format( SapIflowUtils.PROCESS_INB_NAME_TEMPLATE, eventSource ) + " " + consumerOrQueue;
 
-        TProcess receiverProcess = createGenericProcess(
-            String.format(
-                SapIflowUtils.PROCESS_INB_NAME_TEMPLATE, 
-                eventName
-            ),
-            eventName, 
-            SapIflowUtils.ACT_INB_END_NAME );
+        final TProcess receiverProcess = createGenericProcess(
+            processName,
+            "Receive Event", 
+            "Send to Receiver Destination" );
 
         //
         addExtensionProperties(receiverProcess, extConfigs.getInboundProcess().getProcessExtensions());
         addExtensionPropertiesToStartAndEndEvents(receiverProcess, extConfigs.getInboundProcess());
 
-        // TODO - update mapping name and path
-        TCallActivity validateSchemaCallActivity = createValidateSchemaCallActivity(eventName, "mapping name", "mapping path" );
+        final String validateSchemaName = getSchemaName(ingress.getJsonSchemaReference(), muleDoc);
+        final String validateCaName = "Validate inbound event against schema " + validateSchemaName;
+        final TCallActivity validateSchemaCallActivity = 
+                createValidateSchemaCallActivity(
+                    validateCaName, 
+                    validateSchemaName
+        );
         addCallActivityBeforeEndEvent( receiverProcess, validateSchemaCallActivity );
 
         return receiverProcess;
     }
 
-    private TProcess createBusinessLogicProcess( MapFlow ingress ) {
+    private String getSchemaName( String schemaReference, MapMuleDoc mapMuleDoc ) {
+        String schemaName;
+        try {
+            schemaName = mapMuleDoc.getSchemaMap().get( schemaReference ).getName();
+        } catch ( NullPointerException npexc ) {
+            schemaName = "SCHEMA_NOT_FOUND";
+        }
+        return schemaName;
+    }
+
+    private String getValidateMappingName( String schemaName ) {
+        return "Validate" + ( schemaName != null ? schemaName : "NULL" );
+    }
+
+    private String getInboundStubMappingName( final String schemaName ) {
+        return ( schemaName != null ? schemaName : "NULL" ) + "ToDestinationFormat";
+    }
+
+    private String getOutboundStubMappingName( final String schemaName, final String messageName ) {
+        return ( messageName != null ? messageName : "NULL_MESSAGE" ) + "SourceTo" + ( schemaName != null ? schemaName : "NULL" );
+    }
+
+    private String getMappingPath( String mappingName ) {
+        return "src/main/resources/mapping/" + ( mappingName != null ? mappingName : "NULL" );
+    }
+
+    private String getMappingUri( String mappingName ) {
+        return mappingName != null ? String.format("dir://mmap/src/main/resources/mapping/%s.mmap", mappingName) : "NULL";
+    }
+
+    private TProcess createBusinessLogicProcess( MapFlow ingress, MapMuleDoc input ) {
 
         String eventName = ingress.isDirectConsumer() ? ingress.getFlowDesignation() : ingress.getQueueListenerAddress();
 
@@ -228,10 +263,20 @@ public class SapIflowMapper {
         addExtensionProperties(businessLogicProcess, extConfigs.getCalledProcess().getProcessExtensions());
         addExtensionPropertiesToStartAndEndEvents(businessLogicProcess, extConfigs.getCalledProcess());
 
-        addCallActivityBeforeEndEvent(
-            businessLogicProcess, 
-            createStubMapCallActivity( eventName, "mappingUri", "mappingPath")
-        );
+        final String mapToSchemaName = getSchemaName(ingress.getJsonSchemaReference(), input);
+        final String stubMapCa = String.format("Stub map from %s to destination format", mapToSchemaName);
+        final TCallActivity stubMapCallActivity = 
+            createInboundStubMapCallActivity(
+                    stubMapCa, 
+                    mapToSchemaName
+            );
+
+        addCallActivityBeforeEndEvent(businessLogicProcess, stubMapCallActivity);
+        // final String vali
+        // addCallActivityBeforeEndEvent( businessLogicProcess, stubMapCallActivity );
+        //     businessLogicProcess, 
+        //     createInboundStubMapCallActivity( eventName, "mappingUri", "mappingPath")
+        // );
 
         return businessLogicProcess;
     }
@@ -282,12 +327,12 @@ public class SapIflowMapper {
         return subscribeMessageFlow;
     }
 
-    private void mapEgressToIflow( MapSubFlowEgress egress, String endParticipantId ) {
+    private void mapEgressToIflow( MapSubFlowEgress egress, String endParticipantId, MapMuleDoc input ) {
 
         String eventName = egress.getMessageName();
 
-        TProcess senderProcess = createSenderProcess(egress);
-        TProcess eventGeneratorProcess = createEventGeneratorProcess(egress);
+        TProcess senderProcess = createSenderProcess(egress, input);
+        TProcess eventGeneratorProcess = createEventGeneratorProcess(egress, input);
 
         // Add Call Activity from sender to 
         addCallActivityBeforeEndEvent(senderProcess, 
@@ -324,7 +369,7 @@ public class SapIflowMapper {
         messageFlows.add( messageFlow );
     }
 
-    private TProcess createSenderProcess( MapSubFlowEgress egress ) {
+    private TProcess createSenderProcess( MapSubFlowEgress egress, MapMuleDoc input ) {
 
         String eventName = egress.getMessageName();
 
@@ -337,14 +382,15 @@ public class SapIflowMapper {
         addExtensionProperties(senderProcess, extConfigs.getOutboundProcess().getProcessExtensions());
         addExtensionPropertiesToStartAndEndEvents(senderProcess, extConfigs.getOutboundProcess());
 
-        // TODO - update mapping name and path
-        TCallActivity stubMapCallActivity = createStubMapCallActivity(eventName, "mapping name", "mapping path" );
+        final String stubMapSchemaName = getSchemaName(egress.getJsonSchemaReference(), input);
+        final String stubMapCaName = "Stub map for transforming source data to " + stubMapSchemaName;
+        TCallActivity stubMapCallActivity = createOutboundStubMapCallActivity(stubMapCaName, stubMapSchemaName, egress.getMessageName() );
         addCallActivityBeforeEndEvent( senderProcess, stubMapCallActivity );
 
         return senderProcess;
     }
 
-    private TProcess createEventGeneratorProcess( MapSubFlowEgress egress ) {
+    private TProcess createEventGeneratorProcess( MapSubFlowEgress egress, MapMuleDoc input ) {
 
         String eventName = egress.getMessageName();
 
@@ -367,12 +413,15 @@ public class SapIflowMapper {
             eventGeneratorProcess, 
             createCallActivityGenerateComposedTopic());
 
-        // TODO - Mapping name/path?
-        addCallActivityBeforeEndEvent(
-            eventGeneratorProcess, 
-            createValidateSchemaCallActivity(eventName, "mapping name", "")
+        final String validateSchemaName = getSchemaName(egress.getJsonSchemaReference(), input);
+        final String validateCaName = "Validate outbound event against schema " + validateSchemaName;
+        final TCallActivity validateSchemaCallActivity = 
+                createValidateSchemaCallActivity(
+                    validateCaName, 
+                    validateSchemaName
         );
-
+        addCallActivityBeforeEndEvent( eventGeneratorProcess, validateSchemaCallActivity );
+    
         return eventGeneratorProcess;
     }
 
@@ -419,25 +468,47 @@ public class SapIflowMapper {
     }
 
     private TCallActivity createValidateSchemaCallActivity( 
-        String name,
-        String mappingName,
-        String mappingPath ) {
+        final String name,
+        final String schemaName ) {
 
-        // TODO - Add mapping elements
-        TCallActivity ca = createGenericCallActivity(String.format( SapIflowUtils.ACT_VALIDATE_SCHEMA_TEMPLATE, name ));
+        final TCallActivity ca = createGenericCallActivity( name );
+        final String mappingName = getValidateMappingName(schemaName);
         addExtensionProperties(ca, extConfigs.getCallActivity().getMapping());
+        addExtensionProperty(ca, "mappingname", mappingName);
+        addExtensionProperty(ca, "mappingpath", getMappingPath(mappingName));
+        addExtensionProperty(ca, "mappinguri", getMappingUri(mappingName));
+
         return ca;
     }
 
-    private TCallActivity createStubMapCallActivity(
-        String name,
-        String mappingUri,
-        String mappingPath
+    private TCallActivity createInboundStubMapCallActivity(
+        final String name,
+        final String schemaName
     ) {
 
-        // TODO - Make content type dynamic
-        TCallActivity ca = createGenericCallActivity(String.format( SapIflowUtils.ACT_BL_STUBMAP_TEMPLATE, name, "JSON" ));
+        final TCallActivity ca = createGenericCallActivity( name );
+        final String mappingName = getInboundStubMappingName(schemaName);
         addExtensionProperties(ca, extConfigs.getCallActivity().getMapping());
+        addExtensionProperty(ca, "mappingname", mappingName);
+        addExtensionProperty(ca, "mappingpath", getMappingPath(mappingName));
+        addExtensionProperty(ca, "mappinguri", getMappingUri(mappingName));
+
+        return ca;
+    }
+
+    private TCallActivity createOutboundStubMapCallActivity(
+        final String name,
+        final String schemaName,
+        final String messageName
+    ) {
+
+        final TCallActivity ca = createGenericCallActivity( name );
+        final String mappingName = getOutboundStubMappingName(schemaName, messageName);
+        addExtensionProperties(ca, extConfigs.getCallActivity().getMapping());
+        addExtensionProperty(ca, "mappingname", mappingName);
+        addExtensionProperty(ca, "mappingpath", getMappingPath(mappingName));
+        addExtensionProperty(ca, "mappinguri", getMappingUri(mappingName));
+
         return ca;
     }
 
