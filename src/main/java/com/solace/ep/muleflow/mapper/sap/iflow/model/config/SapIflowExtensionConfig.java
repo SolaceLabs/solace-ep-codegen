@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.solace.ep.muleflow.mapper.sap.iflow;
+package com.solace.ep.muleflow.mapper.sap.iflow.model.config;
 
 import java.util.List;
 

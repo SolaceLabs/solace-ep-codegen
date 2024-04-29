@@ -19,24 +19,16 @@ package com.solace.ep.iflow;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 
 import org.junit.jupiter.api.Test;
-import org.omg.spec.bpmn._20100524.model.TDefinitions;
 
-import com.solace.ep.asyncapi.tests.TestAsyncApiParsing;
 import com.solace.ep.muleflow.mapper.asyncapi.AsyncApiToMuleDocMapper;
 import com.solace.ep.muleflow.mapper.model.MapMuleDoc;
-import com.solace.ep.muleflow.mapper.sap.iflow.SapIflowExtensionConfig;
-import com.solace.ep.muleflow.mapper.sap.iflow.SapIflowMapper;
+import com.solace.ep.muleflow.mapper.sap.iflow.SapIFlowGenerator;
 import com.solace.ep.muleflow.mapper.sap.iflow.SapIflowUtils;
-import com.solace.ep.muleflow.mapper.sap.iflow.model.TSapIflowProperty;
-import com.solace.ep.muleflow.mapper.sap.iflow.utils.Bpmn2NamespaceMapper;
+import com.solace.ep.muleflow.mapper.sap.iflow.model.config.SapIflowExtensionConfig;
+import com.solace.ep.muleflow.util.FileUtils;
 
-import jakarta.xml.bind.JAXBContext;
-import jakarta.xml.bind.JAXBException;
-import jakarta.xml.bind.Marshaller;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -65,66 +57,37 @@ public class TestCreateIflowFromEpAsyncApi {
     }
 
     @Test
-    public void testCreateIflow_01() throws Exception {
+    public void testCreateIflow_02() {
 
         String inputFile = "src/test/resources/asyncapi/Order Management-0.1.2.json";
         String outputFile = "src/test/resources/test-output/iflow/OrderMgt-0.1.2.xml";
 
-        MapMuleDoc mapMuleDoc =
-        createIflowFromAsyncApi( inputFile, outputFile );
-
-        SapIflowMapper iflowMapper = new SapIflowMapper();
-
-        iflowMapper.createSapIflow(mapMuleDoc);
-
-        // TDefinitions td = iflowMapper.getOut();
-
         try {
-            JAXBContext context = JAXBContext.newInstance( 
-                    TDefinitions.class,
-                    TSapIflowProperty.class,
-                    com.solace.ep.muleflow.mapper.sap.iflow.model.ObjectFactory.class
-                 );
-            
-            Marshaller marshaller = context.createMarshaller();
-            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-            marshaller.setProperty("org.glassfish.jaxb.namespacePrefixMapper", new Bpmn2NamespaceMapper() );
-
-            marshaller.marshal( iflowMapper.getJaxbOut(), new FileOutputStream( outputFile ) );
-        } catch ( JAXBException jaxbExc ) {
-            log.error( jaxbExc.getMessage() );
-            System.out.println( jaxbExc.getMessage() );
-            jaxbExc.printStackTrace();
-            fail( jaxbExc.getMessage() );
-        } catch ( FileNotFoundException fnfExc ) {
-            log.error( fnfExc.getMessage() );
-            System.out.println( fnfExc.getMessage() );
-            fnfExc.printStackTrace();
-            fail( fnfExc.getMessage() );
+            SapIFlowGenerator.writeSapIflowFileFromAsyncApiFile(inputFile, outputFile);
+        } catch (Exception exc) {
+            exc.printStackTrace();
+            fail( exc.getMessage() );
         }
-
-        assertTrue( true );
-
     }
 
-    private static MapMuleDoc createIflowFromAsyncApi( String inputFile, String outputFile ) {
+    @Test void testCreateIflow_03() {
 
-        final String asyncApi = TestAsyncApiParsing.getAsyncApi(inputFile);
-
-        MapMuleDoc mapMuleDoc = null;
+        String inputFile = "src/test/resources/asyncapi/Shipping Service-0.1.2.json";
+        String outputFile = "src/test/resources/test-output/iflow/Shipping Service-0.1.2.xml";
 
         try {
-            mapMuleDoc = AsyncApiToMuleDocMapper.mapMuleDocFromAsyncApi(asyncApi);
+            MapMuleDoc input = createMapMuleDocFromAsyncApiFile(inputFile);
+            String iflowXml = SapIFlowGenerator.getSapIflowFromMapDoc(input);
+            System.out.println( iflowXml );
+            FileUtils.writeStringToFile(iflowXml, outputFile);
+        } catch ( Exception exc ) {
+            exc.printStackTrace();
+            fail( exc.getMessage() );
         }
-        catch ( Exception exc ) {
-            log.error(exc.getMessage());
-            System.out.println( exc.getCause().getMessage() );
-        }
+    }
 
-        if ( mapMuleDoc == null ) {
-            fail( "Failed to create map doc" );
-        }
-
-        return mapMuleDoc;
+    private static MapMuleDoc createMapMuleDocFromAsyncApiFile( String inputFile ) throws Exception {
+        final String asyncApi = FileUtils.getFileAsString(inputFile);
+        return AsyncApiToMuleDocMapper.mapMuleDocFromAsyncApi(asyncApi);
     }
 }

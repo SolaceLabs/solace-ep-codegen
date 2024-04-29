@@ -24,6 +24,7 @@ import com.fasterxml.jackson.databind.DatabindException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.fasterxml.jackson.dataformat.yaml.YAMLGenerator;
+import com.solace.ep.muleflow.mapper.sap.iflow.model.config.SapIflowExtensionConfig;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -34,7 +35,7 @@ public class SapIflowUtils {
     public static final String
                 DEFINITIONS_PREFIX              = "Defintions_",
                 COLLAB_ID_PREFIX                = "Collaboration_",
-                COLLAB_NAME_DEFAULT             = "";
+                COLLAB_NAME_DEFAULT             = "Default Collaboration";
 
     public static final String
                 PARTICIPANT_ID_PREFIX           = "Participant_",

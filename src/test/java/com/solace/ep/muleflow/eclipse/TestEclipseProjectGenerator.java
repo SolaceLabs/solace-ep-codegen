@@ -21,6 +21,28 @@ public class TestEclipseProjectGenerator {
     private static final String INVENTORY_SERVICE = "src/test/resources/asyncapi/Inventory Service-1.0.3.json";
     // private static final String CATALOGUE_SERVICE = "src/test/resources/asyncapi/Catalogue Services-1.1.1.json";
 
+    @Test
+    public void testCreateAcmeRetailAsapioYaml_0_1_2() {
+
+        EclipseProjectGenerator epg = new EclipseProjectGenerator();
+        final String
+            groupId = "com.solace.ep",
+            artifactId = "acme-retail",
+            version = "0.1.2",
+            inputPath = "src/test/resources/asyncapi/AcmeRetailAsapio-0.1.2.yaml",
+            outputPath = "src/test/resources/test-output/generated-archive/" + artifactId + ".jar";
+        
+        try {
+            epg.generateEclipseArchiveForMuleFlowFromAsyncApi(groupId, artifactId, version, FileUtils.getFileAsString(inputPath), outputPath);
+        } catch ( Exception exc ) {
+            log.error(exc.getMessage());
+            exc.printStackTrace();
+            fail(exc.getMessage());
+            return;
+        }
+        System.out.println("Project Created");
+    }
+
     /**
      * Test ability to generate a new project using EclipseProjectGenerator
      */

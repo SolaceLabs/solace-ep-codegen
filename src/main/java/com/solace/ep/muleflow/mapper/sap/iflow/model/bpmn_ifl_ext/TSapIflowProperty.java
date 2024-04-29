@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.solace.ep.muleflow.mapper.sap.iflow.model;
+package com.solace.ep.muleflow.mapper.sap.iflow.model.bpmn_ifl_ext;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
@@ -28,9 +28,9 @@ import jakarta.xml.bind.annotation.XmlType;
 })
 public class TSapIflowProperty {
     
-    @XmlElement(required = true)
+    @XmlElement(required = true, namespace = "")
     protected String key;
-    @XmlElement( required = true )
+    @XmlElement( required = true, namespace = "" )
     protected String value;
 
     public String getKey() {
