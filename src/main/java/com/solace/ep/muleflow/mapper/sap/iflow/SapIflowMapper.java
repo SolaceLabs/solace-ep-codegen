@@ -69,7 +69,7 @@ public class SapIflowMapper {
             BPMN_START_END_EVENT_H = 32d,
             BPMN_START_END_EVENT_W = 32d,
             BPMN_FLOW_ELT_SEP_X = 60d,
-            BPMN_CALL_ACT_H = 60,
+            BPMN_CALL_ACT_H = 80,
             BPMN_CALL_ACT_W = 150,
             BPMN_MESH_PARTICIPANT_PROCESS_SEP_X = 100d,
             BPMN_MESH_PARTICIPANT_PROCESS_SEP_Y = 60d;
@@ -486,7 +486,7 @@ public class SapIflowMapper {
         TProcess senderProcess = createGenericProcess(
             String.format( SapIflowUtils.PROCESS_OUT_SEND_NAME_TEMPLATE, eventName ),
             SapIflowUtils.ACT_SEND_START_NAME, 
-            SapIflowUtils.ACT_SEND_END_NAME_TEMPLATE );
+            String.format( SapIflowUtils.ACT_SEND_END_NAME_TEMPLATE, eventName ) );
 
         //
         addEmptyMessageEventDefinitions(senderProcess);     // Conform with samples
@@ -850,16 +850,12 @@ public class SapIflowMapper {
 
         process.setId( SapIflowUtils.PROCESS_ID_PREFIX + processId );
         process.setName( procName );
+
         startEvent.setId( SapIflowUtils.ACT_START_EVENT_PREFIX + startEndEventId );
         startEvent.setName( startEventName );
-        // TODO - The following is only to sync with sample data
-        // startEvent.getEventDefinition( ).add( bpmnFactory.createMessageEventDefinition( bpmnFactory.createTMessageEventDefinition() ) );
 
-        // startEvent.getEventDefinition().add( bpmnFactory.createMessageEventDefinition( bpmnFactory.createTMessageEventDefinition() ) );
         endEvent.setId( SapIflowUtils.ACT_END_EVENT_PREFIX + startEndEventId );
         endEvent.setName( endEventName );
-        // TODO - The following is only to sync with sample data
-        // endEvent.getEventDefinition( ).add( bpmnFactory.createMessageEventDefinition( bpmnFactory.createTMessageEventDefinition() ) );
 
         process.getFlowElement().add( bpmnFactory.createStartEvent( startEvent ) );
         process.getFlowElement().add( bpmnFactory.createEndEvent( endEvent ) );
@@ -997,7 +993,7 @@ public class SapIflowMapper {
             }
         }
 
-        addBpmnShapeFromParticipantProcess(participant, processBoundaryX, processBoundaryY, ( xPos - processBoundaryX ) );
+        addBpmnShapeFromParticipantProcess(participant, processBoundaryX, processBoundaryY, ( xPos - processBoundaryX + BPMN_FLOW_ELT_SEP_X) );
 
         processBoundaryY += BPMN_PART_PROC_H + BPMN_PROC_SEP_H;
         processBoundaryMaxX = Math.max(xPos, processBoundaryMaxX);
