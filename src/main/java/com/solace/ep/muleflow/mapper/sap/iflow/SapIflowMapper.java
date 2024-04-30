@@ -331,6 +331,7 @@ public class SapIflowMapper {
             "Send to Receiver Destination" );
 
         //
+        addEmptyMessageEventDefinitions(receiverProcess);       // Conform with samples
         addExtensionProperties(receiverProcess, extConfigs.getInboundProcess().getProcessExtensions());
         addExtensionPropertiesToStartAndEndEvents(receiverProcess, extConfigs.getInboundProcess());
 
@@ -488,6 +489,7 @@ public class SapIflowMapper {
             SapIflowUtils.ACT_SEND_END_NAME_TEMPLATE );
 
         //
+        addEmptyMessageEventDefinitions(senderProcess);     // Conform with samples
         addExtensionProperties(senderProcess, extConfigs.getOutboundProcess().getProcessExtensions());
         addExtensionPropertiesToStartAndEndEvents(senderProcess, extConfigs.getOutboundProcess());
 
@@ -819,6 +821,19 @@ public class SapIflowMapper {
         addExtensionProperties(messageFlow, extConfigs.getMessageFlow().getAllMessageFlows() );
 
         return messageFlow;
+    }
+
+    private void addEmptyMessageEventDefinitions( TProcess process ) {
+        process.getFlowElement().forEach( jaxbElt -> {
+            if ( jaxbElt.getValue() instanceof TStartEvent ) {
+                TStartEvent se = ( TStartEvent )( jaxbElt.getValue() );
+                se.getEventDefinition().add( bpmnFactory.createMessageEventDefinition( bpmnFactory.createTMessageEventDefinition() ) );
+            } 
+            if ( jaxbElt.getValue() instanceof TEndEvent ) {
+                TEndEvent ee = ( TEndEvent )( jaxbElt.getValue() );
+                ee.getEventDefinition().add( bpmnFactory.createMessageEventDefinition( bpmnFactory.createTMessageEventDefinition() ) );
+            } 
+        } );
     }
 
     private TProcess createGenericProcess( 
