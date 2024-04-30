@@ -29,9 +29,7 @@ import com.solace.ep.muleflow.mapper.sap.iflow.SapIflowUtils;
 import com.solace.ep.muleflow.mapper.sap.iflow.model.config.SapIflowExtensionConfig;
 import com.solace.ep.muleflow.util.FileUtils;
 
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 public class TestCreateIflowFromEpAsyncApi {
     
     @Test
@@ -49,6 +47,8 @@ public class TestCreateIflowFromEpAsyncApi {
                 System.out.println( "key: " + prop.getKey() );
                 System.out.println( "val: " + ( prop.getValue() == null ? "NULL" : prop.getValue() ) );
             }
+
+            assertTrue( configs.getCallActivity() != null );
 
         } catch ( Exception exc ) {
             System.out.println(exc.getMessage());
