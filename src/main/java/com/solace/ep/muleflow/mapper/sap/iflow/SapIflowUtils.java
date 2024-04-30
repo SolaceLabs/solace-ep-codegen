@@ -16,14 +16,13 @@
  */
 package com.solace.ep.muleflow.mapper.sap.iflow;
 
-import java.io.IOException;
-import java.io.File;
+import java.io.InputStream;
+import java.io.FileInputStream;
 
-import com.fasterxml.jackson.core.exc.StreamReadException;
-import com.fasterxml.jackson.databind.DatabindException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.fasterxml.jackson.dataformat.yaml.YAMLGenerator;
+import com.solace.ep.muleflow.mapper.sap.iflow.model.config.SapIflowExtensionConfig;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -34,7 +33,7 @@ public class SapIflowUtils {
     public static final String
                 DEFINITIONS_PREFIX              = "Defintions_",
                 COLLAB_ID_PREFIX                = "Collaboration_",
-                COLLAB_NAME_DEFAULT             = "";
+                COLLAB_NAME_DEFAULT             = "Default Collaboration";
 
     public static final String
                 PARTICIPANT_ID_PREFIX           = "Participant_",
@@ -84,26 +83,20 @@ public class SapIflowUtils {
 
     //
 
-    public static SapIflowExtensionConfig parseExtensionConfig( String configFile ) throws Exception {
+    public static com.solace.ep.muleflow.mapper.sap.iflow.model.config.SapIflowExtensionConfig parseExtensionConfig( String configFile ) throws Exception {
 
-        SapIflowExtensionConfig configs = null;
-    	ObjectMapper mapper = new ObjectMapper( new YAMLFactory().enable(YAMLGenerator.Feature.MINIMIZE_QUOTES) );
-        try {
-        	configs = mapper.readValue(new File(configFile), SapIflowExtensionConfig.class);
-        } catch (DatabindException dbexc) {
-        	log.error("Failed to parse the config file: {}", dbexc.getMessage());
-            throw dbexc;
-		} catch (StreamReadException srexc ) {
-        	log.error("Failed to parse the config file: {}", srexc.getMessage());
-        	throw srexc;
-		} catch (IOException ioexc) {
-			log.error("There was an error reading the configuration file: {}", configFile );
-			log.error(ioexc.getMessage());
-        	throw ioexc;
-		}
+    	final ObjectMapper mapper = new ObjectMapper( new YAMLFactory().enable(YAMLGenerator.Feature.MINIMIZE_QUOTES) );
 
-        return configs;
+        try (InputStream is = SapIflowUtils.class.getResourceAsStream( configFile.replace("src/main/resources", "") )) {
+            return mapper.readValue( is, SapIflowExtensionConfig.class);
+        } catch (Exception exc) {
+            log.debug( "Failed to load config from the classpath, trying resources directory" );
+            try (InputStream is = new FileInputStream( configFile )) {
+                return mapper.readValue( is, SapIflowExtensionConfig.class);
+            } catch ( Exception exc0 ) {
+                log.error( exc0.getMessage());
+                throw exc0;
+            }
+        }
     }
-
-
 }

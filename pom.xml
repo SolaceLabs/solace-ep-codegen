@@ -13,10 +13,7 @@
         Mule Flow Generator for Solace Event Portal Applications.
         This project provides the capability to map an AsyncApi document
         generated for a Solace Event Portal Application and map it into
-        a Mule Flow XML document.
-
-        The generated Mule Flow XML may contain components using
-        Mule JSON, XML, EE, and Solace connector modules.
+        a project scaffold for MuleSoft or SAP IS IFlow.
     </description>
     <url>https://github.com/dennis-brinley/solace-ep-mule</url>
 
@@ -26,6 +23,15 @@
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
     </properties>
+
+    <developers>
+        <developer>
+            <name>Dennis Brinley</name>
+            <email>Dennis.Brinley@Solace.com</email>
+            <organization>Solace</organization>
+            <organizationUrl>https://solace.com/</organizationUrl>
+        </developer>
+    </developers>
 
     <dependencies>
         <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.dataformat/jackson-dataformat-xml -->

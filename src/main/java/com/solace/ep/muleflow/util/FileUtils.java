@@ -93,6 +93,36 @@ public class FileUtils {
     }
 
     /**
+     * Write contents of String to a file; option to append or over-write existing file
+     * @param dataToWrite
+     * @param fileName
+     * @param append
+     * @throws IOException
+     */
+    public static void writeStringToFile( String dataToWrite, String fileName, boolean append )  
+    throws IOException {
+
+        BufferedWriter writer = new BufferedWriter(
+            new FileWriter( 
+                new File( fileName ), 
+                append ) );
+        writer.write(dataToWrite);
+        writer.close();
+    }
+
+    /**
+     * Write contents of String to a file, over-writing file contents if it exists
+     * @param dataToWrite
+     * @param fileName
+     * @throws IOException
+     */
+    public static void writeStringToFile( String dataToWrite, String fileName )  
+    throws IOException {
+
+        writeStringToFile(dataToWrite, fileName, false);
+    }
+
+    /**
      * Create subdirectory in the given root
      * @param rootPath - java.io.File Object representing folder in which to create new directory
      * @param subPath

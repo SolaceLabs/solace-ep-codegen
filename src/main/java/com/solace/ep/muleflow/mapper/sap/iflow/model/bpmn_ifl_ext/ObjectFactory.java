@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.solace.ep.muleflow.mapper.sap.iflow.model;
+package com.solace.ep.muleflow.mapper.sap.iflow.model.bpmn_ifl_ext;
 
 import javax.xml.namespace.QName;
 
