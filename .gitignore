@@ -1,6 +1,7 @@
 # Project
 target/
 src/test/resources/test-output/iflow/*.xml
+src/test/resources/test-output/iflow/*.iflw
 src/test/resources/test-output/*.xml
 src/test/resources/test-output/builder/*.xml
 src/test/resources/test-output/generated-archive/*.jar

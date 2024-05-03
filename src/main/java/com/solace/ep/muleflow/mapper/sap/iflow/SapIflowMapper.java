@@ -43,6 +43,7 @@ import org.omg.spec.bpmn._20100524.model.TStartEvent;
 import org.omg.spec.dd._20100524.dc.Bounds;
 import org.omg.spec.dd._20100524.dc.Point;
 
+import com.solace.ep.muleflow.mapper.MapUtils;
 import com.solace.ep.muleflow.mapper.model.MapFlow;
 import com.solace.ep.muleflow.mapper.model.MapMuleDoc;
 import com.solace.ep.muleflow.mapper.model.MapSubFlowEgress;
@@ -122,6 +123,11 @@ public class SapIflowMapper {
         return bpmnFactory.createDefinitions( createSapIflow() );
     }
 
+    /**
+     * Builds the SAP IFlow using the MapMuleDoc object passed to the constructor
+     * Returns root element of type TDefinitions which must be wrapped in a JAXB Element
+     * @return
+     */
     public TDefinitions createSapIflow() {
 
         if ( this.rootElement != null ) {
@@ -228,15 +234,15 @@ public class SapIflowMapper {
         collaboration.setId( SapIflowUtils.COLLAB_ID_PREFIX + "1" );
         String collaborationName;
         if ( inputSource.getGlobalProperties() != null && 
-            inputSource.getGlobalProperties().containsKey( "epApplicationVersion" ) &&
-            inputSource.getGlobalProperties().get( "epApplicationVersion" ).length() > 0 &&
-            inputSource.getGlobalProperties().containsKey( "epApplicationVersionTitle" ) &&
-            inputSource.getGlobalProperties().get( "epApplicationVersionTitle" ).length() > 0
+            inputSource.getGlobalProperties().containsKey( MapUtils.GLOBAL_NAME_EP_APP_VERSION ) &&
+            inputSource.getGlobalProperties().get( MapUtils.GLOBAL_NAME_EP_APP_VERSION ).length() > 0 &&
+            inputSource.getGlobalProperties().containsKey( MapUtils.GLOBAL_NAME_EP_APP_VERSION_TITLE ) &&
+            inputSource.getGlobalProperties().get( MapUtils.GLOBAL_NAME_EP_APP_VERSION_TITLE ).length() > 0
         ) {
             collaborationName = 
-                inputSource.getGlobalProperties().get( "epApplicationVersionTitle" ) +
+                inputSource.getGlobalProperties().get( MapUtils.GLOBAL_NAME_EP_APP_VERSION ) +
                 "_" +
-                inputSource.getGlobalProperties().get( "epApplicationVersion" );
+                inputSource.getGlobalProperties().get( MapUtils.GLOBAL_NAME_EP_APP_VERSION );
         } else {
             collaborationName = SapIflowUtils.COLLAB_NAME_DEFAULT;
         }
@@ -421,13 +427,11 @@ public class SapIflowMapper {
         // Add topic list as extension property
         StringBuilder topicBuilder = new StringBuilder();
         if ( ingress.isDirectConsumer() && ingress.getDirectListenerTopics() != null ) {
-            // topicBuilder.append( "<row>" );
             for ( String topic : ingress.getDirectListenerTopics() ) {
                 topicBuilder.append( "<row><cell id='listObjectValue'>" );
                 topicBuilder.append( topic );
                 topicBuilder.append( "</cell></row>");
             }
-            // topicBuilder.append( "</row>" );
         }
         addExtensionProperty( subscribeMessageFlow, "topicSubscriptions", topicBuilder.toString());
 
@@ -475,8 +479,8 @@ public class SapIflowMapper {
         participants.add( eventGeneratoParticipant );
         messageFlows.add( messageFlow );
 
-        createBpmnShapesForParticipantAndProcess(eventGeneratoParticipant, eventGeneratorProcess);
         createBpmnShapesForParticipantAndProcess(sendParticipant, senderProcess);
+        createBpmnShapesForParticipantAndProcess(eventGeneratoParticipant, eventGeneratorProcess);
     }
 
     private TProcess createSenderProcess( MapSubFlowEgress egress ) {
@@ -494,8 +498,7 @@ public class SapIflowMapper {
         addExtensionPropertiesToStartAndEndEvents(senderProcess, extConfigs.getOutboundProcess());
 
         final String stubMapSchemaName = getSchemaName(egress.getJsonSchemaReference());
-        final String stubMapCaName = "Stub map for transforming source data to " + stubMapSchemaName;
-        TCallActivity stubMapCallActivity = createOutboundStubMapCallActivity(stubMapCaName, stubMapSchemaName, egress.getMessageName() );
+        TCallActivity stubMapCallActivity = createOutboundStubMapCallActivity(stubMapSchemaName, egress.getMessageName() );
         addCallActivityBeforeEndEvent( senderProcess, stubMapCallActivity );
 
         return senderProcess;
@@ -555,7 +558,7 @@ public class SapIflowMapper {
         //
         TMessageFlow publishMessageFlow = 
             createGenericMessageFlow(
-                "Egress Flow Publish event: " + egress.getMessageName(), 
+                "Publish " + egress.getMessageName(), 
                 sourceRef, 
                 targetRef
             );
@@ -625,13 +628,13 @@ public class SapIflowMapper {
     }
 
     private TCallActivity createOutboundStubMapCallActivity(
-        final String name,
         final String schemaName,
         final String messageName
     ) {
 
-        final TCallActivity ca = createGenericCallActivity( name );
-        final String mappingName = getOutboundStubMappingName(schemaName, messageName);
+        final String stubMapCaName = String.format("Map source format to schema %s for event %s", schemaName, messageName );
+        final TCallActivity ca = createGenericCallActivity( stubMapCaName );
+        final String mappingName = getOutboundStubMappingName(schemaName);
         addExtensionProperties(ca, extConfigs.getCallActivity().getMapping());
         addExtensionProperty(ca, "mappingname", mappingName);
         addExtensionProperty(ca, "mappingpath", getMappingPath(mappingName));
@@ -658,8 +661,8 @@ public class SapIflowMapper {
         return ( schemaName != null ? schemaName : "NULL" ) + "ToDestinationFormat";
     }
 
-    private String getOutboundStubMappingName( final String schemaName, final String messageName ) {
-        return ( messageName != null ? messageName : "NULL_MESSAGE" ) + "SourceTo" + ( schemaName != null ? schemaName : "NULL" );
+    private String getOutboundStubMappingName( final String schemaName ) {
+        return "SourceFormatTo" + ( schemaName != null ? schemaName : "NULL" );
     }
 
     private String getMappingPath( String mappingName ) {

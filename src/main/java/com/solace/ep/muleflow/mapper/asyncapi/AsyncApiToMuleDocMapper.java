@@ -198,7 +198,10 @@ public class AsyncApiToMuleDocMapper {
                     }
                 }
 
-                if (hasSchema && sameSchema && jsonContentType) {
+                mapToFlow.setMultipleMessageTypes( !sameSchema );
+
+                // if (hasSchema && sameSchema && jsonContentType) {
+                if (hasSchema && jsonContentType) {
                     mapToFlow.setJsonSchemaContent(jsonPayload);
                     mapToFlow.setJsonSchemaReference(jsonPayloadHash);
                     mapToFlow.setContentType(firstMessage.getContentType());

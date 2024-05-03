@@ -94,6 +94,7 @@ public class SapIflowUtils {
             try (InputStream is = new FileInputStream( configFile )) {
                 return mapper.readValue( is, SapIflowExtensionConfig.class);
             } catch ( Exception exc0 ) {
+                log.error( "Could not retrieve SAP IFL Extension configuration from either the classpath or resources directory" );
                 log.error( exc0.getMessage());
                 throw exc0;
             }

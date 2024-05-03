@@ -213,10 +213,7 @@ public class AsyncApiMessage {
         if ( messageList.size() == 0 ) {
             return "NOT_FOUND";
         }
-        if ( messageList.size() == 1 ) {
-            return messageList.get( 0 ).getEpEventName();
-        }
-        return "MULTIPLE-MESSAGE-TYPES";
+        return messageList.get( 0 ).getEpEventName();
     }
 
     public static AsyncApiMessage getMessageAsSingleton( List<AsyncApiMessage> messageList ) {

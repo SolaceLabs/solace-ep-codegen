@@ -53,12 +53,10 @@ messageFlow:
       value: "300"
     - key:   authenticationType
       value: "{{solace_authentication_type}}"
-    - key:   cmdVariantUri
-      value: ctype::AdapterVariant/cname::SolacePubSubPlus/vendor::Solace/tp::TCP/mp::SMF/direction::Sender
     - key:   ComponentNS
       value: sap
     - key:   ComponentSWCVId
-      value: "1.0.0"
+      value: "1.2.0"
     - key:   ComponentSWCVName
       value: external
     - key:   ComponentType
@@ -108,6 +106,8 @@ messageFlow:
       value: Sender
     - key:   failedMessageSettlementOutcome
       value: FAILED
+    - key:   cmdVariantUri
+      value: ctype::AdapterVariant/cname::SolacePubSubPlus/vendor::Solace/tp::TCP/mp::SMF/direction::Sender/version::1.2.0
     - key:   maxMessageProcessingAttempts
       value: "5"
     - key:   messageRetryDelayIntervalMultiplier
@@ -137,6 +137,8 @@ messageFlow:
       value: 
     - key:   destinationName
       value: "{{composedTopic}}"
+    - key:   cmdVariantUri
+      value: ctype::AdapterVariant/cname::SolacePubSubPlus/vendor::Solace/tp::TCP/mp::SMF/direction::Receiver/version::1.2.0
     - key:   direction
       value: Receiver
     - key:   dmqEligible

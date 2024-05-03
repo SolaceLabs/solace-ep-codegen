@@ -30,7 +30,7 @@ public class ObjectFactory {
         return new TSapIflowProperty();
     }
 
-    @XmlElementDecl(namespace = "http://com.sap.ifl.model/Ifl.xsd", name = "process", substitutionHeadNamespace = "http://com.sap.ifl.model/Ifl.xsd", substitutionHeadName = "property")
+    @XmlElementDecl(namespace = "http://com.sap.ifl.model/Ifl.xsd", name = "iflProperty", substitutionHeadNamespace = "http://com.sap.ifl.model/Ifl.xsd", substitutionHeadName = "property")
     public JAXBElement<TSapIflowProperty> createProperty(TSapIflowProperty value) {
         return new JAXBElement<TSapIflowProperty>(_SapIflowProperty_QNAME, TSapIflowProperty.class, null, value);
     }
