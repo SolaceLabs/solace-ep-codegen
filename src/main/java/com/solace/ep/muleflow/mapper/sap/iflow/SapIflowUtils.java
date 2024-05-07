@@ -31,7 +31,7 @@ public class SapIflowUtils {
     
 
     public static final String
-                DEFINITIONS_PREFIX              = "Defintions_",
+                DEFINITIONS_PREFIX              = "Definitions_",
                 COLLAB_ID_PREFIX                = "Collaboration_",
                 COLLAB_NAME_DEFAULT             = "Default Collaboration";
 
@@ -42,7 +42,7 @@ public class SapIflowUtils {
                 PARTICIPANT_NAME_SRC            = "SourceSystem",
                 PARTICIPANT_NAME_DEST           = "DestinationSystemReceiver",
                 PARTICIPANT_IFL_SEND            = "EndpointSender",
-                PARTICIPANT_IFL_RECV            = "EndpointReceiver",
+                PARTICIPANT_IFL_RECV            = "EndpointRecevier",
                 PARTICIPANT_IFL_INT             = "IntegrationProcess",
                 MSGFLOW_ID_PREFIX               = "MessageFlow_";
                 
@@ -81,7 +81,6 @@ public class SapIflowUtils {
     public static final String
                 SEQ_FLOW_PREFIX                 = "SequenceFlow_";
 
-    //
 
     public static com.solace.ep.muleflow.mapper.sap.iflow.model.config.SapIflowExtensionConfig parseExtensionConfig( String configFile ) throws Exception {
 
