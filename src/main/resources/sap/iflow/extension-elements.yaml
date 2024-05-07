@@ -43,10 +43,10 @@ participant:
       value: EndpointSender
   eventMeshReceiver:
     - key:   ifl:type
-      value: EndpointReceiver
+      value: EndpointRecevier
   destinationSystemReceiver:
     - key:   ifl:type
-      value: EndpointReceiver
+      value: EndpointRecevier
 messageFlow:
   allMessageFlows:
     - key:   accessTokenFetchIntervalInSecs
@@ -61,6 +61,8 @@ messageFlow:
       value: external
     - key:   ComponentType
       value: SolacePubSubPlus
+    - key:   componentVersion
+      value: "1.2"
     - key:   host
       value: "{{solace_host}}"
     - key:   jcsmpProperties
@@ -70,7 +72,7 @@ messageFlow:
     - key:   MessageProtocol
       value: SMF
     - key:   MessageProtocolVersion
-      value: "1.0.0"
+      value: "1.2.0"
     - key:   messageVpn
       value: "{{solace_vpn}}"
     - key:   oauth2AuthorizationCodeCredentialName
@@ -92,7 +94,7 @@ messageFlow:
     - key:   TransportProtocol
       value: TCP
     - key:   TransportProtocolVersion
-      value: "1.0.0"
+      value: "1.2.0"
     - key:   trustStoreAlias
       value: 
     - key:   username
@@ -100,14 +102,18 @@ messageFlow:
     - key:   Vendor
       value: Solace
   subscription:
-    - key:   Description
-      value: 
+    # - key:   Description
+    #   value: 
     - key:   direction
       value: Sender
     - key:   failedMessageSettlementOutcome
       value: FAILED
     - key:   cmdVariantUri
       value: ctype::AdapterVariant/cname::SolacePubSubPlus/vendor::Solace/tp::TCP/mp::SMF/direction::Sender/version::1.2.0
+    - key:   dteTopicName
+      value: 
+    - key:   instanceLockEnabled
+      value: "false"
     - key:   maxMessageProcessingAttempts
       value: "5"
     - key:   messageRetryDelayIntervalMultiplier
@@ -122,6 +128,8 @@ messageFlow:
       value: 
     - key:   system
       value: EventMeshSender
+    - key:   topicEndpointName
+      value: 
   publication:
     - key:   applicationMessageId
       value: 
@@ -131,10 +139,10 @@ messageFlow:
       value: 
     - key:   cosValue
       value: 
-    - key:   deliveryMode
-      value: DIRECT
-    - key:   Description
-      value: 
+    # - key:   deliveryMode
+    #   value: DIRECT
+    # - key:   Description
+    #   value: 
     - key:   destinationName
       value: "{{composedTopic}}"
     - key:   cmdVariantUri
@@ -168,7 +176,7 @@ messageFlow:
     - key:   sequenceNumber
       value: 
     - key:   system
-      value: EventMeshReceiver
+      value: EndpointRecevier
     - key:   ttl
       value: 
     - key:   userProperties
@@ -205,8 +213,8 @@ outboundProcess:
     - key:   transactionalHandling
       value: Not Required
   startEvent:
-#    - key:   componentVersion
-#      value: "1.0"
+    - key:   componentVersion
+      value: "1.0"
     - key:   cmdVariantUri
       value: ctype::FlowstepVariant/cname::MessageStartEvent/version::1.0
   endEvent:
@@ -275,4 +283,3 @@ callActivity:
       value: Variables
     - key:   cmdVariantUri
       value: ctype::FlowstepVariant/cname::Variables/version::1.2.0
-

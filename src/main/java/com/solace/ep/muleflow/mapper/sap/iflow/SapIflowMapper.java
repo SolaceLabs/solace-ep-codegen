@@ -82,6 +82,8 @@ public class SapIflowMapper {
 
     private long objectIncrementer = 1;
 
+    private long messageFlowCounter = 1;
+
     private final ObjectFactory bpmnFactory = new ObjectFactory();
 
     private final org.omg.spec.bpmn._20100524.di.ObjectFactory bpmnDiFactory = new org.omg.spec.bpmn._20100524.di.ObjectFactory();
@@ -397,32 +399,34 @@ public class SapIflowMapper {
             }
         }
 
-        TMessageFlow subscribeMessageFlow = 
+        final String messageFlowName = "From_SolacePubSubPlus_" + messageFlowCounter++;
+        final TMessageFlow subscribeMessageFlow = 
             createGenericMessageFlow(
-                "Ingress Flow from " + ( ingress.isDirectConsumer() ? "Direct Consumer: " : "Queue: " ) + ingress.getFlowDesignation(), 
+                messageFlowName,
                 sourceRef, 
                 targetRef
         );
         addExtensionProperties(subscribeMessageFlow, extConfigs.getMessageFlow().getSubscription() );
 
+        // TODO - Defaulting to 'AUTOMATIC_IMMEDIATE' because Solace IFlow connector does not support all modes
+        // Determine proper mapping of ackMode for IFlow and implement
         addExtensionProperty(
             subscribeMessageFlow, 
             "ackMode", 
-            ( ingress.isDirectConsumer() ? "AUTOMATIC_IMMEDIATE" : 
-                    ( ( ingress.getQueueListenerAckMode() != null && ingress.getQueueListenerAckMode().length() > 0 ) ?
-                        ingress.getQueueListenerAckMode() : "AUTOMATIC_ON_EXCHANGE_COMPLETE" ) ) );
+            "AUTOMATIC_IMMEDIATE" );
+            // ( ingress.isDirectConsumer() ? "AUTOMATIC_IMMEDIATE" : 
+            //         ( ( ingress.getQueueListenerAckMode() != null && ingress.getQueueListenerAckMode().length() > 0 ) ?
+            //             ingress.getQueueListenerAckMode() : "AUTOMATIC_IMMEDIATE" ) ) );
         addExtensionProperty(
             subscribeMessageFlow, 
             "consumerMode", 
             ( ingress.isDirectConsumer() ? "DIRECT" : "GUARANTEED" ) );
-        // addExtensionProperty( subscribeMessageFlow, "Description", "");
-        // addExtensionProperty( subscribeMessageFlow, "direction", "Sender");
-        addExtensionProperty( subscribeMessageFlow, "Name", ingress.getFlowDesignation() );
+        addExtensionProperty( subscribeMessageFlow, "Description", "");
+        addExtensionProperty( subscribeMessageFlow, "Name", messageFlowName );
         addExtensionProperty(
             subscribeMessageFlow, 
             "queueName", 
             ( ingress.isDirectConsumer() ? "" : ingress.getQueueListenerAddress() ) );
-        // addExtensionProperty( subscribeMessageFlow, "system", "EventMeshSender");
 
         // Add topic list as extension property
         StringBuilder topicBuilder = new StringBuilder();
@@ -555,18 +559,18 @@ public class SapIflowMapper {
             }
         }
 
-        //
+        final String messageFlowName = "To_SolacePubSubPlus_" + messageFlowCounter++;
         TMessageFlow publishMessageFlow = 
             createGenericMessageFlow(
-                "Publish " + egress.getMessageName(), 
+                messageFlowName,
                 sourceRef, 
                 targetRef
             );
         addExtensionProperties(publishMessageFlow, extConfigs.getMessageFlow().getPublication() );
         
-        // addExtensionProperty(publishMessageFlow, "deliveryMode", "DIRECT");
-        // addExtensionProperty(publishMessageFlow, "Description", "");
-        addExtensionProperty(publishMessageFlow, "Name", egress.getMessageName());
+        addExtensionProperty(publishMessageFlow, "deliveryMode", "DIRECT");
+        addExtensionProperty(publishMessageFlow, "Description", "");
+        addExtensionProperty(publishMessageFlow, "Name", messageFlowName);
 
         return publishMessageFlow;
     }
