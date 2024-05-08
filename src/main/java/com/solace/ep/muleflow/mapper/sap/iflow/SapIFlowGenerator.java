@@ -34,6 +34,9 @@ import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Marshaller;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Static methods to create SAP IFlow BPMN2 document
+ */
 @Slf4j
 public class SapIFlowGenerator {
     

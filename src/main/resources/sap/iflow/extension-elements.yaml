@@ -1,4 +1,5 @@
 ---
+## Extension elements for SAP IFlow BPMN2 collaboration
 collaboration:
   - key:   namespaceMapping
     value: 
@@ -30,6 +31,7 @@ collaboration:
     value: "ctype::IFlowVariant/cname::IFlowConfiguration/version::1.2.4"
   - key:   ServerTrace
     value: "false" 
+## Extension elements for Event Mesh Sender and Receiver BPMN2 participants by type
 participant:
   eventMeshSender:
     - key:   enableBasicAuthentication
@@ -47,6 +49,10 @@ participant:
   destinationSystemReceiver:
     - key:   ifl:type
       value: EndpointRecevier
+## Message Flow extension elements by type
+## - allMessageFlows - Apply to all consumer and publisher message flows
+## - subscription - Apply these to all consumer message flows
+## - publication - Apply these to all publishing message flows
 messageFlow:
   allMessageFlows:
     - key:   accessTokenFetchIntervalInSecs
@@ -102,8 +108,6 @@ messageFlow:
     - key:   Vendor
       value: Solace
   subscription:
-    # - key:   Description
-    #   value: 
     - key:   direction
       value: Sender
     - key:   failedMessageSettlementOutcome
@@ -139,10 +143,6 @@ messageFlow:
       value: 
     - key:   cosValue
       value: 
-    # - key:   deliveryMode
-    #   value: DIRECT
-    # - key:   Description
-    #   value: 
     - key:   destinationName
       value: "{{composedTopic}}"
     - key:   cmdVariantUri
@@ -181,7 +181,6 @@ messageFlow:
       value: 
     - key:   userProperties
       value: 
-# process:
 inboundProcess:
   processExtensions:
     - key:   transactionTimeout
@@ -245,7 +244,10 @@ calledProcess:
       value: ctype::FlowstepVariant/cname::EndEvent
     - key:   activityType
       value: EndEvent
+## Extension elements valid for BPMN2 processes called from another process
+## Applies to Business Logic and Generate Topic processes
 callActivity:
+  ## Validation Map and Stub Map extensions
   mapping:
     - key:   mappingSourceValue
       value: 
@@ -261,6 +263,7 @@ callActivity:
       value: ctype::FlowstepVariant/cname::MessageMapping/version::1.3.1
     - key:   messageMappingBundleId
       value: 
+  ## Call activity to call another process
   callProcess:
     - key:   componentVersion
       value: "1.0"
@@ -270,6 +273,7 @@ callActivity:
       value: ctype::FlowstepVariant/cname::NonLoopingProcess/version::1.0.3
     - key:   subActivityType
       value: NonLoopingProcess
+  ## Call activity for topic assembly (handle variables)
   topicAssembly:
     - key:   visibility
       value: local
