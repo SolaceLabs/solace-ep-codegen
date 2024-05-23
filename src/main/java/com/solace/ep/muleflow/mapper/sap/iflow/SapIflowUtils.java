@@ -26,6 +26,9 @@ import com.solace.ep.muleflow.mapper.sap.iflow.model.config.SapIflowExtensionCon
 
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Contants and utility functions for SapIFlowMapper
+ */
 @Slf4j
 public class SapIflowUtils {
     
@@ -77,11 +80,20 @@ public class SapIflowUtils {
                 MAPPING_URI_TEMPLATE            = "dir://mmap/src/main/resources/mapping/%s.mmap",
                 MAPPING_PATH_TEMPLATE           = "src/main/resources/mapping/";
 
+    public static final String
+                BPMN_EDGE_PREFIX                = "BPMNEdge_",
+                BPMN_SHAPE_PREFIX               = "BPMNShape_";
+
     //
     public static final String
                 SEQ_FLOW_PREFIX                 = "SequenceFlow_";
 
-
+    /**
+     * Parse extension-elements.yaml file containing the definitions for static SAP iFlow BPMN2 extensions
+     * @param configFile
+     * @return
+     * @throws Exception
+     */
     public static com.solace.ep.muleflow.mapper.sap.iflow.model.config.SapIflowExtensionConfig parseExtensionConfig( String configFile ) throws Exception {
 
     	final ObjectMapper mapper = new ObjectMapper( new YAMLFactory().enable(YAMLGenerator.Feature.MINIMIZE_QUOTES) );

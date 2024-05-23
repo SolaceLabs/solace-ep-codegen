@@ -22,9 +22,12 @@ import java.util.Map;
 
 import org.glassfish.jaxb.runtime.marshaller.NamespacePrefixMapper;
 
+/**
+ * Output SAP IFlow Doc with expected namespaces
+ */
 public class Bpmn2NamespaceMapper extends NamespacePrefixMapper {
     
-    private Map<String, String> namespaceMap = new HashMap<>();
+    private final Map<String, String> namespaceMap = new HashMap<>();
     
     public Bpmn2NamespaceMapper() {
         namespaceMap.put("http://www.omg.org/spec/BPMN/20100524/MODEL", "bpmn2");
@@ -39,8 +42,6 @@ public class Bpmn2NamespaceMapper extends NamespacePrefixMapper {
 
     @Override
     public String getPreferredPrefix( String namespaceUri, String suggestion, boolean required ) {
-        
         return namespaceMap.getOrDefault(namespaceUri, suggestion);
-
     }
 }
