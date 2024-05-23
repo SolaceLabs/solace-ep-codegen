@@ -164,10 +164,14 @@ public class AsyncApiMessage {
         if ( payload.has(AsyncApiFieldConstants.API_$REF) ) {
             JsonElement refElement = payload.get( AsyncApiFieldConstants.API_$REF );
             if ( refElement.isJsonPrimitive() ) {
-                return this.asyncApi.getSchemaAsReference( refElement.getAsString() );
+                String schemaString = this.asyncApi.getSchemaByReference( refElement.getAsString() );
+                // Following line makes schema definitions relative to schema instead of AsyncApi
+                return AsyncApiUtils.refactorJsonSchemaDefinitions(schemaString, refElement.getAsString());
+            } else {
+                throw new Exception( "$ref element for message is not property formatted" );
             }
-            throw new Exception( "$ref element for message is not property formatted" );
         }
+
         Gson gson = new Gson();
         return gson.toJson(payload);
     }

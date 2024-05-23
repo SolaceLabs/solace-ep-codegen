@@ -148,7 +148,7 @@ public class TestAsyncApiParsing {
 
         try {
             String schema1 = accessor.getSchemaByName("Category");
-            String schema2 = accessor.getSchemaAsReference("#/components/schemas/Tag");
+            String schema2 = accessor.getSchemaByReference("#/components/schemas/Tag");
 
             System.out.println(schema1);
             System.out.println(schema2);

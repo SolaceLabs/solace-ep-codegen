@@ -59,4 +59,15 @@ public class AsyncApiUtils {
         }
     }
 
+    /**
+     * Refactors Schema String to make definitions local to the schema instance
+     * instead of relative to the asyncapi
+     * @param schemaString
+     * @param schemaRef
+     * @return
+     */
+    public static String refactorJsonSchemaDefinitions( String schemaString, String schemaRef ) {
+        return schemaString.replace( schemaRef + "/definitions", "#/definitions");
+    }
+
 }

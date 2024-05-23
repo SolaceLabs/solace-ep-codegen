@@ -157,11 +157,24 @@ public class AsyncApiAccessor {
         return new AsyncApiMessage(messageObject, new AsyncApiAccessor(root.deepCopy()));
     }
 
-    public String getSchemaAsReference( String referencePath ) throws Exception {
+    public String getSchemaByReference( String referencePath ) throws Exception {
         JsonObject schemaObject = getFieldAsReference(referencePath);
 
         Gson gson = new Gson();
         return gson.toJson(schemaObject);
+    }
+
+    /**
+     * Retrives the schema as object form the asyncapi
+     * A references to definitions within the schema will be relative to
+     * the asyncapi and not the stand-alone schema
+     * @param referencePath
+     * @return
+     * @throws Exception
+     */
+    public JsonObject getSchemaAsObjectByReference( String referencePath ) throws Exception {
+        JsonObject schemaObject = getFieldAsReference(referencePath);
+        return schemaObject;
     }
 
     public String getSchemaByName( String schemaName ) throws Exception {

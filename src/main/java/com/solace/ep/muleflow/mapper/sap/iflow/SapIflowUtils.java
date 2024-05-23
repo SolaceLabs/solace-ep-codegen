@@ -80,10 +80,13 @@ public class SapIflowUtils {
                 MAPPING_URI_TEMPLATE            = "dir://mmap/src/main/resources/mapping/%s.mmap",
                 MAPPING_PATH_TEMPLATE           = "src/main/resources/mapping/";
 
+    public static final String
+                BPMN_EDGE_PREFIX                = "BPMNEdge_",
+                BPMN_SHAPE_PREFIX               = "BPMNShape_";
+
     //
     public static final String
                 SEQ_FLOW_PREFIX                 = "SequenceFlow_";
-
 
     /**
      * Parse extension-elements.yaml file containing the definitions for static SAP iFlow BPMN2 extensions
