@@ -62,13 +62,13 @@ messageFlow:
     - key:   ComponentNS
       value: sap
     - key:   ComponentSWCVId
-      value: "1.2.0"
+      value: "1.3.0"
     - key:   ComponentSWCVName
       value: external
     - key:   ComponentType
-      value: SolacePubSubPlus
+      value: AdvancedEventMesh
     - key:   componentVersion
-      value: "1.2"
+      value: "1.3"
     - key:   host
       value: "{{solace_host}}"
     - key:   jcsmpProperties
@@ -78,7 +78,7 @@ messageFlow:
     - key:   MessageProtocol
       value: SMF
     - key:   MessageProtocolVersion
-      value: "1.2.0"
+      value: "1.3.0"
     - key:   messageVpn
       value: "{{solace_vpn}}"
     - key:   oauth2AuthorizationCodeCredentialName
@@ -100,20 +100,20 @@ messageFlow:
     - key:   TransportProtocol
       value: TCP
     - key:   TransportProtocolVersion
-      value: "1.2.0"
+      value: "1.3.0"
     - key:   trustStoreAlias
       value: 
     - key:   username
       value: "{{solace_username}}"
     - key:   Vendor
-      value: Solace
+      value: SAP
   subscription:
     - key:   direction
       value: Sender
     - key:   failedMessageSettlementOutcome
       value: FAILED
     - key:   cmdVariantUri
-      value: ctype::AdapterVariant/cname::SolacePubSubPlus/vendor::Solace/tp::TCP/mp::SMF/direction::Sender/version::1.2.0
+      value: ctype::AdapterVariant/cname::AdvancedEventMesh/vendor::SAP/tp::TCP/mp::SMF/direction::Sender/version::1.3.0
     - key:   dteTopicName
       value: 
     - key:   instanceLockEnabled
@@ -144,9 +144,9 @@ messageFlow:
     - key:   cosValue
       value: 
     - key:   destinationName
-      value: "{{composedTopic}}"
+      value: "${property.composedTopic}"
     - key:   cmdVariantUri
-      value: ctype::AdapterVariant/cname::SolacePubSubPlus/vendor::Solace/tp::TCP/mp::SMF/direction::Receiver/version::1.2.0
+      value: ctype::AdapterVariant/cname::AdvancedEventMesh/vendor::SAP/tp::TCP/mp::SMF/direction::Receiver/version::1.3.0
     - key:   direction
       value: Receiver
     - key:   dmqEligible
@@ -274,6 +274,7 @@ callActivity:
     - key:   subActivityType
       value: NonLoopingProcess
   ## Call activity for topic assembly (handle variables)
+  ## TODO - Remove this entry (topicAssembly)
   topicAssembly:
     - key:   visibility
       value: local
@@ -287,3 +288,29 @@ callActivity:
       value: Variables
     - key:   cmdVariantUri
       value: ctype::FlowstepVariant/cname::Variables/version::1.2.0
+  defineTopic:
+    - key:   bodyType
+      value: constant
+    - key:   headerTable
+      value: 
+    - key:   wrapContent
+      value: 
+    - key:   componentVersion
+      value: "1.6"
+    - key:   activityType
+      value: Enricher
+    - key:   cmdVariantUri
+      value: ctype::FlowstepVariant/cname::Enricher/version::1.6.0
+  groovyScript:
+    - key:   scriptFunction
+      value: processData
+    - key:   scriptBundleId
+      value: 
+    - key:   componentVersion
+      value: "1.1"
+    - key:   activityType
+      value: Script
+    - key:   cmdVariantUri
+      value: ctype::FlowstepVariant/cname::GroovyScript/version::1.1.2
+    - key:   subActivityType
+      value: GroovyScript

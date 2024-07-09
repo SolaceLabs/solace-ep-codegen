@@ -105,8 +105,15 @@ public class SapIflowExtensionConfig {
         @JsonProperty
         List<ExtProperty> callProcess;
 
+        // TODO - Remove field, also remove topicAssembly element from extension-elements.yaml
         @JsonProperty
         List<ExtProperty> topicAssembly;
+
+        @JsonProperty
+        List<ExtProperty> defineTopic;
+
+        @JsonProperty
+        List<ExtProperty> groovyScript;
     }
 
     @Data

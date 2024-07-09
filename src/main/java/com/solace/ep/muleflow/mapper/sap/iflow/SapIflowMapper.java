@@ -455,7 +455,7 @@ public class SapIflowMapper {
             }
         }
 
-        final String messageFlowName = "From_SolacePubSubPlus_" + messageFlowCounter++;
+        final String messageFlowName = "From_AdvancedEventMesh_" + messageFlowCounter++;
         final TMessageFlow subscribeMessageFlow = 
             createGenericMessageFlow(
                 messageFlowName,
@@ -469,7 +469,7 @@ public class SapIflowMapper {
         addExtensionProperty(
             subscribeMessageFlow, 
             "ackMode", 
-            "AUTOMATIC_IMMEDIATE" );
+            "AUTOMATIC_ON_EXCHANGE_COMPLETE" );
             // ( consumer.isDirectConsumer() ? "AUTOMATIC_IMMEDIATE" : 
             //         ( ( consumer.getQueueListenerAckMode() != null && consumer.getQueueListenerAckMode().length() > 0 ) ?
             //             consumer.getQueueListenerAckMode() : "AUTOMATIC_IMMEDIATE" ) ) );
@@ -477,8 +477,19 @@ public class SapIflowMapper {
             subscribeMessageFlow, 
             "consumerMode", 
             ( consumer.isDirectConsumer() ? "DIRECT" : "GUARANTEED" ) );
-        addExtensionProperty( subscribeMessageFlow, "Description", "");
+        String description;
+        if ( consumer.isDirectConsumer() ) {
+            StringBuilder topics = new StringBuilder();
+            consumer.getDirectListenerTopics().forEach( t -> {
+                topics.append("\n" + t);
+            });
+            description = String.format("Receive input messages from AEM on topic(s):%s", topics.toString());
+        } else {
+            description = String.format("Receive input messages from AEM on queue [%s]", consumer.getQueueListenerAddress());
+        }
+        addExtensionProperty( subscribeMessageFlow, "Description", description);
         addExtensionProperty( subscribeMessageFlow, "Name", messageFlowName );
+        // addExtensionProperty( subscribeMessageFlow, "Name", "AdvancedEventMesh" );
         addExtensionProperty(
             subscribeMessageFlow, 
             "queueName", 
@@ -598,16 +609,26 @@ public class SapIflowMapper {
         addExtensionPropertiesToStartAndEndEvents(eventGeneratorProcess, extConfigs.getCalledProcess());
 
         // TODO - Verify this logic
-        publisher.getSetVariables().forEach( (k, v) -> {
-            addCallActivityBeforeEndEvent(
-                eventGeneratorProcess,
-                createCallActivityExtractTopicVariable( k ));
-        } );
+        // publisher.getSetVariables().forEach( (k, v) -> {
+        //     addCallActivityBeforeEndEvent(
+        //         eventGeneratorProcess,
+        //         createCallActivityExtractTopicVariable( k ));
+        // } );
 
         // TODO - How to build composed topic?
+        // addCallActivityBeforeEndEvent(
+        //     eventGeneratorProcess, 
+        //     createCallActivityGenerateComposedTopic( publisher.getPublishAddress() ));
+
         addCallActivityBeforeEndEvent(
             eventGeneratorProcess, 
-            createCallActivityGenerateComposedTopic( publisher.getPublishAddress() ));
+            createCallActivityDefineTopic(publisher.getPublishAddress(), List.copyOf(publisher.getSetVariables().keySet())));
+        addCallActivityBeforeEndEvent(
+            eventGeneratorProcess, 
+            createCallActivityExtractParameters());
+        addCallActivityBeforeEndEvent(
+            eventGeneratorProcess, 
+            createCallActivityComposeTopic());
 
         final String validateSchemaName = getSchemaName(publisher.getJsonSchemaReference());
         final String validateCaName = "Validate outbound event against schema " + validateSchemaName;
@@ -635,7 +656,7 @@ public class SapIflowMapper {
             }
         }
 
-        final String messageFlowName = "To_SolacePubSubPlus_" + messageFlowCounter++;
+        final String messageFlowName = "To_AdvancedEventMesh_" + messageFlowCounter++;
         final TMessageFlow publishMessageFlow = 
             createGenericMessageFlow(
                 messageFlowName,
@@ -644,13 +665,44 @@ public class SapIflowMapper {
             );
         addExtensionProperties(publishMessageFlow, extConfigs.getMessageFlow().getPublication() );
         
-        addExtensionProperty(publishMessageFlow, "deliveryMode", "DIRECT");
-        addExtensionProperty(publishMessageFlow, "Description", "");
+        addExtensionProperty(publishMessageFlow, "deliveryMode", "PERSISTENT");
+        addExtensionProperty(publishMessageFlow, "Description", String.format("Publish Message [%s] to AEM on Topic [%s]", publisher.getMessageName() == null ? "?" : publisher.getMessageName(), publisher.getPublishAddress()));
         addExtensionProperty(publishMessageFlow, "Name", messageFlowName);
+        // addExtensionProperty(publishMessageFlow, "Name", "AdvancedEventMesh");
 
         return publishMessageFlow;
     }
 
+    private TCallActivity createCallActivityDefineTopic( final String topicPattern, final List<String> parameters ) {
+        final String COMPOSED_TOPIC_PARAMETER = "<row><cell id='Action'>Create</cell><cell id='Type'>constant</cell><cell id='Value'>%s</cell><cell id='Default'></cell><cell id='Name'>gpath_composedTopicPattern</cell><cell id='Datatype'></cell></row>";
+        final String TOPIC_VAR_PARAMETER = "<row><cell id='Action'>Create</cell><cell id='Type'>constant</cell><cell id='Value'>CHANGE.ME</cell><cell id='Default'></cell><cell id='Name'>gpath_topicexp_%s</cell><cell id='Datatype'></cell></row>";
+        final TCallActivity ca = createGenericCallActivity( "Define Topic to Publish" );
+
+        String propertyTable = String.format(COMPOSED_TOPIC_PARAMETER, topicPattern);
+        for (String p : parameters ) {
+            propertyTable += String.format(TOPIC_VAR_PARAMETER, p);
+        }
+        addExtensionProperty(ca, "propertyTable", propertyTable);
+        addExtensionProperties(ca, extConfigs.getCallActivity().getDefineTopic());
+
+        return ca;
+    }
+
+    private TCallActivity createCallActivityExtractParameters() {
+        final TCallActivity ca = createGenericCallActivity( "Extract Parameters Script" );
+        addExtensionProperties(ca, extConfigs.getCallActivity().getGroovyScript());
+        addExtensionProperty(ca, "script", "extractField.groovy");
+        return ca;
+    }
+
+    private TCallActivity createCallActivityComposeTopic() {
+        final TCallActivity ca = createGenericCallActivity( "Compose Topic Script" );
+        addExtensionProperties(ca, extConfigs.getCallActivity().getGroovyScript());
+        addExtensionProperty(ca, "script", "composeTopic.groovy");
+        return ca;
+    }
+
+    // TODO - Remove method
     private TCallActivity createCallActivityExtractTopicVariable( final String variableName ) {
         // TODO - How to create extract variable block?
         final String EXTRACT_VARIABLE_TEMPLATE = "<row><cell>%s</cell><cell></cell><cell>expression</cell><cell>%s</cell><cell>local</cell></row>";
@@ -661,6 +713,7 @@ public class SapIflowMapper {
         return ca;
     }
 
+    // TODO - Remove method
     private TCallActivity createCallActivityGenerateComposedTopic( final String topicPattern ) {
         // TODO - How to create composed topic block?
         final TCallActivity ca = createGenericCallActivity( SapIflowUtils.ACT_GEN_COMPOSED_TOPIC_NAME );

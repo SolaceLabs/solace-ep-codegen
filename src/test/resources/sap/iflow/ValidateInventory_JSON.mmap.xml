@@ -1,0 +1,157 @@
+<xiObj xmlns="urn:sap-com:xi">
+    <idInfo VID="01">
+        <vc caption="LOCAL" sp="-1" swcGuid="00000000000000000000000000000000" vcType="S">
+            <clCxt consider="A" />
+        </vc>
+        <key typeID="XI_TRAFO" version="" />
+        <version>1.0</version>
+    </idInfo>
+    <documentation>
+        <description />
+    </documentation>
+    <generic>
+        <admInf>
+            <modifBy></modifBy>
+            <modifAt></modifAt>
+            <modifAtLong>1720546830883</modifAtLong>
+            <owner />
+        </admInf>
+        <lnks>
+            <lnkRole kpos="1" role="TARGET_IFR_MESS">
+                <lnk rMode="R">
+                    <key typeID="json" version="1.1">
+                        <elem>Inventory_JSON_api.json</elem>
+                        <elem>src/main/resources/json</elem>
+                        <elem>/__$delim$__GET__$delim$__Response__$delim$__200</elem>
+                        <elem></elem>
+                    </key>
+                </lnk>
+            </lnkRole>
+            <lnkRole kpos="1" role="SOURCE_IFR_MESS">
+                <lnk rMode="R">
+                    <key typeID="json" version="1.1">
+                        <elem>Inventory_JSON_api.json</elem>
+                        <elem>src/main/resources/json</elem>
+                        <elem>/__$delim$__GET__$delim$__Response__$delim$__200</elem>
+                        <elem></elem>
+                    </key>
+                </lnk>
+            </lnkRole>
+        </lnks>
+        <textInfo loadedL="EN">
+            <textObj id="7954780410774be8811614985d09b107" masterL="EN" type="0">
+                <texts lang="EN">
+                    <text label="" />
+                    <text label="21327ec998d3248b3333da4cbe20b699"></text>
+                </texts>
+            </textObj>
+        </textInfo>
+    </generic>
+    <content>
+        <tr:XiTrafo xmlns:tr="urn:sap-com:xi:mapping:xitrafo">
+            <tr:MetaData>
+                <mappingtool version="XI7.1">
+                    <project version="XI7.1">
+                        <libstorage>
+                            <entry name="usernamespace">
+                                <functionstorage version="XI7.1">
+                                    <key>
+                                        <key typeID="">
+                                            <elem></elem>
+                                            <elem></elem>
+                                        </key>
+                                    </key>
+                                    <classname></classname>
+                                    <package></package>
+                                    <imports />
+                                    <globals>
+                                        <javaText />
+                                    </globals>
+                                    <init>
+                                        <functionmodel>
+                                            <signature cacheType="0" />
+                                            <name></name>
+                                            <key></key>
+                                            <tab></tab>
+                                            <title></title>
+                                            <uiTitle></uiTitle>
+                                            <implementation type="udf">
+                                                <javaText />
+                                            </implementation>
+                                        </functionmodel>
+                                    </init>
+                                    <cleanup>
+                                        <javaText />
+                                    </cleanup>
+                                    <usedjars />
+                                </functionstorage>
+                            </entry>
+                        </libstorage>
+                        <transformation>
+                            <brick gid="0" path="/__$$DuMmY_RoOt$$__/items" type="Dst">
+                                <viewData x="200" y="40" />
+                                <arg>
+                                    <brick gid="0" path="/__$$DuMmY_RoOt$$__/items" type="Src">
+                                        <viewData x="50" y="40" />
+                                    </brick>
+                                </arg>
+                                <group />
+                            </brick>
+                            <brick gid="0" path="/__$$DuMmY_RoOt$$__/items/quantity" type="Dst">
+                                <viewData x="200" y="40" />
+                                <arg>
+                                    <brick gid="0" path="/__$$DuMmY_RoOt$$__/items/quantity"
+                                        type="Src">
+                                        <viewData x="50" y="40" />
+                                    </brick>
+                                </arg>
+                                <group />
+                            </brick>
+                            <brick gid="0" path="/__$$DuMmY_RoOt$$__/items/price" type="Dst">
+                                <viewData x="200" y="40" />
+                                <arg>
+                                    <brick gid="0" path="/__$$DuMmY_RoOt$$__/items/price" type="Src">
+                                        <viewData x="50" y="40" />
+                                    </brick>
+                                </arg>
+                                <group />
+                            </brick>
+                            <brick gid="0" path="/__$$DuMmY_RoOt$$__/items/id" type="Dst">
+                                <viewData x="200" y="40" />
+                                <arg>
+                                    <brick gid="0" path="/__$$DuMmY_RoOt$$__/items/id" type="Src">
+                                        <viewData x="50" y="40" />
+                                    </brick>
+                                </arg>
+                                <group />
+                            </brick>
+                        </transformation>
+                        <testData>
+                            <instances />
+                        </testData>
+                        <ViewState></ViewState>
+                        <pcont />
+                    </project>
+                </mappingtool>
+            </tr:MetaData>
+            <tr:ByteCodeJar />
+            <tr:SourceStructure />
+            <tr:TargetStructure />
+            <tr:Multiplicity>1:1</tr:Multiplicity>
+            <tr:SourceParameters>
+                <tr:Parameter>
+                    <tr:Position>1</tr:Position>
+                    <tr:Minoccurs>1</tr:Minoccurs>
+                    <tr:Maxoccurs>1</tr:Maxoccurs>
+                </tr:Parameter>
+            </tr:SourceParameters>
+            <tr:TargetParameters>
+                <tr:Parameter>
+                    <tr:Position>1</tr:Position>
+                    <tr:Minoccurs>1</tr:Minoccurs>
+                    <tr:Maxoccurs>1</tr:Maxoccurs>
+                </tr:Parameter>
+            </tr:TargetParameters>
+        </tr:XiTrafo>
+    </content>
+</xiObj>
