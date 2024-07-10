@@ -623,9 +623,9 @@ public class SapIflowMapper {
         addCallActivityBeforeEndEvent(
             eventGeneratorProcess, 
             createCallActivityDefineTopic(publisher.getPublishAddress(), List.copyOf(publisher.getSetVariables().keySet())));
-        addCallActivityBeforeEndEvent(
-            eventGeneratorProcess, 
-            createCallActivityExtractParameters());
+        // addCallActivityBeforeEndEvent(
+        //     eventGeneratorProcess, 
+        //     createCallActivityExtractParameters());
         addCallActivityBeforeEndEvent(
             eventGeneratorProcess, 
             createCallActivityComposeTopic());
@@ -688,12 +688,12 @@ public class SapIflowMapper {
         return ca;
     }
 
-    private TCallActivity createCallActivityExtractParameters() {
-        final TCallActivity ca = createGenericCallActivity( "Extract Parameters Script" );
-        addExtensionProperties(ca, extConfigs.getCallActivity().getGroovyScript());
-        addExtensionProperty(ca, "script", "extractField.groovy");
-        return ca;
-    }
+    // private TCallActivity createCallActivityExtractParameters() {
+    //     final TCallActivity ca = createGenericCallActivity( "Extract Parameters Script" );
+    //     addExtensionProperties(ca, extConfigs.getCallActivity().getGroovyScript());
+    //     addExtensionProperty(ca, "script", "extractField.groovy");
+    //     return ca;
+    // }
 
     private TCallActivity createCallActivityComposeTopic() {
         final TCallActivity ca = createGenericCallActivity( "Compose Topic Script" );
@@ -702,25 +702,21 @@ public class SapIflowMapper {
         return ca;
     }
 
-    // TODO - Remove method
-    private TCallActivity createCallActivityExtractTopicVariable( final String variableName ) {
-        // TODO - How to create extract variable block?
-        final String EXTRACT_VARIABLE_TEMPLATE = "<row><cell>%s</cell><cell></cell><cell>expression</cell><cell>%s</cell><cell>local</cell></row>";
-        final String extractVariableXml = String.format( EXTRACT_VARIABLE_TEMPLATE, variableName, ( "$." + variableName ) );
-        final TCallActivity ca = createGenericCallActivity( SapIflowUtils.ACT_GEN_EXTRACT_TOPIC_PREFIX + variableName);
-        addExtensionProperties(ca, extConfigs.getCallActivity().getTopicAssembly());
-        addExtensionProperty( ca, "variable", extractVariableXml );
-        return ca;
-    }
+    // private TCallActivity createCallActivityExtractTopicVariable( final String variableName ) {
+    //     final String EXTRACT_VARIABLE_TEMPLATE = "<row><cell>%s</cell><cell></cell><cell>expression</cell><cell>%s</cell><cell>local</cell></row>";
+    //     final String extractVariableXml = String.format( EXTRACT_VARIABLE_TEMPLATE, variableName, ( "$." + variableName ) );
+    //     final TCallActivity ca = createGenericCallActivity( SapIflowUtils.ACT_GEN_EXTRACT_TOPIC_PREFIX + variableName);
+    //     addExtensionProperties(ca, extConfigs.getCallActivity().getTopicAssembly());
+    //     addExtensionProperty( ca, "variable", extractVariableXml );
+    //     return ca;
+    // }
 
-    // TODO - Remove method
-    private TCallActivity createCallActivityGenerateComposedTopic( final String topicPattern ) {
-        // TODO - How to create composed topic block?
-        final TCallActivity ca = createGenericCallActivity( SapIflowUtils.ACT_GEN_COMPOSED_TOPIC_NAME );
-        addExtensionProperties(ca, extConfigs.getCallActivity().getTopicAssembly());
-        addExtensionProperty( ca, "variable", topicPattern );
-        return ca;
-    }
+    // private TCallActivity createCallActivityGenerateComposedTopic( final String topicPattern ) {
+    //     final TCallActivity ca = createGenericCallActivity( SapIflowUtils.ACT_GEN_COMPOSED_TOPIC_NAME );
+    //     addExtensionProperties(ca, extConfigs.getCallActivity().getTopicAssembly());
+    //     addExtensionProperty( ca, "variable", topicPattern );
+    //     return ca;
+    // }
 
     private TCallActivity createCallActivityToProcess( final String formattedName, final String processToCall ) {
 
