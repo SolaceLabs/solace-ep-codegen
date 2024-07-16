@@ -22,11 +22,11 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 import org.junit.jupiter.api.Test;
 
-import com.solace.ep.codegen.mapper.asyncapi.AsyncApiToMuleDocMapper;
-import com.solace.ep.codegen.mapper.model.MapMuleDoc;
-import com.solace.ep.codegen.mapper.sap.iflow.SapIFlowGenerator;
-import com.solace.ep.codegen.mapper.sap.iflow.SapIflowUtils;
-import com.solace.ep.codegen.mapper.sap.iflow.model.config.SapIflowExtensionConfig;
+import com.solace.ep.codegen.asyncapi.mapper.AsyncApiToMuleDocMapper;
+import com.solace.ep.codegen.internal.model.MapMuleDoc;
+import com.solace.ep.codegen.sap.iflow.SapIFlowGenerator;
+import com.solace.ep.codegen.sap.iflow.SapIflowUtils;
+import com.solace.ep.codegen.sap.iflow.model.config.SapIflowExtensionConfig;
 import com.solace.ep.codegen.util.FileUtils;
 
 

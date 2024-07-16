@@ -20,9 +20,9 @@ package com.solace.ep.codegen.mule;
 import java.io.File;
 
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import com.solace.ep.codegen.mapper.MuleDocMapper;
-import com.solace.ep.codegen.mapper.asyncapi.AsyncApiToMuleDocMapper;
-import com.solace.ep.codegen.mapper.model.MapMuleDoc;
+import com.solace.ep.codegen.asyncapi.mapper.AsyncApiToMuleDocMapper;
+import com.solace.ep.codegen.internal.model.MapMuleDoc;
+import com.solace.ep.codegen.mule.mapper.MuleDocMapper;
 import com.solace.ep.codegen.mule.model.core.MuleDoc;
 import com.solace.ep.codegen.mule.util.XmlMapperUtils;
 import com.solace.ep.codegen.util.FileUtils;
