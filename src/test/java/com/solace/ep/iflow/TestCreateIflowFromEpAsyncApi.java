@@ -22,12 +22,12 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 import org.junit.jupiter.api.Test;
 
-import com.solace.ep.muleflow.mapper.asyncapi.AsyncApiToMuleDocMapper;
-import com.solace.ep.muleflow.mapper.model.MapMuleDoc;
-import com.solace.ep.muleflow.mapper.sap.iflow.SapIFlowGenerator;
-import com.solace.ep.muleflow.mapper.sap.iflow.SapIflowUtils;
-import com.solace.ep.muleflow.mapper.sap.iflow.model.config.SapIflowExtensionConfig;
-import com.solace.ep.muleflow.util.FileUtils;
+import com.solace.ep.codegen.mapper.asyncapi.AsyncApiToMuleDocMapper;
+import com.solace.ep.codegen.mapper.model.MapMuleDoc;
+import com.solace.ep.codegen.mapper.sap.iflow.SapIFlowGenerator;
+import com.solace.ep.codegen.mapper.sap.iflow.SapIflowUtils;
+import com.solace.ep.codegen.mapper.sap.iflow.model.config.SapIflowExtensionConfig;
+import com.solace.ep.codegen.util.FileUtils;
 
 
 public class TestCreateIflowFromEpAsyncApi {

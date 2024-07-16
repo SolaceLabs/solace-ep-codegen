@@ -9,11 +9,11 @@ import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.solace.ep.asyncapi.tests.TestAsyncApiParsing;
-import com.solace.ep.muleflow.mapper.MuleDocMapper;
-import com.solace.ep.muleflow.mapper.asyncapi.AsyncApiToMuleDocMapper;
-import com.solace.ep.muleflow.mapper.model.MapMuleDoc;
-import com.solace.ep.muleflow.mule.model.core.MuleDoc;
-import com.solace.ep.muleflow.mule.util.XmlMapperUtils;
+import com.solace.ep.codegen.mapper.MuleDocMapper;
+import com.solace.ep.codegen.mapper.asyncapi.AsyncApiToMuleDocMapper;
+import com.solace.ep.codegen.mapper.model.MapMuleDoc;
+import com.solace.ep.codegen.mule.model.core.MuleDoc;
+import com.solace.ep.codegen.mule.util.XmlMapperUtils;
 
 import lombok.extern.slf4j.Slf4j;
 

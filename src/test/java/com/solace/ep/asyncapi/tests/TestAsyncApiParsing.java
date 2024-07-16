@@ -12,9 +12,9 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 
 import com.google.gson.JsonObject;
-import com.solace.ep.muleflow.asyncapi.AsyncApiAccessor;
-import com.solace.ep.muleflow.asyncapi.AsyncApiChannel;
-import com.solace.ep.muleflow.asyncapi.AsyncApiMessage;
+import com.solace.ep.codegen.asyncapi.AsyncApiAccessor;
+import com.solace.ep.codegen.asyncapi.AsyncApiChannel;
+import com.solace.ep.codegen.asyncapi.AsyncApiMessage;
 
 import lombok.extern.slf4j.Slf4j;
 

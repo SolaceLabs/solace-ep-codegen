@@ -5,8 +5,8 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 import org.junit.jupiter.api.Test;
 
-import com.solace.ep.muleflow.mule.MuleFlowGenerator;
-import com.solace.ep.muleflow.util.FileUtils;
+import com.solace.ep.codegen.mule.MuleFlowGenerator;
+import com.solace.ep.codegen.util.FileUtils;
 
 import lombok.extern.slf4j.Slf4j;
 

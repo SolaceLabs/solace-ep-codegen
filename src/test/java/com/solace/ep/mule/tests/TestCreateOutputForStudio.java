@@ -6,22 +6,22 @@ import static org.junit.jupiter.api.Assertions.fail;
 import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import com.solace.ep.muleflow.mule.model.core.GlobalProperty;
-import com.solace.ep.muleflow.mule.model.core.MuleDoc;
-import com.solace.ep.muleflow.mule.model.core.MuleFlow;
-import com.solace.ep.muleflow.mule.model.core.MuleFlowRef;
-import com.solace.ep.muleflow.mule.model.core.SetVariable;
-import com.solace.ep.muleflow.mule.model.ee.TransformOperation;
-import com.solace.ep.muleflow.mule.model.ee.TransformOperation.TransformMessage;
-import com.solace.ep.muleflow.mule.model.json.ValidateJsonSchema;
-import com.solace.ep.muleflow.mule.model.solace.SolaceConfiguration;
-import com.solace.ep.muleflow.mule.model.solace.SolaceConnection;
-import com.solace.ep.muleflow.mule.model.solace.SolaceMessage;
-import com.solace.ep.muleflow.mule.model.solace.SolacePublish;
-import com.solace.ep.muleflow.mule.model.solace.SolaceQueueListener;
-import com.solace.ep.muleflow.mule.model.solace.SolaceConfiguration.EventPortalConfiguration;
-import com.solace.ep.muleflow.mule.model.xml_module.ValidateXmlSchema;
-import com.solace.ep.muleflow.mule.util.XmlMapperUtils;
+import com.solace.ep.codegen.mule.model.core.GlobalProperty;
+import com.solace.ep.codegen.mule.model.core.MuleDoc;
+import com.solace.ep.codegen.mule.model.core.MuleFlow;
+import com.solace.ep.codegen.mule.model.core.MuleFlowRef;
+import com.solace.ep.codegen.mule.model.core.SetVariable;
+import com.solace.ep.codegen.mule.model.ee.TransformOperation;
+import com.solace.ep.codegen.mule.model.ee.TransformOperation.TransformMessage;
+import com.solace.ep.codegen.mule.model.json.ValidateJsonSchema;
+import com.solace.ep.codegen.mule.model.solace.SolaceConfiguration;
+import com.solace.ep.codegen.mule.model.solace.SolaceConnection;
+import com.solace.ep.codegen.mule.model.solace.SolaceMessage;
+import com.solace.ep.codegen.mule.model.solace.SolacePublish;
+import com.solace.ep.codegen.mule.model.solace.SolaceQueueListener;
+import com.solace.ep.codegen.mule.model.solace.SolaceConfiguration.EventPortalConfiguration;
+import com.solace.ep.codegen.mule.model.xml_module.ValidateXmlSchema;
+import com.solace.ep.codegen.mule.util.XmlMapperUtils;
 
 import lombok.extern.slf4j.Slf4j;
 
