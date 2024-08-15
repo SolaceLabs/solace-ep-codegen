@@ -11,10 +11,10 @@
     <name>Solace-EventPortal-CodeGen</name>
     <description>
         Code Generator for Solace Event Portal Applications.
-        This project provides the capability create iPaaS code objects
-        from Solace Event Portal Application.
+        This project provides the capability to create iPaaS code artifacts
+        from Solace Event Portal Applications using AsyncApi.
     </description>
-    <url>https://github.com/dennis-brinley/solace-ep-mule</url>
+    <url>https://github.com/SolaceLabs/solace-ep-codegen</url>
 
     <packaging>jar</packaging>
 
