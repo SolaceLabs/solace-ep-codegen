@@ -136,6 +136,33 @@ public class TestEclipseProjectGenerator {
     }
 
     @Test
+    public void testGenerateEclipseArchiveForMuleFlowFromAsyncApi_inv_1_0_4() {
+
+        final String
+            INV_SERVICE_LOCAL = "src/test/resources/asyncapi/Inventory Service-1.0.4.json";
+        final String 
+            groupId = "com.solace.ep.sample.fulfillment",
+            artifactId = "inventory-service",
+            version = "1.0.4";
+        final String
+            generatedArchive = "src/test/resources/test-output/generated-archive/" + artifactId + ".jar";
+
+        String asyncApi;
+        try {
+            asyncApi = FileUtils.getFileAsString(INV_SERVICE_LOCAL);
+            EclipseProjectGenerator epg = new EclipseProjectGenerator();
+            epg.generateEclipseArchiveForMuleFlowFromAsyncApi(groupId, artifactId, version, asyncApi, generatedArchive);
+        } catch ( Exception exc ) {
+            log.error("Failed to create the archive file for {}", INV_SERVICE_LOCAL);
+            fail( exc.getMessage() );
+            return;
+        }
+        Path generatedArchivePath = Paths.get( generatedArchive );
+        assertTrue( Files.exists( generatedArchivePath ) );
+
+    }
+
+    @Test
     public void testGenerateShippingService0_1_2() {
 
         final String SHIPPING_SERVICE_ASYNCAPI = "src/test/resources/asyncapi/Shipping Service-0.1.2.json";

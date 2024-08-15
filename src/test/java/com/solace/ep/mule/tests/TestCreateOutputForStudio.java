@@ -127,7 +127,7 @@ public class TestCreateOutputForStudio {
 
         try {
             outXml = xmlMapper.writeValueAsString(mule);
-            System.out.println(outXml);
+            // System.out.println(outXml);
             log.info("Serialized Xml output");
         } catch ( Exception exc ) {
             log.error( exc.getLocalizedMessage() );

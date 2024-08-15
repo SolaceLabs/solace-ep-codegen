@@ -133,7 +133,7 @@ public class TestAsyncApiParsing {
             assertTrue( message1.getEpEventStateId().contentEquals("2"));
 
             assertTrue( message1.getPayloadAsString().contains("UNDERPANTS") );
-            System.out.println( message1.getPayloadAsString() );
+            // System.out.println( message1.getPayloadAsString() );
         } catch ( Exception e ) {
             fail(e.getLocalizedMessage());
         }
@@ -150,8 +150,8 @@ public class TestAsyncApiParsing {
             String schema1 = accessor.getSchemaByName("Category");
             String schema2 = accessor.getSchemaByReference("#/components/schemas/Tag");
 
-            System.out.println(schema1);
-            System.out.println(schema2);
+            // System.out.println(schema1);
+            // System.out.println(schema2);
 
             assertTrue( schema1.contains("properties"));
             assertTrue(schema2.contains("properties"));
@@ -170,7 +170,7 @@ public class TestAsyncApiParsing {
             AsyncApiMessage m = accessor.getMessageByName("Test Message");
             String schema1 = m.getPayloadAsString();
 
-            System.out.println(schema1);
+            // System.out.println(schema1);
 
             assertTrue(schema1.contains("integer"));
         } catch( Exception e) {
@@ -196,9 +196,9 @@ public class TestAsyncApiParsing {
                         AsyncApiMessage.getMessageAsSingleton(channel.getPublishOpMessages()).getPayloadAsString().contains("namespace") ||
                         AsyncApiMessage.getMessageAsSingleton(channel.getPublishOpMessages()).getPayloadAsString().contains("properties"));
 
-                    for (String p : channel.getParameters() ) {
-                        System.out.println( "Parameter: " + p );
-                    }
+                    // for (String p : channel.getParameters() ) {
+                    //     System.out.println( "Parameter: " + p );
+                    // }
 
                     String queueName = channel.getPublishQueueName();
 
