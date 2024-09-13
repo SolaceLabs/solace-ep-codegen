@@ -1,0 +1,334 @@
+{
+    "components": {
+        "schemas": {},
+        "messages": {
+            "Catalogue Updated": {
+                "x-ep-event-id": "qd444el506r",
+                "x-ep-event-version-displayname": "",
+                "description": "Changes in items available for purchase from the store and their descriptions.",
+                "x-ep-application-domain-id": "4940w3ohug3",
+                "schemaFormat": "application/vnd.apache.avro+json;version=1.9.0",
+                "x-ep-event-state-name": "RELEASED",
+                "x-ep-shared": "true",
+                "x-ep-application-domain-name": "Merchandising",
+                "x-ep-event-version-id": "5rcpcygnsd8",
+                "payload": {
+                    "namespace": "io.confluent.examples.streams.avro.microservices",
+                    "name": "Catalog",
+                    "type": "record",
+                    "fields": [
+                        {
+                            "name": "id",
+                            "type": "string"
+                        },
+                        {
+                            "name": "product",
+                            "type": "enum",
+                            "symbols": [
+                                "JUMPERS",
+                                "UNDERPANTS",
+                                "STOCKINGS"
+                            ]
+                        },
+                        {
+                            "name": "quantity",
+                            "type": "int"
+                        }
+                    ]
+                },
+                "x-ep-event-version": "1.0.2",
+                "x-ep-event-name": "Catalogue Updated",
+                "contentType": "application/json",
+                "x-ep-event-state-id": "2"
+            },
+            "Shipment Created": {
+                "x-ep-event-id": "79xb6oijf4r",
+                "x-ep-event-version-displayname": "",
+                "description": "Changes in the shipping status of ordered items as they move out of the warehouse to home delivery.",
+                "x-ep-application-domain-id": "jdjtm87hb63",
+                "schemaFormat": "application/vnd.apache.avro+json;version=1.9.0",
+                "x-ep-event-state-name": "RELEASED",
+                "x-ep-shared": "true",
+                "x-ep-application-domain-name": "Shipping",
+                "x-ep-event-version-id": "bhfcathym0j",
+                "payload": {
+                    "namespace": "io.confluent.examples.streams.avro.microservices",
+                    "name": "Shipping",
+                    "type": "record",
+                    "fields": [
+                        {
+                            "name": "id",
+                            "type": "string"
+                        },
+                        {
+                            "name": "customerId",
+                            "type": "long"
+                        },
+                        {
+                            "name": "trackingNumber",
+                            "type": "int"
+                        }
+                    ]
+                },
+                "x-ep-event-version": "1.0.2",
+                "x-ep-event-name": "Shipment Created",
+                "contentType": "application/json",
+                "x-ep-event-state-id": "2"
+            },
+            "Shipment Updated": {
+                "x-ep-event-id": "5af0er8w8sf",
+                "x-ep-event-version-displayname": "",
+                "description": "",
+                "x-ep-application-domain-id": "jdjtm87hb63",
+                "schemaFormat": "application/vnd.apache.avro+json;version=1.9.0",
+                "x-ep-event-state-name": "RELEASED",
+                "x-ep-shared": "true",
+                "x-ep-application-domain-name": "Shipping",
+                "x-ep-event-version-id": "id2hckno3cf",
+                "payload": {
+                    "namespace": "io.confluent.examples.streams.avro.microservices",
+                    "name": "Shipping",
+                    "type": "record",
+                    "fields": [
+                        {
+                            "name": "id",
+                            "type": "string"
+                        },
+                        {
+                            "name": "customerId",
+                            "type": "long"
+                        },
+                        {
+                            "name": "trackingNumber",
+                            "type": "int"
+                        }
+                    ]
+                },
+                "x-ep-event-version": "0.1.0",
+                "x-ep-event-name": "Shipment Updated",
+                "contentType": "application/json",
+                "x-ep-event-state-id": "2"
+            },
+            "Customer Created": {
+                "x-ep-event-id": "hibv6txn0fn",
+                "x-ep-event-version-displayname": "",
+                "description": "Shows changes to customer information including name, address and loyalty status",
+                "x-ep-application-domain-id": "tqq4yat791e",
+                "schemaFormat": "application/vnd.apache.avro+json;version=1.9.0",
+                "x-ep-event-state-name": "RELEASED",
+                "x-ep-shared": "true",
+                "x-ep-application-domain-name": "OnlineServices",
+                "x-ep-event-version-id": "kk8mmcdslhz",
+                "payload": {
+                    "namespace": "io.confluent.examples.streams.avro.microservices",
+                    "name": "Customer",
+                    "type": "record",
+                    "fields": [
+                        {
+                            "name": "id",
+                            "type": "long"
+                        },
+                        {
+                            "name": "firstName",
+                            "type": "string"
+                        },
+                        {
+                            "name": "lastName",
+                            "type": "string"
+                        },
+                        {
+                            "name": "email",
+                            "type": "string"
+                        },
+                        {
+                            "name": "address",
+                            "type": "string"
+                        },
+                        {
+                            "default": "bronze",
+                            "name": "level",
+                            "type": "string"
+                        }
+                    ]
+                },
+                "x-ep-event-version": "2.0.2",
+                "x-ep-event-name": "Customer Created",
+                "contentType": "application/json",
+                "x-ep-event-state-id": "2"
+            },
+            "Customer Updated": {
+                "x-ep-event-id": "10jmkh5ijq1",
+                "x-ep-event-version-displayname": "",
+                "description": "",
+                "x-ep-application-domain-id": "tqq4yat791e",
+                "schemaFormat": "application/vnd.apache.avro+json;version=1.9.0",
+                "x-ep-event-state-name": "RELEASED",
+                "x-ep-shared": "true",
+                "x-ep-application-domain-name": "OnlineServices",
+                "x-ep-event-version-id": "x59tl9w1phv",
+                "payload": {
+                    "namespace": "io.confluent.examples.streams.avro.microservices",
+                    "name": "Customer",
+                    "type": "record",
+                    "fields": [
+                        {
+                            "name": "id",
+                            "type": "long"
+                        },
+                        {
+                            "name": "firstName",
+                            "type": "string"
+                        },
+                        {
+                            "name": "lastName",
+                            "type": "string"
+                        },
+                        {
+                            "name": "email",
+                            "type": "string"
+                        },
+                        {
+                            "name": "address",
+                            "type": "string"
+                        },
+                        {
+                            "default": "bronze",
+                            "name": "level",
+                            "type": "string"
+                        }
+                    ]
+                },
+                "x-ep-event-version": "2.0.1",
+                "x-ep-event-name": "Customer Updated",
+                "contentType": "application/json",
+                "x-ep-event-state-id": "2"
+            }
+        }
+    },
+    "channels": {
+        "acmeretail/onlineservices/customer/created/v2/{regionId}/{customerId}": {
+            "publish": {
+                "bindings": {
+                    "solace": {
+                        "destinations": [
+                            {
+                                "destinationType": "queue",
+                                "queue": {
+                                    "name": "SHIPPING.CUSTOMERS",
+                                    "topicSubscriptions": [
+                                        "acmeretail/onlineservices/customer/*/v2/*/*"
+                                    ]
+                                }
+                            }
+                        ],
+                        "bindingVersion": "0.3.0"
+                    }
+                },
+                "message": {
+                    "$ref": "#/components/messages/Customer Created"
+                }
+            },
+            "parameters": {
+                "regionId": {
+                    "schema": {
+                        "type": "string"
+                    },
+                    "x-ep-parameter-name": "regionId"
+                },
+                "customerId": {
+                    "schema": {
+                        "type": "string"
+                    },
+                    "x-ep-parameter-name": "customerId"
+                }
+            }
+        },
+        "acmeretail/merchandising/catalogue/updated/v1/{productTypeId}/{productId}": {
+            "publish": {
+                "bindings": {
+                    "solace": {
+                        "destinations": [
+                            {
+                                "destinationType": "queue",
+                                "queue": {
+                                    "name": "SHIPPING.CATALOGUE",
+                                    "topicSubscriptions": [
+                                        "acmeretail/merchandising/catalogue/updated/v1/*/*"
+                                    ]
+                                }
+                            }
+                        ],
+                        "bindingVersion": "0.3.0"
+                    }
+                },
+                "message": {
+                    "$ref": "#/components/messages/Catalogue Updated"
+                }
+            },
+            "parameters": {
+                "productId": {
+                    "schema": {
+                        "type": "string"
+                    },
+                    "x-ep-parameter-name": "productId"
+                },
+                "productTypeId": {
+                    "schema": {
+                        "type": "string"
+                    },
+                    "x-ep-parameter-name": "productTypeId"
+                }
+            }
+        },
+        "acmeretail/onlineservices/customer/updated/v2/{regionId}/{customerId}": {
+            "publish": {
+                "bindings": {
+                    "solace": {
+                        "destinations": [
+                            {
+                                "destinationType": "queue",
+                                "queue": {
+                                    "name": "SHIPPING.CUSTOMERS",
+                                    "topicSubscriptions": [
+                                        "acmeretail/onlineservices/customer/*/v2/*/*"
+                                    ]
+                                }
+                            }
+                        ],
+                        "bindingVersion": "0.3.0"
+                    }
+                },
+                "message": {
+                    "$ref": "#/components/messages/Customer Updated"
+                }
+            },
+            "parameters": {
+                "regionId": {
+                    "schema": {
+                        "type": "string"
+                    },
+                    "x-ep-parameter-name": "regionId"
+                },
+                "customerId": {
+                    "schema": {
+                        "type": "string"
+                    },
+                    "x-ep-parameter-name": "customerId"
+                }
+            }
+        }
+    },
+    "asyncapi": "2.5.0",
+    "info": {
+        "x-ep-application-version": "0.1.2",
+        "x-ep-application-version-id": "no95i2vlifo",
+        "x-ep-application-id": "pvmnilubh38",
+        "description": "A streaming service leveraging the solace Streams API. This service reacts to orders as they are created, updating the Shipping topic as notifications are received from the delivery company.\n\n[GitHub Source](https://github.com/confluentinc/solace-streams-examples)",
+        "x-ep-state-name": "RELEASED",
+        "title": "Shipping Service",
+        "x-ep-application-domain-id": "jdjtm87hb63",
+        "version": "0.1.2",
+        "x-ep-state-id": "2",
+        "x-ep-application-domain-name": "Shipping"
+    }
+}

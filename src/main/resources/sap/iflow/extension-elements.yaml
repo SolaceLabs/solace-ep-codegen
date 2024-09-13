@@ -181,6 +181,118 @@ messageFlow:
       value: 
     - key:   userProperties
       value: 
+  httpSender:
+    - key:   clientCertificates
+      value: 
+    - key:   cmdVariantUri
+      value: ctype::AdapterVariant/cname::sap:HTTPS/tp::HTTPS/mp::None/direction::Sender/version::1.5.0
+    - key:   ComponentNS
+      value: sap
+    - key:   ComponentSWCVId
+      value: "1.5.0"
+    - key:   ComponentSWCVName
+      value: external
+    - key:   ComponentType
+      value: HTTPS
+    - key:   componentVersion
+      value: "1.5"
+    - key:   Description
+      value: 
+    - key:   direction
+      value: Sender
+    - key:   maximumBodySize
+      value: "40"
+    - key:   MessageProtocol
+      value: None
+    - key:   MessageProtocolVersion
+      value: "1.5.0"
+    # - key:   Name
+    #   value: HTTPS
+    - key:   senderAuthType
+      value: RoleBased
+    # - key:   system
+    #   value: HTTPSenderSystem
+    - key:   TransportProtocol
+      value: HTTPS
+    - key:   TransportProtocolVersion
+      value: "1.5.0"
+    - key:   urlPath
+      value: /sample/url/context
+    - key:   userRole
+      value: ESBMessaging.send
+    - key:   xsrfProtection
+      value: "0"
+  httpReceiver:
+    - key:   allowedRequestHeaders
+      value:
+    - key:   allowedResponseHeaders
+      value: "*"
+    - key:   authenticationMethod
+      value: Basic
+    - key:   cmdVariantUri
+      value: ctype::AdapterVariant/cname::sap:HTTP/tp::HTTP/mp::None/direction::Receiver/version::1.15.0
+    - key:   ComponentNS
+      value: sap
+    - key:   ComponentSWCVId
+      value: "1.15.0"
+    - key:   ComponentSWCVName
+      value: external
+    - key:   ComponentType
+      value: HTTP
+    - key:   componentVersion
+      value: "1.15"
+    - key:   credentialName
+      value: sampleCredentialName
+    - key:   Description
+      value:
+    - key:   direction
+      value: Receiver
+    - key:   enableMPLAttachments
+      value: "true"
+    - key:   httpAddressQuery
+      value:
+    - key:   httpAddressWithoutQuery
+      value: https://sample.server.com/default/context/
+    - key:   httpErrorResponseCodes
+      value:
+    - key:   httpMethod
+      value: POST
+    - key:   httpRequestTimeout
+      value: "60000"
+    - key:   httpShouldSendBody
+      value: "false"
+    - key:   locationID
+      value:
+    - key:   MessageProtocol
+      value: None
+    - key:   MessageProtocolVersion
+      value: "1.15.0"
+    - key:   methodSourceExpression
+      value:
+    # - key:   Name
+    #   value: HTTP
+    - key:   privateKeyAlias
+      value:
+    - key:   proxyHost
+      value:
+    - key:   proxyPort
+      value:
+    - key:   proxyType
+      value: default
+    - key:   retryInterval
+      value: "5"
+    - key:   retryIteration
+      value: "1"
+    - key:   retryOnConnectionFailure
+      value: "false"
+    # - key:   system
+    #   value: Receiver
+    - key:   throwExceptionOnFailure
+      value: "true"
+    - key:   TransportProtocol
+      value: HTTP
+    - key:   TransportProtocolVersion
+      value: "1.15.0"
 inboundProcess:
   processExtensions:
     - key:   transactionTimeout
@@ -302,8 +414,8 @@ callActivity:
     - key:   cmdVariantUri
       value: ctype::FlowstepVariant/cname::Enricher/version::1.6.0
   groovyScript:
-    - key:   scriptFunction
-      value: processData
+    # - key:   scriptFunction
+    #   value: processData
     - key:   scriptBundleId
       value: 
     - key:   componentVersion

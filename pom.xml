@@ -6,7 +6,7 @@
 
     <groupId>com.solace.ep.codegen</groupId>
     <artifactId>solace-ep-codegen</artifactId>
-    <version>1.1.0</version>
+    <version>1.1.1</version>
 
     <name>Solace-EventPortal-CodeGen</name>
     <description>
