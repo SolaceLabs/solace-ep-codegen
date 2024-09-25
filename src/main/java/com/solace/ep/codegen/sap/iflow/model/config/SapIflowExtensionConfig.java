@@ -62,6 +62,11 @@ public class SapIflowExtensionConfig {
         @JsonProperty
         List<ExtProperty> subscription;
 
+        @JsonProperty
+        List<ExtProperty> httpSender;
+
+        @JsonProperty
+        List<ExtProperty> httpReceiver;
     }
 
     @Data

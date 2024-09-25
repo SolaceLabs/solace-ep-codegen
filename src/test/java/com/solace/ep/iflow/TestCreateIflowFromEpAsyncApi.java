@@ -70,10 +70,43 @@ public class TestCreateIflowFromEpAsyncApi {
         }
     }
 
-    @Test void testCreateIflow_03() {
+    @Test
+    void testCreateIflow_03() {
 
         String inputFile = "src/test/resources/asyncapi/Shipping Service-0.1.2.json";
         String outputFile = "src/test/resources/test-output/iflow/Shipping Service-0.1.2.xml";
+
+        try {
+            MapMuleDoc input = createMapMuleDocFromAsyncApiFile(inputFile);
+            String iflowXml = SapIFlowGenerator.getSapIflowFromMapDoc(input);
+            System.out.println( iflowXml );
+            FileUtils.writeStringToFile(iflowXml, outputFile);
+        } catch ( Exception exc ) {
+            exc.printStackTrace();
+            fail( exc.getMessage() );
+        }
+    }
+
+    @Test void testCreateIflow_NoPublishers_04() {
+
+        String inputFile = "src/test/resources/asyncapi/Shipping Service-NoPublishers.json";
+        String outputFile = "src/test/resources/test-output/iflow/Shipping Service-NoPublishers.xml";
+
+        try {
+            MapMuleDoc input = createMapMuleDocFromAsyncApiFile(inputFile);
+            String iflowXml = SapIFlowGenerator.getSapIflowFromMapDoc(input);
+            System.out.println( iflowXml );
+            FileUtils.writeStringToFile(iflowXml, outputFile);
+        } catch ( Exception exc ) {
+            exc.printStackTrace();
+            fail( exc.getMessage() );
+        }
+    }
+
+    @Test void testCreateIflow_NoConsumers_05() {
+
+        String inputFile = "src/test/resources/asyncapi/Shipping Service-NoConsumers.json";
+        String outputFile = "src/test/resources/test-output/iflow/Shipping Service-NoConsumers.xml";
 
         try {
             MapMuleDoc input = createMapMuleDocFromAsyncApiFile(inputFile);
