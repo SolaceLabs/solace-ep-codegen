@@ -49,6 +49,9 @@ public class SapIflowExtensionConfig {
     @JsonProperty
     CallActivityExt callActivity;
 
+    @JsonProperty
+    RouterExt router;
+
     @Data
     @NoArgsConstructor
     public static class MessageFlowExt {
@@ -62,11 +65,19 @@ public class SapIflowExtensionConfig {
         @JsonProperty
         List<ExtProperty> subscription;
 
+        // Property differences between Solace and AEM adaptors for Sender/Receiver
+        @JsonProperty
+        List<ExtProperty> solaceSubscriptionDiff;
+
+        @JsonProperty
+        List<ExtProperty> solacePublicationDiff;
+
         @JsonProperty
         List<ExtProperty> httpSender;
 
         @JsonProperty
         List<ExtProperty> httpReceiver;
+
     }
 
     @Data
@@ -119,6 +130,15 @@ public class SapIflowExtensionConfig {
 
         @JsonProperty
         List<ExtProperty> groovyScript;
+    }
+
+    @Data
+    @NoArgsConstructor
+    public static class RouterExt {
+
+        @JsonProperty
+        List<ExtProperty> sequentialMulticast;
+
     }
 
     @Data

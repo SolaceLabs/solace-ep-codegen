@@ -36,6 +36,7 @@ import org.omg.spec.bpmn._20100524.model.TDefinitions;
 import org.omg.spec.bpmn._20100524.model.TEndEvent;
 import org.omg.spec.bpmn._20100524.model.TFlowElement;
 import org.omg.spec.bpmn._20100524.model.TMessageFlow;
+import org.omg.spec.bpmn._20100524.model.TParallelGateway;
 import org.omg.spec.bpmn._20100524.model.TParticipant;
 import org.omg.spec.bpmn._20100524.model.TProcess;
 import org.omg.spec.bpmn._20100524.model.TSequenceFlow;
@@ -78,10 +79,14 @@ public class SapIflowMapper {
             BPMN_START_END_EVENT_H = 32d,
             BPMN_START_END_EVENT_W = 32d,
             BPMN_FLOW_ELT_SEP_X = 60d,
+            BPMN_FLOW_ELT_SEP_Y = 60d,
+            BPMN_FLOW_ELT_SEP_VERT_STACK_X = 100d,
             BPMN_CALL_ACT_H = 80d,
             BPMN_CALL_ACT_W = 150d,
-            BPMN_MESH_PARTICIPANT_PROCESS_SEP_X = 100d,
-            BPMN_MESH_PARTICIPANT_PROCESS_SEP_Y = 60d;
+            BPMN_PARALLEL_GATEWAY_H = 40d,
+            BPMN_PARALLEL_GATEWAY_W = 40d,
+            BPMN_MESH_PARTICIPANT_PROCESS_SEP_X = 100d;
+            // BPMN_MESH_PARTICIPANT_PROCESS_SEP_Y = 60d;
 
     // BPMN Graph position state variables
     private double
@@ -94,6 +99,10 @@ public class SapIflowMapper {
 
     // Enumerate message flow names
     private long messageFlowCounter = 1L;
+
+    private long parallelGatewayCounter = 1L;
+
+    private boolean solaceEventMeshAdaptor = false;
 
     // Object Factories
     private final ObjectFactory bpmnFactory = new ObjectFactory();
@@ -164,182 +173,6 @@ public class SapIflowMapper {
     public JAXBElement<TDefinitions> createSapIflowAsJAXBElement() throws Exception {
         return bpmnFactory.createDefinitions( createSapIflow() );
     }
-
-    /**
-     * Builds the SAP IFlow using the MapMuleDoc object passed to the constructor.
-     * Returns root element of type TDefinitions which must be wrapped in a JAXB Element
-     * for serialization
-     * @return
-     */
-    /**
-    public TDefinitions createSapIflow(boolean alt) throws Exception {
-
-        if ( this.rootElement != null ) {
-            log.info( "Returning previously constructed SAP BPMN2 IFlow object" );
-            return this.rootElement;
-        }
-
-        log.info("START - Create SAP IFlow BPMN2 Document");
-        BPMNShape   bpmnDestinationSystemReceiver = null, bpmnEventMeshReceiver = null;
-        String startParticipantId = "", endParticipantId = "";
-
-        // Create input mesh participants (static)
-        // Only if there are consumer flows defined
-        if ( inputSource.getMapFlows().size() > 0 ) {
-            log.info("There are {} Consumer(s) found in input", inputSource.getMapFlows().size());
-            final TParticipant eventMeshSender = createGenericParticipant( 
-                SapIflowUtils.PARTICIPANT_IFL_SEND, 
-                SapIflowUtils.PARTICIPANT_NAME_SEND );
-            addExtensionProperties(eventMeshSender, extConfigs.getParticipant().getEventMeshSender());
-
-            final TParticipant sourceSystem = createGenericParticipant(
-                SapIflowUtils.PARTICIPANT_IFL_SEND, 
-                SapIflowUtils.PARTICIPANT_NAME_SRC );
-            addExtensionProperties(sourceSystem, extConfigs.getParticipant().getSourceSystem());
-            
-            startParticipantId = eventMeshSender.getId();
-
-            participants.add(eventMeshSender);
-            participants.add(sourceSystem);
-
-            // Add objects to the graph
-            addBpmnShapeFromStaticParticipant(
-                eventMeshSender, 
-                BPMN_START_BOUNDARY_X, 
-                BPMN_START_BOUNDARY_Y
-            );
-            addBpmnShapeFromStaticParticipant(
-                sourceSystem, 
-                BPMN_START_BOUNDARY_X, 
-                ( 
-                    BPMN_START_BOUNDARY_Y + 
-                    BPMN_STATIC_PARTICIPANT_H + 
-                    BPMN_MESH_PARTICIPANT_PROCESS_SEP_Y
-                )
-            );
-
-            // Set the leftX start boundary to include Sender participants
-            processBoundaryX += BPMN_STATIC_PARTICIPANT_W + BPMN_MESH_PARTICIPANT_PROCESS_SEP_X;
-            processBoundaryMaxX = processBoundaryX;
-            log.debug( "EventMeshSender Participants Created" );
-        } else {
-            log.info( "No Consumers found in input" );
-        }
-
-        // Create output mesh participants (static)
-        // Only if there are publisher flows defined
-        if ( inputSource.getMapEgressSubFlows().size() > 0 ) {
-            log.info( "There are {} Publication Flows found in the input", inputSource.getMapEgressSubFlows().size() );
-            final TParticipant eventMeshReceiver = createGenericParticipant( 
-                SapIflowUtils.PARTICIPANT_IFL_RECV, 
-                SapIflowUtils.PARTICIPANT_NAME_RECV );
-            addExtensionProperties(eventMeshReceiver, extConfigs.getParticipant().getEventMeshReceiver());
-
-            final TParticipant destinationSystemReceiver = createGenericParticipant(
-                SapIflowUtils.PARTICIPANT_IFL_RECV, 
-                SapIflowUtils.PARTICIPANT_NAME_DEST );
-            addExtensionProperties(destinationSystemReceiver, extConfigs.getParticipant().getDestinationSystemReceiver());
-            
-            endParticipantId = eventMeshReceiver.getId();
-
-            participants.add(eventMeshReceiver);
-            participants.add(destinationSystemReceiver);
-
-            // Add objects to the graph - initially on the top left
-            // The receivers will be moved to the right of the processes after
-            // the maximum process width is known
-            bpmnEventMeshReceiver = addBpmnShapeFromStaticParticipant(
-                eventMeshReceiver, 
-                BPMN_START_BOUNDARY_X, 
-                BPMN_START_BOUNDARY_Y
-            );
-            bpmnDestinationSystemReceiver = addBpmnShapeFromStaticParticipant(
-                destinationSystemReceiver, 
-                BPMN_START_BOUNDARY_X, 
-                ( 
-                    BPMN_START_BOUNDARY_Y + 
-                    BPMN_STATIC_PARTICIPANT_H + 
-                    BPMN_MESH_PARTICIPANT_PROCESS_SEP_Y
-                )
-            );
-            log.debug( "EventMeshReceiver Participants Created" );
-        } else {
-            log.info( "No Publication Flows found in input" );
-        }
-
-        // Create INPUT Proceses (Consumers)
-        for ( MapFlow consumer : inputSource.getMapFlows() ) {
-            mapConsumerToIflow(consumer, startParticipantId);
-        }
-
-        // Create Output Processes (Publishers)
-        for ( MapSubFlowEgress publisher : inputSource.getMapEgressSubFlows() ) {
-            mapPublisherToIflow(publisher, endParticipantId);
-        }
-
-        // Move the Receiver participants to the right of the processes on the graph
-        if ( bpmnDestinationSystemReceiver != null && bpmnEventMeshReceiver != null ) { 
-            updateBpmnShapePositionX(bpmnEventMeshReceiver, ( processBoundaryMaxX + BPMN_MESH_PARTICIPANT_PROCESS_SEP_X ) );
-            updateBpmnShapePositionX(bpmnDestinationSystemReceiver, ( processBoundaryMaxX + BPMN_MESH_PARTICIPANT_PROCESS_SEP_X ) );
-        }
-
-        // Add the message flows to the BPMN Edge list
-        messageFlows.forEach( flow -> {
-            createBpmnEdgeFromMessageFlow(flow);
-        } );
-
-        // Create the BPMN Document
-        final TCollaboration collaboration = bpmnFactory.createTCollaboration();
-        collaboration.setId( SapIflowUtils.COLLAB_ID_PREFIX + "1" );
-        String collaborationName;
-        if ( inputSource.getGlobalProperties() != null && 
-            inputSource.getGlobalProperties().containsKey( MapUtils.GLOBAL_NAME_EP_APP_VERSION ) &&
-            inputSource.getGlobalProperties().get( MapUtils.GLOBAL_NAME_EP_APP_VERSION ).length() > 0 &&
-            inputSource.getGlobalProperties().containsKey( MapUtils.GLOBAL_NAME_EP_APP_VERSION_TITLE ) &&
-            inputSource.getGlobalProperties().get( MapUtils.GLOBAL_NAME_EP_APP_VERSION_TITLE ).length() > 0
-        ) {
-            collaborationName = 
-                inputSource.getGlobalProperties().get( MapUtils.GLOBAL_NAME_EP_APP_VERSION_TITLE ).replace( " ", "_" ) +
-                "_" +
-                inputSource.getGlobalProperties().get( MapUtils.GLOBAL_NAME_EP_APP_VERSION );
-        } else {
-            collaborationName = SapIflowUtils.COLLAB_NAME_DEFAULT;
-        }
-        collaboration.setName( collaborationName );
-        addExtensionProperties(collaboration, extConfigs.getCollaboration());
-        collaboration.getParticipant().addAll(participants);
-        collaboration.getMessageFlow().addAll(messageFlows);
-
-        final TDefinitions definitions = bpmnFactory.createTDefinitions();
-        definitions.setId( SapIflowUtils.DEFINITIONS_PREFIX + "1" );
-        definitions.getRootElement().add( bpmnFactory.createCollaboration(collaboration) );
-        processes.forEach( process -> {
-            definitions.getRootElement().add( bpmnFactory.createProcess( process ) );
-        });
-
-        // Add the graph to the BPMN Document
-        final BPMNPlane plane = diFactory.createBPMNPlane();
-        plane.setId( "BPMNPlane_1" );
-        plane.setBpmnElement( new QName( collaboration.getId() ) );
-        shapes.forEach( ( name, shape ) -> {
-            plane.getDiagramElement().add( diFactory.createBPMNShape( shape ) );
-        } );
-        edges.forEach( edge -> {
-            plane.getDiagramElement().add( diFactory.createBPMNEdge(edge) );
-        } );
-
-        final BPMNDiagram diagram = diFactory.createBPMNDiagram();
-        diagram.setId( "BPMNDiagram_1" );
-        diagram.setName( collaborationName + " Diagram" );
-        diagram.setBPMNPlane(plane);
-
-        definitions.getBPMNDiagram().add(diagram);
-
-        log.info("DONE - Create SAP IFlow BPMN2 Document");
-        this.rootElement = definitions;
-        return this.rootElement;
-    }
-    **/
 
     private String getParticipantNameById( String participantId ) {
         for( TParticipant p : participants ) {
@@ -439,15 +272,6 @@ public class SapIflowMapper {
             BPMN_START_BOUNDARY_X, 
             BPMN_START_BOUNDARY_Y
         );
-        // bpmnDestinationSystemReceiver = addBpmnShapeFromStaticParticipant(
-        //     // destinationSystemReceiver, 
-        //     BPMN_START_BOUNDARY_X, 
-        //     ( 
-        //         BPMN_START_BOUNDARY_Y + 
-        //         BPMN_STATIC_PARTICIPANT_H + 
-        //         BPMN_MESH_PARTICIPANT_PROCESS_SEP_Y
-        //     )
-        // );
         log.debug( "EventMeshReceiver Participants Created" );
 
         // Create INPUT Proceses (Consumers)
@@ -460,9 +284,6 @@ public class SapIflowMapper {
         }
 
         // Create Output Processes (Publishers)
-        // for ( MapSubFlowEgress publisher : inputSource.getMapEgressSubFlows() ) {
-        //     mapPublisherToIflow(publisher, endParticipantId);
-        // }
         for ( int idx = 0; idx < inputSource.getMapEgressSubFlows().size(); idx++ ) {
             mapPublisherToIflow(inputSource.getMapEgressSubFlows().get(idx), idx, endParticipantId);
         }
@@ -577,12 +398,16 @@ public class SapIflowMapper {
         }
         if ( consumerCount == 1 && publisherCount > 1 ) {
             // TODO - Add fanout of consumer to publishers
-            final TProcess publisherProcess = outputParticipantsAndProcesses.get(0).getProcess();
-            inputParticipantsAndProcesses.forEach( inputPAndP -> {
-                final TProcess consumerProcess = inputPAndP.getProcess();
-                final TCallActivity ca = createCallActivityToProcess( "Call " + publisherProcess.getName(), publisherProcess.getId());
-                addCallActivityBeforeEndEvent(consumerProcess, ca);
-            } );
+
+
+            final TProcess inputProcess = inputParticipantsAndProcesses.get(0).getProcess();
+            addSequentialMulticastBeforeEndEvent(inputProcess);
+
+            for ( ParticipantAndProcess oPAndP : outputParticipantsAndProcesses ) {
+                final TProcess publisherProcess = oPAndP.getProcess();
+                final TCallActivity ca = createCallActivityToProcess("Call " + publisherProcess.getName(), publisherProcess.getId());
+                addCallActivityBeforeEndEvent(inputProcess, ca);
+            }
         }
     }
 
@@ -599,24 +424,9 @@ public class SapIflowMapper {
     {
         final String eventName = consumer.isDirectConsumer() ? consumer.getFlowDesignation() : consumer.getQueueListenerAddress();
 
-        // log.debug("START - Create Receiver and BusinessLogic Processes for input [{}]", eventName);
         log.debug("START - Create Receiver Process for input [{}]", eventName);
 
         final TProcess receiverProcess = createReceiverProcess(consumer);
-        // final TProcess businessLogicProcess = createBusinessLogicProcess(consumer);
-
-        // Add call from receiverProcess to businessLogicProcess
-        // addCallActivityBeforeEndEvent(
-        //     receiverProcess, 
-        //     createCallActivityToProcess( 
-        //         String.format( SapIflowUtils.ACT_BL_TEMPLATE_NAME, eventName ),
-        //         businessLogicProcess.getId()
-        //     )
-        // );
-
-        // TODO - Evaluate where sequences should be generated 1
-        // generateSequences( receiverProcess );
-        // generateSequences( businessLogicProcess );
 
         final TParticipant inboundParticipantProc = createGenericParticipant( 
             receiverProcess.getId(), 
@@ -624,12 +434,6 @@ public class SapIflowMapper {
             receiverProcess.getName(),
             receiverProcess.getId() );
 
-        // final TParticipant businessLogicParticipant = createGenericParticipant(
-        //     businessLogicProcess.getId(), 
-        //     SapIflowUtils.PARTICIPANT_IFL_INT,
-        //     businessLogicProcess.getName(),
-        //     businessLogicProcess.getId() );
-        
         final TMessageFlow inputMessageFlow = createSubscribeMessageFlow(
             consumer, 
             startParticipantId, 
@@ -645,18 +449,12 @@ public class SapIflowMapper {
 
         // TODO - Should this be here?
         processes.add( receiverProcess );
-        // processes.add( businessLogicProcess );
         participants.add( inboundParticipantProc );
-        // participants.add( businessLogicParticipant );
         //
         messageFlows.add( inputMessageFlow );
         messageFlows.add( outputMessageFlow );
 
         inputParticipantsAndProcesses.add( new ParticipantAndProcess(inboundParticipantProc, receiverProcess) );
-        // inputParticipantsAndProcesses.add( new ParticipantAndProcess(businessLogicParticipant, businessLogicProcess));
-        // createBpmnShapesForParticipantAndProcess( inboundParticipantProc, receiverProcess );
-        // createBpmnShapesForParticipantAndProcess( businessLogicParticipant, businessLogicProcess);
-        // log.info("DONE - Create Receiver and BusinessLogic Processes for input [{}]", eventName);
         log.info("DONE - Create Receiver Process for input [{}]", eventName);
     }
 
@@ -752,39 +550,6 @@ public class SapIflowMapper {
         return receiverProcess;
     }
 
-    /**
-     * Create inbound business logic process
-     * @param consumer
-     * @return
-     */
-    // private TProcess createBusinessLogicProcess( final MapFlow consumer ) {
-
-    //     final String eventName = consumer.isDirectConsumer() ? consumer.getFlowDesignation() : consumer.getQueueListenerAddress();
-
-    //     final TProcess businessLogicProcess = createGenericProcess(
-    //         String.format(
-    //             SapIflowUtils.PROCESS_INB_BL_NAME_TEMPLATE, 
-    //             eventName
-    //         ),
-    //         String.format( SapIflowUtils.ACT_BL_START_NAME_TEMPLATE, eventName ), 
-    //         String.format( SapIflowUtils.ACT_BL_END_NAME_TEMPLATE, eventName )
-    //     );
-
-    //     addExtensionProperties(businessLogicProcess, extConfigs.getCalledProcess().getProcessExtensions());
-    //     addExtensionPropertiesToStartAndEndEvents(businessLogicProcess, extConfigs.getCalledProcess());
-
-    //     final String mapToSchemaName = getSchemaName(consumer.getJsonSchemaReference());
-    //     final String stubMapCa = String.format("Stub map from %s to destination format", mapToSchemaName);
-    //     final TCallActivity stubMapCallActivity = 
-    //         createInboundStubMapCallActivity(
-    //                 stubMapCa, 
-    //                 mapToSchemaName
-    //         );
-    //     addCallActivityBeforeEndEvent(businessLogicProcess, stubMapCallActivity);
-
-    //     return businessLogicProcess;
-    // }
-
     private TMessageFlow createHttpsInMessageFlow(
         final String sourceRef,
         final TProcess targetProcess
@@ -829,7 +594,8 @@ public class SapIflowMapper {
             }
         }
 
-        final String messageFlowName = "From_AdvancedEventMesh_" + messageFlowCounter++;
+        final String messageFlowName = 
+            solaceEventMeshAdaptor ? "From_SolaceEventMesh_" : "From_AdvancedEventMesh_" + messageFlowCounter++;
         final TMessageFlow subscribeMessageFlow = 
             createGenericMessageFlow(
                 messageFlowName,
@@ -839,15 +605,10 @@ public class SapIflowMapper {
         addExtensionProperties(subscribeMessageFlow, extConfigs.getMessageFlow().getAllMessageFlows());
         addExtensionProperties(subscribeMessageFlow, extConfigs.getMessageFlow().getSubscription() );
 
-        // TODO - Defaulting to 'AUTOMATIC_IMMEDIATE' because Solace IFlow connector does not support all modes
-        // Determine proper mapping of ackMode for IFlow and implement
         addExtensionProperty(
             subscribeMessageFlow, 
             "ackMode", 
             "AUTOMATIC_ON_EXCHANGE_COMPLETE" );
-            // ( consumer.isDirectConsumer() ? "AUTOMATIC_IMMEDIATE" : 
-            //         ( ( consumer.getQueueListenerAckMode() != null && consumer.getQueueListenerAckMode().length() > 0 ) ?
-            //             consumer.getQueueListenerAckMode() : "AUTOMATIC_IMMEDIATE" ) ) );
         addExtensionProperty(
             subscribeMessageFlow, 
             "consumerMode", 
@@ -858,13 +619,16 @@ public class SapIflowMapper {
             consumer.getDirectListenerTopics().forEach( t -> {
                 topics.append("\n" + t);
             });
-            description = String.format("Receive input messages from AEM on topic(s):%s", topics.toString());
+            description = String.format("Receive input messages from %s on topic(s):\n%s",
+                solaceEventMeshAdaptor ? "SolaceEventMesh" : "AdvancedEventMesh",
+                topics.toString());
         } else {
-            description = String.format("Receive input messages from AEM on queue [%s]", consumer.getQueueListenerAddress());
+            description = String.format("Receive input messages from %s on queue [%s]", 
+                solaceEventMeshAdaptor ? "SolaceEventMesh" : "AdvancedEventMesh",
+                consumer.getQueueListenerAddress());
         }
         addExtensionProperty( subscribeMessageFlow, "Description", description);
         addExtensionProperty( subscribeMessageFlow, "Name", messageFlowName );
-        // addExtensionProperty( subscribeMessageFlow, "Name", "AdvancedEventMesh" );
         addExtensionProperty(
             subscribeMessageFlow, 
             "queueName", 
@@ -898,77 +662,19 @@ public class SapIflowMapper {
 
         log.debug("START - Create Sender and EventGenerator Processes for output event [{}]", eventName);
 
-        // final TProcess senderProcess = createSenderProcess(publisher);
         final TProcess eventGeneratorProcess = createEventGeneratorProcess(publisher, index);
-
-        // Add Call Activity from sender to 
-        // addCallActivityBeforeEndEvent(senderProcess, 
-        //     createCallActivityToProcess(
-        //         String.format( SapIflowUtils.ACT_SEND_GENERATE_NAME_TEMPLATE, eventName ), 
-        //         eventGeneratorProcess.getId()
-        //     )
-        // );
-
-        // final TParticipant sendParticipant = createGenericParticipant( 
-        //     senderProcess.getId(), 
-        //     SapIflowUtils.PARTICIPANT_IFL_INT,
-        //     senderProcess.getName(),
-        //     senderProcess.getId() );
-
         final TParticipant eventGeneratorParticipant = createGenericParticipant(
             eventGeneratorProcess.getId(), 
             SapIflowUtils.PARTICIPANT_IFL_INT,
             eventGeneratorProcess.getName(),
             eventGeneratorProcess.getId() );
 
-        // final TMessageFlow messageFlow = createPublishMessageFlow(
-        //     publisher, 
-        //     senderProcess,
-        //     endParticipantId );
-
-        // TODO - Should this be done here?
-        // generateSequences( senderProcess );
-        // generateSequences( eventGeneratorProcess );
-        
-        // TODO - Should this be done here?
-        // processes.add( senderProcess );
         processes.add( eventGeneratorProcess );
-        // participants.add( sendParticipant );
         participants.add( eventGeneratorParticipant );
-        // messageFlows.add( messageFlow );
 
         outputParticipantsAndProcesses.add( new ParticipantAndProcess(eventGeneratorParticipant, eventGeneratorProcess) );
-        // createBpmnShapesForParticipantAndProcess(sendParticipant, senderProcess);
-        // createBpmnShapesForParticipantAndProcess(eventGeneratorParticipant, eventGeneratorProcess);
         log.debug("DONE - Create Sender and EventGenerator Processes for output event [{}]", eventName);
     }
-
-    /**
-     * Create Sender process
-     * Connects to Event Mesh Receiver for publication
-     * @param publisher
-     * @return
-     */
-    // private TProcess createSenderProcess( final MapSubFlowEgress publisher ) {
-
-    //     final String eventName = publisher.getMessageName();
-
-    //     final TProcess senderProcess = createGenericProcess(
-    //         String.format( SapIflowUtils.PROCESS_OUT_SEND_NAME_TEMPLATE, eventName ),
-    //         SapIflowUtils.ACT_SEND_START_NAME, 
-    //         String.format( SapIflowUtils.ACT_SEND_END_NAME_TEMPLATE, eventName ) );
-
-    //     //
-    //     addEmptyMessageEventDefinitions(senderProcess);     // Conform with samples
-    //     addExtensionProperties(senderProcess, extConfigs.getOutboundProcess().getProcessExtensions());
-    //     addExtensionPropertiesToStartAndEndEvents(senderProcess, extConfigs.getOutboundProcess());
-
-    //     final String stubMapSchemaName = getSchemaName(publisher.getJsonSchemaReference());
-    //     final TCallActivity stubMapCallActivity = createOutboundStubMapCallActivity(stubMapSchemaName, publisher.getMessageName() );
-    //     addCallActivityBeforeEndEvent( senderProcess, stubMapCallActivity );
-
-    //     return senderProcess;
-    // }
 
     /**
      * Create Event Generator Process
@@ -995,7 +701,6 @@ public class SapIflowMapper {
 
         addCallActivityBeforeEndEvent(
             eventGeneratorProcess, 
-            // createCallActivityDefineTopic(publisher.getPublishAddress(), List.copyOf(publisher.getSetVariables().keySet())));
             createCallActivityDefineTopic(publisher.getPublishAddress()));
 
         addCallActivityBeforeEndEvent(
@@ -1019,7 +724,6 @@ public class SapIflowMapper {
     }
 
     private TMessageFlow createPublishMessageFlow( 
-        // final MapSubFlowEgress publisher,
         final TProcess sourceProcess,
         final String targetRef ) {
 
@@ -1043,7 +747,6 @@ public class SapIflowMapper {
         addExtensionProperties(publishMessageFlow, extConfigs.getMessageFlow().getPublication() );
         
         addExtensionProperty(publishMessageFlow, "deliveryMode", "PERSISTENT");
-        // addExtensionProperty(publishMessageFlow, "Description", String.format("Publish Message [%s] to AEM on Topic [%s]", publisher.getMessageName() == null ? "?" : publisher.getMessageName(), publisher.getPublishAddress()));
         addExtensionProperty(publishMessageFlow, "Description", "Publish Message to Event Mesh");
         addExtensionProperty(publishMessageFlow, "Name", messageFlowName);
 
@@ -1079,29 +782,16 @@ public class SapIflowMapper {
         return httpOutMessageFlow;
     }
 
-    // private TCallActivity createCallActivityDefineTopic( final String topicPattern, final List<String> parameters ) {
     private TCallActivity createCallActivityDefineTopic( final String topicPattern ) {
-        // final String COMPOSED_TOPIC_PARAMETER = "<row><cell id='Action'>Create</cell><cell id='Type'>constant</cell><cell id='Value'>%s</cell><cell id='Default'></cell><cell id='Name'>gpath_composedTopicPattern</cell><cell id='Datatype'></cell></row>";
-        // final String TOPIC_VAR_PARAMETER = "<row><cell id='Action'>Create</cell><cell id='Type'>constant</cell><cell id='Value'>CHANGE.ME</cell><cell id='Default'></cell><cell id='Name'>gpath_topicexp_%s</cell><cell id='Datatype'></cell></row>";
         final String COMPOSED_TOPIC_PARAMETER = "<row><cell id='Action'>Create</cell><cell id='Type'>constant</cell><cell id='Value'>%s</cell><cell id='Default'></cell><cell id='Name'>composedTopic</cell><cell id='Datatype'></cell></row>";
         final TCallActivity ca = createGenericCallActivity( "Set composedTopic Property" );
 
         String propertyTable = String.format(COMPOSED_TOPIC_PARAMETER, topicPattern);
-        // for (String p : parameters ) {
-        //     propertyTable += String.format(TOPIC_VAR_PARAMETER, p);
-        // }
         addExtensionProperty(ca, "propertyTable", propertyTable);
         addExtensionProperties(ca, extConfigs.getCallActivity().getDefineTopic());
 
         return ca;
     }
-
-    // private TCallActivity createCallActivityExtractParameters() {
-    //     final TCallActivity ca = createGenericCallActivity( "Extract Parameters Script" );
-    //     addExtensionProperties(ca, extConfigs.getCallActivity().getGroovyScript());
-    //     addExtensionProperty(ca, "script", "extractField.groovy");
-    //     return ca;
-    // }
 
     private TCallActivity createCallActivityTopicParameters(final MapSubFlowEgress publisher, final int index) {
         if (publisher.getSetVariables() == null || publisher.getSetVariables().size() == 0) {
@@ -1121,22 +811,6 @@ public class SapIflowMapper {
         addExtensionProperty(ca, "scriptFunction", "composeTopic");
         return ca;
     }
-
-    // private TCallActivity createCallActivityExtractTopicVariable( final String variableName ) {
-    //     final String EXTRACT_VARIABLE_TEMPLATE = "<row><cell>%s</cell><cell></cell><cell>expression</cell><cell>%s</cell><cell>local</cell></row>";
-    //     final String extractVariableXml = String.format( EXTRACT_VARIABLE_TEMPLATE, variableName, ( "$." + variableName ) );
-    //     final TCallActivity ca = createGenericCallActivity( SapIflowUtils.ACT_GEN_EXTRACT_TOPIC_PREFIX + variableName);
-    //     addExtensionProperties(ca, extConfigs.getCallActivity().getTopicAssembly());
-    //     addExtensionProperty( ca, "variable", extractVariableXml );
-    //     return ca;
-    // }
-
-    // private TCallActivity createCallActivityGenerateComposedTopic( final String topicPattern ) {
-    //     final TCallActivity ca = createGenericCallActivity( SapIflowUtils.ACT_GEN_COMPOSED_TOPIC_NAME );
-    //     addExtensionProperties(ca, extConfigs.getCallActivity().getTopicAssembly());
-    //     addExtensionProperty( ca, "variable", topicPattern );
-    //     return ca;
-    // }
 
     private TCallActivity createCallActivityToProcess( final String formattedName, final String processToCall ) {
 
@@ -1288,6 +962,17 @@ public class SapIflowMapper {
         );
     }
 
+    private void addSequentialMulticastBeforeEndEvent( final TProcess process ) {
+        TParallelGateway sequentialMulticast = bpmnFactory.createTParallelGateway();
+        sequentialMulticast.setId("ParallelGateway_" + objectIncrementer++);
+        sequentialMulticast.setName("Sequential Multicast " + parallelGatewayCounter++);
+        addExtensionProperties(sequentialMulticast, extConfigs.getRouter().getSequentialMulticast());
+        process.getFlowElement().add(
+            process.getFlowElement().size() - 1,
+            bpmnFactory.createParallelGateway(sequentialMulticast)
+        );
+    }
+
     /**
      * Create sequence flows for a given process.
      * The process StartEvent, Call Activity(ies) 1-N, and EndEvent must be in sequence
@@ -1309,6 +994,7 @@ public class SapIflowMapper {
             TFlowElement fe = i.next().getValue();
 
             if ( firstItem ) {
+                // Should always be TStartEvent
 
                 firstItem = false;
                 currentSeqFlowId = SapIflowUtils.SEQ_FLOW_PREFIX + objectIncrementer++;
@@ -1325,6 +1011,46 @@ public class SapIflowMapper {
             }
 
             if ( i.hasNext() ) {
+                // Not a TStartEvent or TEndEvent
+
+                if ( fe instanceof TParallelGateway ) {
+                    TParallelGateway pg = ( TParallelGateway )fe;
+                    pg.getIncoming().add( new QName(lastSeqFlowId));
+                    sequenceFlows.add(createSequenceFlow(lastSeqFlowId, lastEventObject, fe));
+
+                    // Call Activities after the ParallelGateway and before the End Event
+                    List<TCallActivity> branchActivities = new ArrayList<>();
+                    List<String> branchSequenceIds = new ArrayList<>();
+
+                    while ( i.hasNext() ) {
+                        TFlowElement branchElement = i.next().getValue();
+                        if ( branchElement instanceof TCallActivity ) {
+                            TCallActivity branchActivity = (TCallActivity)branchElement;
+                            branchActivities.add(branchActivity);
+
+                            final String branchSeqFlowId = SapIflowUtils.SEQ_FLOW_PREFIX + objectIncrementer++;
+                            final TSequenceFlow branchSeqFlow = createSequenceFlow(branchSeqFlowId, pg, branchActivity);
+                            branchSeqFlow.setName("Branch " + branchActivities.size());
+                            sequenceFlows.add(branchSeqFlow);
+                            pg.getOutgoing().add( new QName(branchSeqFlowId));
+                            branchActivity.getIncoming().add( new QName(branchSeqFlowId) );
+                            branchSequenceIds.add( branchSeqFlowId );
+                        } else if ( branchElement instanceof TEndEvent ) {
+                            TEndEvent branchEndEvent = (TEndEvent)branchElement;
+
+                            for (TCallActivity caToEndEvent : branchActivities ) {
+                                final String toEndSeqFlowId = SapIflowUtils.SEQ_FLOW_PREFIX + objectIncrementer++;
+                                sequenceFlows.add( createSequenceFlow(toEndSeqFlowId, caToEndEvent, branchEndEvent));
+                                caToEndEvent.getOutgoing().add( new QName(toEndSeqFlowId) );
+                                branchEndEvent.getIncoming().add( new QName(toEndSeqFlowId) );
+                            }
+                            break;
+                        }
+                    }
+                    addRoutingSequenceTableProperty(pg, branchSequenceIds);
+                    // Should be all done with the current process
+                    break;
+                }
 
                 currentSeqFlowId = SapIflowUtils.SEQ_FLOW_PREFIX + objectIncrementer++;
 
@@ -1334,12 +1060,7 @@ public class SapIflowMapper {
                     ca.getOutgoing().add( new QName( currentSeqFlowId ) );
                 }
 
-                final TSequenceFlow sf = bpmnFactory.createTSequenceFlow();
-                sf.setId( lastSeqFlowId );
-                sf.setSourceRef( lastEventObject );
-                sf.setTargetRef( fe );
-                sequenceFlows.add(sf);
-
+                sequenceFlows.add( createSequenceFlow(lastSeqFlowId, lastEventObject, fe) );
                 lastSeqFlowId = currentSeqFlowId;
                 lastEventObject = fe;
 
@@ -1350,11 +1071,7 @@ public class SapIflowMapper {
                     ee.getIncoming().add( new QName( lastSeqFlowId ) );
                 }
 
-                final TSequenceFlow sf = bpmnFactory.createTSequenceFlow();
-                sf.setId( lastSeqFlowId );
-                sf.setSourceRef( lastEventObject );
-                sf.setTargetRef( fe );
-                sequenceFlows.add(sf);
+                sequenceFlows.add( createSequenceFlow(lastSeqFlowId, lastEventObject, fe) );
             }
         }
 
@@ -1362,6 +1079,27 @@ public class SapIflowMapper {
         sequenceFlows.forEach( sf -> {
             process.getFlowElement().add( bpmnFactory.createSequenceFlow(sf) );
         } );
+    }
+
+    private void addRoutingSequenceTableProperty( final TParallelGateway pg, final List<String> seqIds ) {
+        final String ROW_PATTERN = "<row><cell>%d</cell><cell>%s</cell></row>";
+        final StringBuilder table = new StringBuilder();
+        for (int idx = 0; idx < seqIds.size(); idx++) {
+            table.append(String.format(ROW_PATTERN, idx + 1, seqIds.get(idx)));
+        }
+        addExtensionProperty(pg, "routingSequenceTable", table.toString());
+    }
+
+    private TSequenceFlow createSequenceFlow(
+        final String sequenceFlowId,
+        final Object sourceRef,
+        final Object targetRef
+    ) {
+        final TSequenceFlow sf = bpmnFactory.createTSequenceFlow();
+        sf.setId(sequenceFlowId);
+        sf.setSourceRef(sourceRef);
+        sf.setTargetRef(targetRef);
+        return sf;
     }
 
     private TCallActivity createGenericCallActivity( final String formattedName ) {
@@ -1481,6 +1219,8 @@ public class SapIflowMapper {
         BPMNShape shape = null;
         if ( flowElement instanceof TCallActivity ) {
             shape = addBpmnShapeFromCallActivity( (TCallActivity)flowElement, x, y);
+        } else if ( flowElement instanceof TParallelGateway ) {
+            shape = addBpmnShapeFromParallelGateway( (TParallelGateway)flowElement, x, y);
         } else if ( flowElement instanceof TStartEvent || flowElement instanceof TEndEvent ) {
             shape = addBpmnShapeFromStartEndEvent(flowElement, x, y);
         }
@@ -1502,10 +1242,16 @@ public class SapIflowMapper {
         return shape;
     }
 
+    private BPMNShape addBpmnShapeFromParallelGateway( final TParallelGateway parallelGateway, final double x, final double y ) {
+        final double h =  BPMN_PARALLEL_GATEWAY_H, w = BPMN_PARALLEL_GATEWAY_W;
+        final BPMNShape shape = createGenericBPMNShape(parallelGateway.getId(), h, w, x, y);
+        return shape;
+    }
+
     private BPMNShape addBpmnShapeFromParticipantProcess( 
-        final TParticipant participant, final double x, final double y, final double w )
+        final TParticipant participant, final double x, final double y, final double h, final double w )
     {
-        final double h = BPMN_PART_PROC_H;
+        // final double h = BPMN_PART_PROC_H;
         final BPMNShape shape = createGenericBPMNShape(participant.getId(), h, w, x, y);
         shapes.put(shape.getId(), shape);
         return shape;
@@ -1537,16 +1283,41 @@ public class SapIflowMapper {
     private void createBpmnShapesForParticipantAndProcess( final TParticipant participant, final TProcess process ) {
     
         double xPos = processBoundaryX;
+        int parallelFlowCount = 0;
+        boolean incrementParallelFlows = false;
+        TFlowElement lastElement = null;
 
         for ( JAXBElement<? extends TFlowElement> jaxbElement : process.getFlowElement() ) {
             final TFlowElement elt = jaxbElement.getValue();
-            if ( !(elt instanceof TStartEvent || elt instanceof TEndEvent || elt instanceof TCallActivity ) ) {
+            if ( !( 
+                elt instanceof TStartEvent || 
+                elt instanceof TEndEvent || 
+                elt instanceof TCallActivity ||
+                elt instanceof TParallelGateway) ) {
                 continue;
             }
+            if (elt instanceof TParallelGateway) {
+                incrementParallelFlows = true;
+            }
+            if ( incrementParallelFlows && elt instanceof TEndEvent ) {
+                // Advance the cause forward before output End Event
+                xPos += advanceXPos(lastElement, true);
+            }
             final double x = getFlowEltX(xPos);
-            final double y = getFlowEltY(elt, processBoundaryY);
+            final double y = getFlowEltY(elt, processBoundaryY, parallelFlowCount);
             addBpmnShapeFromFlowElement(elt, x, y);
-            xPos += advanceXPos(elt);
+            
+            if ( !incrementParallelFlows ) {
+                xPos += advanceXPos(elt);
+            } else {
+                if ( elt instanceof TParallelGateway || elt instanceof TEndEvent ) {
+                    xPos += advanceXPos(elt, true);
+                }
+                if ( elt instanceof TCallActivity ) {
+                    parallelFlowCount++;
+                }
+            }
+            lastElement = elt;
         }
 
         // Create BPMN Shapes for Sequence Flows
@@ -1559,15 +1330,32 @@ public class SapIflowMapper {
             }
         } );
 
-        addBpmnShapeFromParticipantProcess(participant, processBoundaryX, processBoundaryY, ( xPos - processBoundaryX + BPMN_FLOW_ELT_SEP_X) );
+        final int parallelFlowAdjustment = (!incrementParallelFlows ? 0 : (parallelFlowCount > 0 ? parallelFlowCount - 1 : 0));
+        addBpmnShapeFromParticipantProcess(
+            participant, 
+            processBoundaryX, 
+            processBoundaryY, 
+            ( BPMN_PART_PROC_H + ( parallelFlowAdjustment * ( BPMN_CALL_ACT_H + BPMN_FLOW_ELT_SEP_Y ) ) ),
+            ( xPos - processBoundaryX + BPMN_FLOW_ELT_SEP_X) );
 
-        processBoundaryY += BPMN_PART_PROC_H + BPMN_PROC_SEP_Y;
+        processBoundaryY += BPMN_PART_PROC_H + BPMN_PROC_SEP_Y + ( parallelFlowAdjustment * (BPMN_CALL_ACT_H + BPMN_FLOW_ELT_SEP_Y) );
         processBoundaryMaxX = Math.max(xPos, processBoundaryMaxX);
     }
 
-    private double getFlowEltY( final TFlowElement elt, final double boundaryY ) {
-        double dimY = ( elt instanceof TCallActivity ? BPMN_CALL_ACT_H : BPMN_START_END_EVENT_H);
-        return boundaryY + ( BPMN_PART_PROC_H / 2 ) - ( dimY / 2 );
+    private double getFlowEltY( final TFlowElement elt, final double boundaryY, final int verticalStack ) {
+        // double dimY = ( elt instanceof TCallActivity ? BPMN_CALL_ACT_H : BPMN_START_END_EVENT_H);
+        double dimY = 0d;
+        double stackY = 0d;
+        if (elt instanceof TCallActivity) {
+            dimY = BPMN_CALL_ACT_H;
+            stackY = verticalStack * (BPMN_CALL_ACT_H + BPMN_FLOW_ELT_SEP_Y);
+        } else if (elt instanceof TParallelGateway) {
+            dimY = BPMN_PARALLEL_GATEWAY_H;
+        } else {
+            dimY = BPMN_START_END_EVENT_H;
+        }
+
+        return boundaryY + ( BPMN_PART_PROC_H / 2 ) - ( dimY / 2 ) + stackY;
     }
 
     private double getFlowEltX( final double boundaryX ) {
@@ -1575,8 +1363,20 @@ public class SapIflowMapper {
     }
 
     private double advanceXPos( final TFlowElement elt ) {
-        double advanceShapeX = ( elt instanceof TCallActivity ? BPMN_CALL_ACT_W : BPMN_START_END_EVENT_W ); 
-        return advanceShapeX + BPMN_FLOW_ELT_SEP_X;
+        return advanceXPos(elt, false);
+    }
+
+    private double advanceXPos( final TFlowElement elt, boolean verticalStackSpacing ) {
+        // double advanceShapeX = ( elt instanceof TCallActivity ? BPMN_CALL_ACT_W : BPMN_START_END_EVENT_W );
+        double advanceShapeX = 0D;
+        if (elt instanceof TCallActivity) {
+            advanceShapeX = BPMN_CALL_ACT_W;
+        } else if (elt instanceof TParallelGateway) {
+            advanceShapeX = BPMN_PARALLEL_GATEWAY_W;
+        } else {
+            advanceShapeX = BPMN_START_END_EVENT_W;
+        }
+        return advanceShapeX + ( verticalStackSpacing ? BPMN_FLOW_ELT_SEP_VERT_STACK_X : BPMN_FLOW_ELT_SEP_X );
     }
 
     /**
@@ -1628,7 +1428,21 @@ public class SapIflowMapper {
         rightPoint.setX(rightX);
         rightPoint.setY(rightY);
 
+        Point waypoint1 = null, waypoint2 = null;
+        if ( leftY != rightY ) {
+            waypoint1 = dcFactory.createPoint();
+            waypoint1.setX( ( (rightX - leftX) / 2 ) + leftX );
+            waypoint1.setY( leftY );
+            waypoint2 = dcFactory.createPoint();
+            waypoint2.setX( waypoint1.getX() );
+            waypoint2.setY( rightY );
+        }
+
         edge.getWaypoint().add(leftPoint);
+        if ( waypoint1 != null && waypoint2 != null ) {
+            edge.getWaypoint().add(waypoint1);
+            edge.getWaypoint().add(waypoint2);
+        }
         edge.getWaypoint().add(rightPoint);
     }
 

@@ -5,6 +5,7 @@ src/test/resources/test-output/iflow/*.iflw
 src/test/resources/test-output/*.xml
 src/test/resources/test-output/builder/*.xml
 src/test/resources/test-output/generated-archive/*.jar
+src/test/resources/test-output/iflow/stack-tests/
 
 # IDE
 .vscode/

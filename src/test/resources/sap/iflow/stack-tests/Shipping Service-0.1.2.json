@@ -1,0 +1,231 @@
+{
+    "components": {
+        "schemas": {
+            "Order_JSON": {
+                "x-ep-schema-version": "0.1.0",
+                "x-ep-schema-version-id": "is0hoe91ot5",
+                "$schema": "http://json-schema.org/draft-07/schema#",
+                "x-ep-schema-state-name": "RELEASED",
+                "x-ep-schema-name": "Order_JSON",
+                "title": "Order",
+                "type": "object",
+                "x-ep-application-domain-id": "m3lw7l3n5g8",
+                "required": [
+                    "order_id",
+                    "customer",
+                    "items",
+                    "total_price",
+                    "order_date",
+                    "status"
+                ],
+                "x-ep-schema-version-displayname": "",
+                "x-ep-shared": "true",
+                "x-ep-application-domain-name": "OnlineServices",
+                "x-ep-schema-state-id": "2",
+                "x-ep-schema-id": "t6nm915bgg0",
+                "definitions": {
+                    "order_item": {
+                        "type": "object",
+                        "properties": {
+                            "quantity": {
+                                "description": "Quantity of the item ordered",
+                                "type": "integer",
+                                "minimum": 1
+                            },
+                            "item_id": {
+                                "description": "Unique identifier for the item",
+                                "type": "string"
+                            },
+                            "price": {
+                                "description": "Price per unit of the item",
+                                "type": "number",
+                                "minimum": 0
+                            }
+                        },
+                        "required": [
+                            "item_id",
+                            "quantity",
+                            "price"
+                        ]
+                    },
+                    "customer": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "description": "Name of the customer",
+                                "type": "string"
+                            },
+                            "id": {
+                                "description": "Unique identifier for the customer",
+                                "type": "string"
+                            },
+                            "email": {
+                                "format": "email",
+                                "description": "Email address of the customer",
+                                "type": "string"
+                            }
+                        },
+                        "required": [
+                            "id",
+                            "name",
+                            "email"
+                        ]
+                    }
+                },
+                "properties": {
+                    "order_date": {
+                        "format": "date-time",
+                        "description": "Date and time when the order was placed",
+                        "type": "string"
+                    },
+                    "total_price": {
+                        "description": "Total price of the order",
+                        "type": "number",
+                        "minimum": 0
+                    },
+                    "order_id": {
+                        "description": "Unique identifier for the order",
+                        "type": "string"
+                    },
+                    "items": {
+                        "description": "Items included in the order",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Order_JSON/definitions/order_item"
+                        }
+                    },
+                    "customer": {
+                        "description": "Customer placing the order",
+                        "$ref": "#/components/schemas/Order_JSON/definitions/customer"
+                    },
+                    "status": {
+                        "description": "Status of the order",
+                        "type": "string",
+                        "enum": [
+                            "pending",
+                            "processing",
+                            "shipped",
+                            "delivered",
+                            "cancelled"
+                        ]
+                    }
+                }
+            }
+        },
+        "messages": {
+            "Order_Packaged": {
+                "x-ep-event-id": "gk4fj2gi1yj",
+                "x-ep-event-version-displayname": "",
+                "description": "As the order moves through the fulfillment process, each service add to this topic to show current state.",
+                "x-ep-application-domain-id": "m3lw7l3n5g8",
+                "schemaFormat": "application/vnd.aai.asyncapi+json;version=2.0.0",
+                "x-ep-event-state-name": "RELEASED",
+                "x-ep-shared": "true",
+                "x-ep-application-domain-name": "OnlineServices",
+                "x-ep-event-version-id": "h9m0c5x4nfg",
+                "payload": {
+                    "$ref": "#/components/schemas/Order_JSON"
+                },
+                "x-ep-event-version": "1.0.2",
+                "x-ep-event-name": "Order Packaged",
+                "contentType": "application/json",
+                "x-ep-event-state-id": "2",
+                "x-ep-custom-attr-confidential": "true"
+            },
+            "Order_Shipped": {
+                "x-ep-event-id": "isiysa05ky6",
+                "x-ep-event-version-displayname": "",
+                "description": "",
+                "x-ep-application-domain-id": "m3lw7l3n5g8",
+                "schemaFormat": "application/vnd.aai.asyncapi+json;version=2.0.0",
+                "x-ep-event-state-name": "RELEASED",
+                "x-ep-shared": "true",
+                "x-ep-application-domain-name": "OnlineServices",
+                "x-ep-event-version-id": "p04act22256",
+                "payload": {
+                    "$ref": "#/components/schemas/Order_JSON"
+                },
+                "x-ep-event-version": "1.0.1",
+                "x-ep-event-name": "Order Shipped",
+                "contentType": "application/json",
+                "x-ep-event-state-id": "2",
+                "x-ep-custom-attr-confidential": "false"
+            }
+        }
+    },
+    "channels": {
+        "acmeretail/onlineservices/order/packaged/v1/{regionId}/{orderId}": {
+            "publish": {
+                "bindings": {
+                    "solace": {
+                        "destinations": [
+                            {
+                                "destinationType": "queue",
+                                "queue": {
+                                    "name": "SHIPPING.ORDER.PACKAGED",
+                                    "topicSubscriptions": [
+                                        "acmeretail/onlineservices/order/packaged/v1/*/*"
+                                    ]
+                                }
+                            }
+                        ],
+                        "bindingVersion": "0.3.0"
+                    }
+                },
+                "message": {
+                    "$ref": "#/components/messages/Order_Packaged"
+                }
+            },
+            "parameters": {
+                "regionId": {
+                    "schema": {
+                        "type": "string"
+                    },
+                    "x-ep-parameter-name": "regionId"
+                },
+                "orderId": {
+                    "schema": {
+                        "type": "string"
+                    },
+                    "x-ep-parameter-name": "orderId"
+                }
+            }
+        },
+        "acmeretail/onlineservices/order/shipped/v1/{regionId}/{orderId}": {
+            "subscribe": {
+                "message": {
+                    "$ref": "#/components/messages/Order_Shipped"
+                }
+            },
+            "parameters": {
+                "regionId": {
+                    "schema": {
+                        "type": "string"
+                    },
+                    "x-ep-parameter-name": "regionId"
+                },
+                "orderId": {
+                    "schema": {
+                        "type": "string"
+                    },
+                    "x-ep-parameter-name": "orderId"
+                }
+            }
+        }
+    },
+    "asyncapi": "2.5.0",
+    "info": {
+        "x-ep-application-version": "0.1.2",
+        "x-ep-application-version-id": "rk1vshi4b0w",
+        "x-ep-application-id": "7k31982gxlq",
+        "description": "A streaming service leveraging the solace Streams API. This service reacts to orders as they are created, updating the Shipping topic as notifications are received from the delivery company.\n\n[GitHub Source](https://github.com/confluentinc/solace-streams-examples)",
+        "x-ep-state-name": "RELEASED",
+        "x-ep-custom-attr-acl-principal": "CN=ShippingService,OU=Shipping,DC=AcmeRetail,DC=COM",
+        "title": "Shipping Service",
+        "x-ep-application-domain-id": "6cpf8p48ab7",
+        "x-ep-custom-attr-application-type": "solace-streams",
+        "version": "0.1.2",
+        "x-ep-state-id": "2",
+        "x-ep-application-domain-name": "Shipping"
+    }
+}

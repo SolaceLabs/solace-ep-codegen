@@ -119,6 +119,38 @@ public class TestCreateIflowFromEpAsyncApi {
         }
     }
 
+    @Test void testCreateIflow_ShippingOneToOne_06() {
+
+        final String inputFile = "src/test/resources/sap/iflow/stack-tests/Shipping Service-0.1.2.json";
+        final String outputFile = "src/test/resources/test-output/iflow/stack-tests/Shipping Service-0.1.2.xml";
+
+        try {
+            final MapMuleDoc input = createMapMuleDocFromAsyncApiFile(inputFile);
+            final String iflowXml = SapIFlowGenerator.getSapIflowFromMapDoc(input);
+            System.out.println( iflowXml );
+            FileUtils.writeStringToFile(iflowXml, outputFile);
+        } catch ( Exception exc ) {
+            exc.printStackTrace();
+            fail( exc.getMessage() );
+        }
+    }
+
+    @Test void testCreateIflow_ERPManyPublishers_07() {
+
+        final String inputFile = "src/test/resources/sap/iflow/stack-tests/ERP System-1.0.0.json";
+        final String outputFile = "src/test/resources/test-output/iflow/stack-tests/ERP System-1.0.0.json.xml";
+
+        try {
+            final MapMuleDoc input = createMapMuleDocFromAsyncApiFile(inputFile);
+            final String iflowXml = SapIFlowGenerator.getSapIflowFromMapDoc(input);
+            System.out.println( iflowXml );
+            FileUtils.writeStringToFile(iflowXml, outputFile);
+        } catch ( Exception exc ) {
+            exc.printStackTrace();
+            fail( exc.getMessage() );
+        }
+    }
+
     private static MapMuleDoc createMapMuleDocFromAsyncApiFile( String inputFile ) throws Exception {
         final String asyncApi = FileUtils.getFileAsString(inputFile);
         return AsyncApiToMuleDocMapper.mapMuleDocFromAsyncApi(asyncApi);
