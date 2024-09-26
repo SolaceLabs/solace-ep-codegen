@@ -181,6 +181,37 @@ messageFlow:
       value: 
     - key:   userProperties
       value: 
+  # Property differences between Solace and AEM adaptors for Sender/Receiver
+  solaceSubscriptionDiff:
+    - key:   cmdVariantUri
+      value: ctype::AdapterVariant/cname::SolacePubSubPlus/vendor::Solace/tp::TCP/mp::SMF/direction::Sender/version::1.2.0
+    - key:   ComponentSWCVId
+      value: "1.2.0"
+    - key:   ComponentType
+      value: SolacePubSubPlus
+    - key:   componentVersion
+      value: "1.2"
+    - key:   MessageProtocolVersion
+      value: "1.2.0"
+    - key:   TransportProtocolVersion
+      value: "1.2.0"
+    - key:   Vendor
+      value: Solace
+  solacePublicationDiff:
+    - key:   cmdVariantUri
+      value: ctype::AdapterVariant/cname::SolacePubSubPlus/vendor::Solace/tp::TCP/mp::SMF/direction::Receiver/version::1.2.0
+    - key:   ComponentSWCVId
+      value: "1.2.0"
+    - key:   ComponentType
+      value: SolacePubSubPlus
+    - key:   componentVersion
+      value: "1.2"
+    - key:   MessageProtocolVersion
+      value: "1.2.0"
+    - key:   TransportProtocolVersion
+      value: "1.2.0"
+    - key:   Vendor
+      value: Solace
   httpSender:
     - key:   clientCertificates
       value: 
@@ -206,12 +237,8 @@ messageFlow:
       value: None
     - key:   MessageProtocolVersion
       value: "1.5.0"
-    # - key:   Name
-    #   value: HTTPS
     - key:   senderAuthType
       value: RoleBased
-    # - key:   system
-    #   value: HTTPSenderSystem
     - key:   TransportProtocol
       value: HTTPS
     - key:   TransportProtocolVersion
@@ -269,8 +296,6 @@ messageFlow:
       value: "1.15.0"
     - key:   methodSourceExpression
       value:
-    # - key:   Name
-    #   value: HTTP
     - key:   privateKeyAlias
       value:
     - key:   proxyHost
@@ -285,8 +310,6 @@ messageFlow:
       value: "1"
     - key:   retryOnConnectionFailure
       value: "false"
-    # - key:   system
-    #   value: Receiver
     - key:   throwExceptionOnFailure
       value: "true"
     - key:   TransportProtocol
@@ -414,8 +437,6 @@ callActivity:
     - key:   cmdVariantUri
       value: ctype::FlowstepVariant/cname::Enricher/version::1.6.0
   groovyScript:
-    # - key:   scriptFunction
-    #   value: processData
     - key:   scriptBundleId
       value: 
     - key:   componentVersion
@@ -426,3 +447,13 @@ callActivity:
       value: ctype::FlowstepVariant/cname::GroovyScript/version::1.1.2
     - key:   subActivityType
       value: GroovyScript
+router:
+  sequentialMulticast:
+    - key:   componentVersion
+      value: "1.1"
+    - key:   activityType
+      value: SequentialMulticast
+    - key:   cmdVariantUri
+      value: ctype::FlowstepVariant/cname::SequentialMulticast/version::1.1.0
+    - key:   subActivityType
+      value: parallel
