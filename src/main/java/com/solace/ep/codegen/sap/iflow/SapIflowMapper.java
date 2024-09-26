@@ -1410,11 +1410,15 @@ public class SapIflowMapper {
 
         final BPMNShape leftShape = shapes.get(bpmnSourceRefId);
         final BPMNShape rightShape = shapes.get(bpmnTargetRefId);
-        connectShapesLeftToRight(edge, leftShape, rightShape);
+        connectShapesLeftToRight(edge, leftShape, rightShape, true);
         edges.add(edge);
     }
 
     private void connectShapesLeftToRight( final BPMNEdge edge, final BPMNShape leftShape, final BPMNShape rightShape ) {
+        connectShapesLeftToRight(edge, leftShape, rightShape, false);
+    }
+
+    private void connectShapesLeftToRight( final BPMNEdge edge, final BPMNShape leftShape, final BPMNShape rightShape, boolean skipWaypoints ) {
         final double leftX = leftShape.getBounds().getX() + leftShape.getBounds().getWidth();
         final double leftY = leftShape.getBounds().getY() + ( leftShape.getBounds().getHeight() / 2 );
         final double rightX = rightShape.getBounds().getX();
@@ -1429,7 +1433,7 @@ public class SapIflowMapper {
         rightPoint.setY(rightY);
 
         Point waypoint1 = null, waypoint2 = null;
-        if ( leftY != rightY ) {
+        if ( leftY != rightY && !skipWaypoints ) {
             waypoint1 = dcFactory.createPoint();
             waypoint1.setX( ( (rightX - leftX) / 2 ) + leftX );
             waypoint1.setY( leftY );
