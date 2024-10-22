@@ -52,6 +52,9 @@ public class SapIflowExtensionConfig {
     @JsonProperty
     RouterExt router;
 
+    @JsonProperty
+    ProcessExt subProcessException;
+
     @Data
     @NoArgsConstructor
     public static class MessageFlowExt {
