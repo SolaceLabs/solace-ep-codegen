@@ -457,3 +457,21 @@ router:
       value: ctype::FlowstepVariant/cname::SequentialMulticast/version::1.1.0
     - key:   subActivityType
       value: parallel
+subProcessException:
+  processExtensions:
+    - key:   activityType
+      value: ErrorEventSubProcessTemplate
+    - key:   cmdVariantUri
+      value: ctype::FlowstepVariant/cname::ErrorEventSubProcessTemplate/version::1.1.0
+    - key:   componentVersion
+      value: "1.1"
+  startEvent:
+    - key:   activityType
+      value: StartErrorEvent
+    - key:   cmdVariantUri
+      value: ctype::FlowstepVariant/cname::ErrorStartEvent
+  endEvent:
+    - key:   activityType
+      value: EndErrorEvent
+    - key:   cmdVariantUri
+      value: ctype::FlowstepVariant/cname::ErrorEndEvent

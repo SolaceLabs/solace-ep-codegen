@@ -34,6 +34,7 @@ import org.omg.spec.bpmn._20100524.model.TCallActivity;
 import org.omg.spec.bpmn._20100524.model.TCollaboration;
 import org.omg.spec.bpmn._20100524.model.TDefinitions;
 import org.omg.spec.bpmn._20100524.model.TEndEvent;
+import org.omg.spec.bpmn._20100524.model.TErrorEventDefinition;
 import org.omg.spec.bpmn._20100524.model.TFlowElement;
 import org.omg.spec.bpmn._20100524.model.TMessageFlow;
 import org.omg.spec.bpmn._20100524.model.TParallelGateway;
@@ -41,6 +42,7 @@ import org.omg.spec.bpmn._20100524.model.TParticipant;
 import org.omg.spec.bpmn._20100524.model.TProcess;
 import org.omg.spec.bpmn._20100524.model.TSequenceFlow;
 import org.omg.spec.bpmn._20100524.model.TStartEvent;
+import org.omg.spec.bpmn._20100524.model.TSubProcess;
 import org.omg.spec.dd._20100524.dc.Bounds;
 import org.omg.spec.dd._20100524.dc.Point;
 
@@ -87,6 +89,8 @@ public class SapIflowMapper {
             BPMN_PARALLEL_GATEWAY_W = 40d,
             BPMN_MESH_PARTICIPANT_PROCESS_SEP_X = 100d;
             // BPMN_MESH_PARTICIPANT_PROCESS_SEP_Y = 60d;
+    private static final double
+            BPMN_SUBPROC_H = 160d;
 
     // BPMN Graph position state variables
     private double
@@ -101,6 +105,8 @@ public class SapIflowMapper {
     private long messageFlowCounter = 1L;
 
     private long parallelGatewayCounter = 1L;
+
+    private long exceptionSubProcessCounter = 1L;
 
     private boolean solaceEventMeshAdaptor = false;
 
@@ -233,7 +239,7 @@ public class SapIflowMapper {
         addBpmnShapeFromStaticParticipant(
             sender, 
             BPMN_START_BOUNDARY_X, 
-            BPMN_START_BOUNDARY_Y
+            ( BPMN_START_BOUNDARY_Y + ( ( BPMN_PART_PROC_H - BPMN_STATIC_PARTICIPANT_H ) / 2d ) )
         );
 
         // Set the leftX start boundary to include Sender participants
@@ -270,7 +276,7 @@ public class SapIflowMapper {
         bpmnReceiver = addBpmnShapeFromStaticParticipant(
             receiver, 
             BPMN_START_BOUNDARY_X, 
-            BPMN_START_BOUNDARY_Y
+            ( BPMN_START_BOUNDARY_Y + ( ( BPMN_PART_PROC_H - BPMN_STATIC_PARTICIPANT_H ) / 2d ) )
         );
         log.debug( "EventMeshReceiver Participants Created" );
 
@@ -293,7 +299,8 @@ public class SapIflowMapper {
 
         // Generate sequences for all iFlow processes
         processes.forEach( iFlowProcess -> {
-            generateSequences(iFlowProcess);
+            // generateSequences(iFlowProcess);
+            generateSequences(iFlowProcess.getFlowElement());
         } );
 
         inputParticipantsAndProcesses.forEach( iPAndP  -> {
@@ -479,8 +486,7 @@ public class SapIflowMapper {
         addExtensionProperties(receiverProcess, extConfigs.getInboundProcess().getProcessExtensions());
         addExtensionPropertiesToStartAndEndEvents(receiverProcess, extConfigs.getInboundProcess());
 
-        // TODO - Evaluate where sequences should be generated 2
-        // generateSequences( receiverProcess );
+        addExceptionSubProcessToHttpReceiver(receiverProcess);
 
         final TParticipant inboundParticipantProc = createGenericParticipant( 
             receiverProcess.getId(), 
@@ -528,6 +534,8 @@ public class SapIflowMapper {
         addExtensionProperties(receiverProcess, extConfigs.getInboundProcess().getProcessExtensions());
         addExtensionPropertiesToStartAndEndEvents(receiverProcess, extConfigs.getInboundProcess());
 
+        addExceptionSubProcessToAemReceiver(receiverProcess);
+
         final String validateSchemaName = getSchemaName(consumer.getJsonSchemaReference());
         final String validateCaName = "Validate inbound event against schema " + validateSchemaName;
         final TCallActivity validateSchemaCallActivity = 
@@ -548,6 +556,41 @@ public class SapIflowMapper {
         addCallActivityBeforeEndEvent(receiverProcess, stubMapCallActivity);
 
         return receiverProcess;
+    }
+
+    private void addExceptionSubProcessToAemReceiver( TProcess aemReceiverProcess ) {
+        final long exceptionSubProcessIndex = exceptionSubProcessCounter++;
+        final TSubProcess exceptionSubProcess = createExceptionSubProcess(exceptionSubProcessIndex);
+        final TCallActivity ca = createCallActivityExceptionAemInput(exceptionSubProcessIndex);
+        addCallActivityBeforeEndEvent(exceptionSubProcess.getFlowElement(), ca);
+
+        if ( aemReceiverProcess.getFlowElement() != null && aemReceiverProcess.getFlowElement().size() > 0 ) {
+            aemReceiverProcess.getFlowElement().add(0, bpmnFactory.createSubProcess(exceptionSubProcess));
+        }
+    }
+
+    private void addExceptionSubProcessToHttpReceiver( TProcess httpReceiverProcess ) {
+        final long exceptionSubProcessIndex = exceptionSubProcessCounter++;
+        final TSubProcess exceptionSubProcess = createExceptionSubProcess(exceptionSubProcessIndex);
+        final TCallActivity ca = createCallActivityExceptionHttpInput();
+        addCallActivityBeforeEndEvent(exceptionSubProcess.getFlowElement(), ca);
+
+        if ( httpReceiverProcess.getFlowElement() != null && httpReceiverProcess.getFlowElement().size() > 0 ) {
+            httpReceiverProcess.getFlowElement().add(0, bpmnFactory.createSubProcess(exceptionSubProcess));
+        }
+    }
+
+    private TSubProcess createExceptionSubProcess(
+        final long exceptionSubProcessIndex
+    ) {
+        final String index = Long.toString(exceptionSubProcessIndex);
+        TSubProcess exceptionSubProcess = 
+            createGenericSubProcess(
+                "Exception SubProcess " + index, "Error Start " + index, "Error End" + index
+            );
+        addExtensionProperties(exceptionSubProcess, extConfigs.getSubProcessException().getProcessExtensions());
+        addExtensionPropertiesToExceptionSubProcessStartAndEndEvents(exceptionSubProcess, extConfigs.getSubProcessException());
+        return exceptionSubProcess;
     }
 
     private TMessageFlow createHttpsInMessageFlow(
@@ -797,10 +840,11 @@ public class SapIflowMapper {
         if (publisher.getSetVariables() == null || publisher.getSetVariables().size() == 0) {
             return null;
         }
-        final TCallActivity ca = createGenericCallActivity( "Set Dynamic Topic Parameters" );
+        final int topicFunctionIndex = index + 1;
+        final TCallActivity ca = createGenericCallActivity( "Set Dynamic Topic Parameters " + Integer.toString(topicFunctionIndex) );
         addExtensionProperties(ca, extConfigs.getCallActivity().getGroovyScript());
         addExtensionProperty(ca, "script", "topicParameters.groovy");
-        addExtensionProperty(ca, "scriptFunction", "defineTopicParams_" + Integer.toString(index));
+        addExtensionProperty(ca, "scriptFunction", "defineTopicParams_" + Integer.toString(topicFunctionIndex));
         return ca;
     }
 
@@ -809,6 +853,22 @@ public class SapIflowMapper {
         addExtensionProperties(ca, extConfigs.getCallActivity().getGroovyScript());
         addExtensionProperty(ca, "script", "composeTopic.groovy");
         addExtensionProperty(ca, "scriptFunction", "composeTopic");
+        return ca;
+    }
+
+    private TCallActivity createCallActivityExceptionAemInput(final long index) {
+        final TCallActivity ca = createGenericCallActivity( "Exception Process " + Long.toString(index) );
+        addExtensionProperties(ca, extConfigs.getCallActivity().getGroovyScript());
+        addExtensionProperty(ca, "script", "exceptionHandlingIn.groovy");
+        addExtensionProperty(ca, "scriptFunction", "inputExceptionProcess_" + Long.toString(index));
+        return ca;
+    }
+
+    private TCallActivity createCallActivityExceptionHttpInput() {
+        final TCallActivity ca = createGenericCallActivity( "Exception Process HTTP" );
+        addExtensionProperties(ca, extConfigs.getCallActivity().getGroovyScript());
+        addExtensionProperty(ca, "script", "exceptionHandlingHttpIn.groovy");
+        addExtensionProperty(ca, "scriptFunction", "inputExceptionProcess_http" );
         return ca;
     }
 
@@ -946,6 +1006,25 @@ public class SapIflowMapper {
         }
     }
 
+    private void addExtensionPropertiesToExceptionSubProcessStartAndEndEvents( final TSubProcess subProcess, final ProcessExt processExtProperties )  {
+        for (JAXBElement<? extends TFlowElement> event : subProcess.getFlowElement()) {
+            if ( event.getValue() instanceof TStartEvent ) {
+                TStartEvent startEvent = (TStartEvent)(event.getValue());
+                TErrorEventDefinition startErrorEventDef = new TErrorEventDefinition();
+                addExtensionProperties(startErrorEventDef, processExtProperties.getStartEvent());
+                startEvent.getEventDefinition().add( bpmnFactory.createErrorEventDefinition(startErrorEventDef) );
+                continue;
+            }
+            if ( event.getValue() instanceof TEndEvent ) {
+                TEndEvent endEvent = (TEndEvent)(event.getValue());
+                TErrorEventDefinition endErrorEventDef = new TErrorEventDefinition();
+                addExtensionProperties(endErrorEventDef, processExtProperties.getEndEvent());
+                endEvent.getEventDefinition().add( bpmnFactory.createErrorEventDefinition(endErrorEventDef) );
+                continue;
+            }
+        }
+    }
+
     /**
      * Call activities are created with StartEvent and EndEvent
      * This method inserts a call activity before the EndEvent
@@ -958,6 +1037,16 @@ public class SapIflowMapper {
         }
         process.getFlowElement().add(
             process.getFlowElement().size() - 1, 
+            bpmnFactory.createCallActivity(activity)
+        );
+    }
+
+    private void addCallActivityBeforeEndEvent( final List<JAXBElement<? extends TFlowElement>> eltList, final TCallActivity activity ) {
+        if ( activity == null ) {
+            return;
+        }
+        eltList.add(
+            eltList.size() - 1, 
             bpmnFactory.createCallActivity(activity)
         );
     }
@@ -977,9 +1066,9 @@ public class SapIflowMapper {
      * Create sequence flows for a given process.
      * The process StartEvent, Call Activity(ies) 1-N, and EndEvent must be in sequence
      * Also adds incoming + outgoing events for all flow events
-     * @param process
+     * @param stepList
      */
-    private void generateSequences( final TProcess process ) {
+    private void generateSequences( final List<JAXBElement<? extends TFlowElement>> stepList ) {
 
         boolean firstItem = true;
         String  currentSeqFlowId = "", lastSeqFlowId = "";
@@ -987,11 +1076,19 @@ public class SapIflowMapper {
 
         final List<TSequenceFlow> sequenceFlows = new ArrayList<>();
 
-        Iterator<JAXBElement<? extends TFlowElement>> i = process.getFlowElement().iterator();
+        Iterator<JAXBElement<? extends TFlowElement>> i = stepList.iterator();
 
         while( i.hasNext() ) {
 
             TFlowElement fe = i.next().getValue();
+
+            // Generate sequences for Sub Process independently and move on
+            // Exception SubProcess is added before StartEvent
+            if ( fe instanceof TSubProcess ) {
+                TSubProcess subProcess = (TSubProcess)fe;
+                generateSequences(subProcess.getFlowElement());
+                continue;
+            }
 
             if ( firstItem ) {
                 // Should always be TStartEvent
@@ -1077,7 +1174,7 @@ public class SapIflowMapper {
 
         i = null;   // Avoid conflict
         sequenceFlows.forEach( sf -> {
-            process.getFlowElement().add( bpmnFactory.createSequenceFlow(sf) );
+            stepList.add( bpmnFactory.createSequenceFlow(sf) );
         } );
     }
 
@@ -1163,6 +1260,33 @@ public class SapIflowMapper {
         process.getFlowElement().add( bpmnFactory.createEndEvent( endEvent ) );
 
         return process;
+    }
+
+    private TSubProcess createGenericSubProcess(
+        final String subProcessName,
+        final String startEventName,
+        final String endEventName
+    ) {
+        final long subProcessId = objectIncrementer++;
+        final long startEndEventId = objectIncrementer++;
+
+        final TSubProcess subProcess = bpmnFactory.createTSubProcess();
+        final TStartEvent startEvent = bpmnFactory.createTStartEvent();
+        final TEndEvent endEvent = bpmnFactory.createTEndEvent();
+
+        subProcess.setId( "SubProcess_" + subProcessId );
+        subProcess.setName(subProcessName);
+
+        startEvent.setId( SapIflowUtils.ACT_START_EVENT_PREFIX + startEndEventId );
+        startEvent.setName(startEventName);
+
+        endEvent.setId( SapIflowUtils.ACT_END_EVENT_PREFIX + startEndEventId );
+        endEvent.setName(endEventName);
+
+        subProcess.getFlowElement().add( bpmnFactory.createStartEvent(startEvent) );
+        subProcess.getFlowElement().add( bpmnFactory.createEndEvent(endEvent));
+
+        return subProcess;
     }
 
     private TParticipant createGenericParticipant( 
@@ -1251,8 +1375,15 @@ public class SapIflowMapper {
     private BPMNShape addBpmnShapeFromParticipantProcess( 
         final TParticipant participant, final double x, final double y, final double h, final double w )
     {
-        // final double h = BPMN_PART_PROC_H;
         final BPMNShape shape = createGenericBPMNShape(participant.getId(), h, w, x, y);
+        shapes.put(shape.getId(), shape);
+        return shape;
+    }
+
+    private BPMNShape addBpmnShapeFromSubProcess(
+        final TSubProcess subProcess, final double x, final double y, final double h, final double w )
+    {
+        final BPMNShape shape = createGenericBPMNShape(subProcess.getId(), h, w, x, y);
         shapes.put(shape.getId(), shape);
         return shape;
     }
@@ -1286,9 +1417,14 @@ public class SapIflowMapper {
         int parallelFlowCount = 0;
         boolean incrementParallelFlows = false;
         TFlowElement lastElement = null;
+        final List<TSubProcess> subProcesses = new ArrayList<>();
 
         for ( JAXBElement<? extends TFlowElement> jaxbElement : process.getFlowElement() ) {
             final TFlowElement elt = jaxbElement.getValue();
+            if ( elt instanceof TSubProcess ) {
+                subProcesses.add( (TSubProcess)elt );
+                continue;
+            }
             if ( !( 
                 elt instanceof TStartEvent || 
                 elt instanceof TEndEvent || 
@@ -1324,22 +1460,92 @@ public class SapIflowMapper {
         // Can only do this after all of the shapes to join have been created
         process.getFlowElement().forEach( jaxbElement -> {
             final TFlowElement elt = jaxbElement.getValue();
-            if ( (elt instanceof TSequenceFlow ) ) {
+            if ( elt instanceof TSequenceFlow ) {
                 TSequenceFlow sf = ( TSequenceFlow )elt;
                 createBpmnEdgeFromSequenceFlow(sf);
             }
         } );
 
-        final int parallelFlowAdjustment = (!incrementParallelFlows ? 0 : (parallelFlowCount > 0 ? parallelFlowCount - 1 : 0));
+        final double parallelFlowAdjustmentH = 
+                        (!incrementParallelFlows ? 0 : (parallelFlowCount > 0 ? parallelFlowCount - 1 : 0)) * 
+                        ( BPMN_CALL_ACT_H + BPMN_FLOW_ELT_SEP_Y );
+        final double subProcessAdjustmentH = subProcesses.size() * (BPMN_SUBPROC_H + BPMN_PROC_SEP_Y);
+        final double processShapeH = BPMN_PART_PROC_H + parallelFlowAdjustmentH + subProcessAdjustmentH;
+        double processShapeW = xPos - processBoundaryX + BPMN_FLOW_ELT_SEP_X;
+
+        // Add sub-processes, mainly exception sub-process for input flow
+        if ( subProcesses.size() > 0 ) {
+            final double subX = processBoundaryX + BPMN_FLOW_ELT_SEP_X;
+            final double subY = processBoundaryY + BPMN_PART_PROC_H + parallelFlowAdjustmentH;
+            double maxSubWidth = 0d;
+            for ( TSubProcess sp : subProcesses ) {
+                createBpmnShapesForSubProcess(sp, subX, subY);
+                maxSubWidth = Math.max(
+                                shapes.get(SapIflowUtils.BPMN_SHAPE_PREFIX + sp.getId()).getBounds().getWidth(),
+                                maxSubWidth );
+            }
+            if ( processShapeW < ( maxSubWidth + ( 2 * BPMN_FLOW_ELT_SEP_X ) ) ) {
+                processShapeW = maxSubWidth + ( 2 * BPMN_FLOW_ELT_SEP_X );
+            }
+        }
+
         addBpmnShapeFromParticipantProcess(
             participant, 
             processBoundaryX, 
             processBoundaryY, 
-            ( BPMN_PART_PROC_H + ( parallelFlowAdjustment * ( BPMN_CALL_ACT_H + BPMN_FLOW_ELT_SEP_Y ) ) ),
-            ( xPos - processBoundaryX + BPMN_FLOW_ELT_SEP_X) );
+            processShapeH,
+            processShapeW
+        );
 
-        processBoundaryY += BPMN_PART_PROC_H + BPMN_PROC_SEP_Y + ( parallelFlowAdjustment * (BPMN_CALL_ACT_H + BPMN_FLOW_ELT_SEP_Y) );
+        processBoundaryY += processShapeH + BPMN_PROC_SEP_Y;
         processBoundaryMaxX = Math.max(xPos, processBoundaryMaxX);
+    }
+
+    private void createBpmnShapesForSubProcess( 
+        final TSubProcess subProcess,
+        final double startX,
+        final double startY )
+    {
+        double xPos = startX;
+        // double yPos = startY;
+
+        for ( JAXBElement<? extends TFlowElement> jaxbElement : subProcess.getFlowElement() ) {
+            final TFlowElement elt = jaxbElement.getValue();
+            if ( !( 
+                elt instanceof TStartEvent || 
+                elt instanceof TEndEvent || 
+                elt instanceof TCallActivity ) ) {
+                continue;
+            }
+
+            final double x = getFlowEltX(xPos);
+            final double y = getFlowEltY(elt, startY);
+            addBpmnShapeFromFlowElement(elt, x, y);
+            xPos += advanceXPos(elt);
+        }
+
+        final double processShapeH = BPMN_SUBPROC_H;
+        final double processShapeW = xPos - startX + BPMN_FLOW_ELT_SEP_X;
+
+        addBpmnShapeFromSubProcess(
+            subProcess, 
+            startX, 
+            startY, 
+            processShapeH,
+            processShapeW
+        );
+
+        subProcess.getFlowElement().forEach( jaxbElement -> {
+            final TFlowElement elt = jaxbElement.getValue();
+            if ( elt instanceof TSequenceFlow ) {
+                TSequenceFlow sf = ( TSequenceFlow )elt;
+                createBpmnEdgeFromSequenceFlow(sf);
+            }
+        });
+    }
+
+    private double getFlowEltY( final TFlowElement elt, final double boundaryY ) {
+        return getFlowEltY(elt, boundaryY, 0);
     }
 
     private double getFlowEltY( final TFlowElement elt, final double boundaryY, final int verticalStack ) {

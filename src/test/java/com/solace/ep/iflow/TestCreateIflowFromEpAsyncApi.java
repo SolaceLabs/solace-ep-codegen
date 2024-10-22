@@ -151,6 +151,22 @@ public class TestCreateIflowFromEpAsyncApi {
         }
     }
 
+    @Test void testCreateIflow_UpdateInventory_08() {
+
+        final String inputFile = "src/test/resources/asyncapi/UpdateInventory-0.1.0 (1).yaml";
+        final String outputFile = "src/test/resources/test-output/iflow/stack-tests/UpdateInventory-0.1.0 (1).json.xml";
+
+        try {
+            final MapMuleDoc input = createMapMuleDocFromAsyncApiFile(inputFile);
+            final String iflowXml = SapIFlowGenerator.getSapIflowFromMapDoc(input);
+            System.out.println( iflowXml );
+            FileUtils.writeStringToFile(iflowXml, outputFile);
+        } catch ( Exception exc ) {
+            exc.printStackTrace();
+            fail( exc.getMessage() );
+        }
+    }
+
     private static MapMuleDoc createMapMuleDocFromAsyncApiFile( String inputFile ) throws Exception {
         final String asyncApi = FileUtils.getFileAsString(inputFile);
         return AsyncApiToMuleDocMapper.mapMuleDocFromAsyncApi(asyncApi);
