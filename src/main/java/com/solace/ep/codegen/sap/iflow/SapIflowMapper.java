@@ -488,6 +488,9 @@ public class SapIflowMapper {
 
         addExceptionSubProcessToHttpReceiver(receiverProcess);
 
+        // Added for logging
+        addCallActivityBeforeEndEvent(receiverProcess, createCallActivityInitializeParameters());
+
         final TParticipant inboundParticipantProc = createGenericParticipant( 
             receiverProcess.getId(), 
             SapIflowUtils.PARTICIPANT_IFL_INT,
@@ -535,6 +538,9 @@ public class SapIflowMapper {
         addExtensionPropertiesToStartAndEndEvents(receiverProcess, extConfigs.getInboundProcess());
 
         addExceptionSubProcessToAemReceiver(receiverProcess);
+
+        // Added for logging
+        addCallActivityBeforeEndEvent(receiverProcess, createCallActivityInitializeParameters());
 
         final String validateSchemaName = getSchemaName(consumer.getJsonSchemaReference());
         final String validateCaName = "Validate inbound event against schema " + validateSchemaName;
@@ -832,6 +838,21 @@ public class SapIflowMapper {
         String propertyTable = String.format(COMPOSED_TOPIC_PARAMETER, topicPattern);
         addExtensionProperty(ca, "propertyTable", propertyTable);
         addExtensionProperties(ca, extConfigs.getCallActivity().getDefineTopic());
+
+        return ca;
+    }
+
+    private TCallActivity createCallActivityInitializeParameters() {
+        final String INITIALIZE_PARAMETER_ROW = "<row><cell id='Action'>Create</cell><cell id='Type'>constant</cell><cell id='Value'>{{%s}}</cell><cell id='Default'></cell><cell id='Name'>%s</cell><cell id='Datatype'></cell></row>";
+        final TCallActivity ca = createGenericCallActivity( "Initialize Parameters" );
+        final List<String> parametersToInclude = List.of( "ExceptionLogging", "ReferenceID" );
+        final StringBuilder parameterTable = new StringBuilder();
+
+        for ( String p : parametersToInclude ) {
+            parameterTable.append( String.format(INITIALIZE_PARAMETER_ROW, p, p) );
+        }
+        addExtensionProperty(ca, "propertyTable", parameterTable.toString());
+        addExtensionProperties(ca, extConfigs.getCallActivity().getDefineTopic());      // defineTopic is Content Modifier
 
         return ca;
     }
