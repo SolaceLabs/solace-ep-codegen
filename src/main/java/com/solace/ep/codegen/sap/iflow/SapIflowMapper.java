@@ -845,7 +845,7 @@ public class SapIflowMapper {
     private TCallActivity createCallActivityInitializeParameters() {
         final String INITIALIZE_PARAMETER_ROW = "<row><cell id='Action'>Create</cell><cell id='Type'>constant</cell><cell id='Value'>{{%s}}</cell><cell id='Default'></cell><cell id='Name'>%s</cell><cell id='Datatype'></cell></row>";
         final TCallActivity ca = createGenericCallActivity( "Initialize Parameters" );
-        final List<String> parametersToInclude = List.of( "ExceptionLogging", "ReferenceID" );
+        final List<String> parametersToInclude = List.of( "ExceptionLogging" );
         final StringBuilder parameterTable = new StringBuilder();
 
         for ( String p : parametersToInclude ) {
