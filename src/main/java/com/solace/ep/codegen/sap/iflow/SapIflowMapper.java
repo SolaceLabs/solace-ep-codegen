@@ -106,8 +106,6 @@ public class SapIflowMapper {
 
     private long parallelGatewayCounter = 1L;
 
-    private long exceptionSubProcessCounter = 1L;
-
     private boolean solaceEventMeshAdaptor = false;
 
     // Object Factories
@@ -486,7 +484,7 @@ public class SapIflowMapper {
         addExtensionProperties(receiverProcess, extConfigs.getInboundProcess().getProcessExtensions());
         addExtensionPropertiesToStartAndEndEvents(receiverProcess, extConfigs.getInboundProcess());
 
-        addExceptionSubProcessToHttpReceiver(receiverProcess);
+        addExceptionSubProcessToReceiver(receiverProcess);
 
         // Added for logging
         addCallActivityBeforeEndEvent(receiverProcess, createCallActivityInitializeParameters());
@@ -537,7 +535,7 @@ public class SapIflowMapper {
         addExtensionProperties(receiverProcess, extConfigs.getInboundProcess().getProcessExtensions());
         addExtensionPropertiesToStartAndEndEvents(receiverProcess, extConfigs.getInboundProcess());
 
-        addExceptionSubProcessToAemReceiver(receiverProcess);
+        addExceptionSubProcessToReceiver(receiverProcess);
 
         // Added for logging
         addCallActivityBeforeEndEvent(receiverProcess, createCallActivityInitializeParameters());
@@ -564,35 +562,22 @@ public class SapIflowMapper {
         return receiverProcess;
     }
 
-    private void addExceptionSubProcessToAemReceiver( TProcess aemReceiverProcess ) {
-        final long exceptionSubProcessIndex = exceptionSubProcessCounter++;
-        final TSubProcess exceptionSubProcess = createExceptionSubProcess(exceptionSubProcessIndex);
-        final TCallActivity ca = createCallActivityExceptionAemInput(exceptionSubProcessIndex);
+    private void addExceptionSubProcessToReceiver( TProcess receiverProcess ) {
+        final TSubProcess exceptionSubProcess = createExceptionSubProcess();
+        final TCallActivity ca = createCallActivityExceptionInput();
         addCallActivityBeforeEndEvent(exceptionSubProcess.getFlowElement(), ca);
 
-        if ( aemReceiverProcess.getFlowElement() != null && aemReceiverProcess.getFlowElement().size() > 0 ) {
-            aemReceiverProcess.getFlowElement().add(0, bpmnFactory.createSubProcess(exceptionSubProcess));
+        if ( receiverProcess.getFlowElement() != null && receiverProcess.getFlowElement().size() > 0 ) {
+            receiverProcess.getFlowElement().add(0, bpmnFactory.createSubProcess(exceptionSubProcess));
         }
     }
 
-    private void addExceptionSubProcessToHttpReceiver( TProcess httpReceiverProcess ) {
-        final long exceptionSubProcessIndex = exceptionSubProcessCounter++;
-        final TSubProcess exceptionSubProcess = createExceptionSubProcess(exceptionSubProcessIndex);
-        final TCallActivity ca = createCallActivityExceptionHttpInput();
-        addCallActivityBeforeEndEvent(exceptionSubProcess.getFlowElement(), ca);
-
-        if ( httpReceiverProcess.getFlowElement() != null && httpReceiverProcess.getFlowElement().size() > 0 ) {
-            httpReceiverProcess.getFlowElement().add(0, bpmnFactory.createSubProcess(exceptionSubProcess));
-        }
-    }
-
-    private TSubProcess createExceptionSubProcess(
-        final long exceptionSubProcessIndex
-    ) {
-        final String index = Long.toString(exceptionSubProcessIndex);
+    private TSubProcess createExceptionSubProcess() {
         TSubProcess exceptionSubProcess = 
             createGenericSubProcess(
-                "Exception SubProcess " + index, "Error Start " + index, "Error End" + index
+                "Exception SubProcess", 
+                "Error Start", 
+                "Error End"
             );
         addExtensionProperties(exceptionSubProcess, extConfigs.getSubProcessException().getProcessExtensions());
         addExtensionPropertiesToExceptionSubProcessStartAndEndEvents(exceptionSubProcess, extConfigs.getSubProcessException());
@@ -845,7 +830,7 @@ public class SapIflowMapper {
     private TCallActivity createCallActivityInitializeParameters() {
         final String INITIALIZE_PARAMETER_ROW = "<row><cell id='Action'>Create</cell><cell id='Type'>constant</cell><cell id='Value'>{{%s}}</cell><cell id='Default'></cell><cell id='Name'>%s</cell><cell id='Datatype'></cell></row>";
         final TCallActivity ca = createGenericCallActivity( "Initialize Parameters" );
-        final List<String> parametersToInclude = List.of( "ExceptionLogging" );
+        final List<String> parametersToInclude = List.of( "ExceptionLogging", "LogStackTrace" );
         final StringBuilder parameterTable = new StringBuilder();
 
         for ( String p : parametersToInclude ) {
@@ -877,19 +862,11 @@ public class SapIflowMapper {
         return ca;
     }
 
-    private TCallActivity createCallActivityExceptionAemInput(final long index) {
-        final TCallActivity ca = createGenericCallActivity( "Exception Process " + Long.toString(index) );
+    private TCallActivity createCallActivityExceptionInput() {
+        final TCallActivity ca = createGenericCallActivity( "Log Exception" );
         addExtensionProperties(ca, extConfigs.getCallActivity().getGroovyScript());
         addExtensionProperty(ca, "script", "exceptionHandlingIn.groovy");
-        addExtensionProperty(ca, "scriptFunction", "inputExceptionProcess_" + Long.toString(index));
-        return ca;
-    }
-
-    private TCallActivity createCallActivityExceptionHttpInput() {
-        final TCallActivity ca = createGenericCallActivity( "Exception Process HTTP" );
-        addExtensionProperties(ca, extConfigs.getCallActivity().getGroovyScript());
-        addExtensionProperty(ca, "script", "exceptionHandlingHttpIn.groovy");
-        addExtensionProperty(ca, "scriptFunction", "inputExceptionProcess_http" );
+        addExtensionProperty(ca, "scriptFunction", "processData" );
         return ca;
     }
 
